@@ -17,8 +17,8 @@ export async function openBrowser(opts: {
     const context = browser.contexts()[0] ?? (await browser.newContext());
     return { browser, context, attached: true };
   }
-  const browser = await chromium.launch({ headless: opts.headless });
-  const contextOpts: Parameters<Browser["newContext"]>[0] = { viewport: null };
+  const browser = await chromium.launch({ headless: opts.headless, channel: "chrome" });
+  const contextOpts: Parameters<Browser["newContext"]>[0] = { viewport: null, ignoreHTTPSErrors: true };
   if (opts.loadStoragePath) {
     contextOpts.storageState = opts.loadStoragePath;
   }

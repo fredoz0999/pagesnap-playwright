@@ -8,11 +8,10 @@ Clicks/fills are logged automatically in `steps.md`. YAML checkpoints are **manu
 
 ```
 npm install
-npx playwright install chromium
 npm run capture -- https://example.com
 ```
 
-Then walk the app. Ctrl+M checkpoint, Ctrl+Shift+M note, Ctrl+Q end. Steps are recorded automatically.
+Then walk the app. Ctrl+M capture, Ctrl+Shift+M note, Ctrl+Q end. Uses your installed Chrome (no browser download).
 
 ```
 npm run capture -- https://example.com --framework=playwright --goal='Register a user'
@@ -62,7 +61,3 @@ Flags beat `capture.config.properties`. Lean defaults: `--no-urls`, no hints, `m
 
 Cookie/storage files are secrets. No screenshots. Not ariaSnapshot() by default.
 
-
-## Sibling
-
-Selenium / Java capture: https://github.com/fredoz0999/pagesnap-selenium
