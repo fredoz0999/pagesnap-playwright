@@ -62,3 +62,7 @@ Flags beat `capture.config.properties`. Lean defaults: `--no-urls`, no hints, `m
 
 Cookie/storage files are secrets. No screenshots. Not ariaSnapshot() by default.
 
+
+## Sibling
+
+Selenium / Java capture: https://github.com/fredoz0999/pagesnap-selenium
