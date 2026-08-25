@@ -99,7 +99,11 @@ const sweepSecrets = (text) => {
 const implicitRole = (el) => {
   const tag = el.tagName.toLowerCase();
   const type = (el.getAttribute('type') || '').toLowerCase();
-  if (tag === 'a' && el.hasAttribute('href')) return 'link';
+  // href-less <a data-test=...> (Sauce Demo cart icon) is still a control.
+  if (tag === 'a') {
+    if (el.hasAttribute('href')) return 'link';
+    if (el.getAttribute('data-testid') || el.getAttribute('data-test') || el.getAttribute('data-test-id') || el.getAttribute('data-cy') || el.getAttribute('data-qa')) return 'link';
+  }
   if (tag === 'button') return 'button';
   if (tag === 'input') {
     if (type === 'checkbox') return 'checkbox';
