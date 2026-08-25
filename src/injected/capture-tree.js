@@ -334,21 +334,44 @@ const structuralPath = (el) => {
   return parts.length ? parts.join(' > ') : null;
 };
 
+// LocatorLabs-style reliability scores mapped to PageSnap `by` values.
+// Unique locators keep the table score; non-unique (`matches`) are capped at 40.
+const SCORE = {
+  testid: 98,
+  role: 95,
+  label: 90,
+  id: 90,
+  name: 88,
+  placeholder: 85,
+  linkText: 75,
+  css: 60,
+  xpath: 40
+};
+const locatorScore = (by, matches) => {
+  const base = Object.prototype.hasOwnProperty.call(SCORE, by) ? SCORE[by] : 40;
+  if (matches != null) return Math.min(base, 40);
+  return base;
+};
+const stampScore = (loc) => {
+  loc.score = locatorScore(loc.by, loc.matches);
+  return loc;
+};
+
 // Narrow a locator that matched several elements (radio groups above all).
 const repairLocator = (el, cand) => {
   const nameAttr = el.getAttribute('name');
   const valueAttr = el.getAttribute('value');
   if (nameAttr && valueAttr != null && valueAttr !== '') {
-    const narrowed = {
+    const narrowed = stampScore({
       by: 'css',
       value: el.tagName.toLowerCase() + attrSel('name', nameAttr) + attrSel('value', valueAttr),
       stability: cand.stability
-    };
+    });
     if (isUniqueLocator(el, narrowed)) return narrowed;
   }
   const path = structuralPath(el);
   if (path) {
-    const structural = { by: 'css', value: path, stability: 'low' };
+    const structural = stampScore({ by: 'css', value: path, stability: 'low' });
     if (isUniqueLocator(el, structural)) return structural;
   }
   return null;
@@ -363,7 +386,7 @@ const ACTIONABLE = new Set([
   'form', 'generic'
 ]);
 
-// Token-lean multi-locator: keep the classic by/value/stability shape,
+// Token-lean multi-locator: keep the classic by/value/stability/score shape,
 // but emit at most two verified strategies and skip redundant twins
 // (id vs #id, name vs tag[name=…]).
 const MAX_LOCATORS = lean ? 1 : 2;
@@ -375,7 +398,7 @@ const buildLocators = (el) => {
   let hasTestId = false;
   const push = (by, value, stability, extra) => {
     if (value == null || String(value).trim() === '') return;
-    locators.push(Object.assign({ by: by, value: String(value), stability: stability }, extra || {}));
+    locators.push(stampScore(Object.assign({ by: by, value: String(value), stability: stability }, extra || {})));
   };
 
   const testId = el.getAttribute('data-testid') || el.getAttribute('data-test')
@@ -497,7 +520,7 @@ const buildLocators = (el) => {
       } else if (!lean && ambiguous.length < 1) {
         const amb = { by: cand.by, value: cand.value, stability: cand.stability, matches: found.length };
         if (cand.name) amb.name = cand.name;
-        ambiguous.push(amb);
+        ambiguous.push(stampScore(amb));
       }
     }
   }
@@ -505,7 +528,7 @@ const buildLocators = (el) => {
   if (!verified.length) {
     const path = structuralPath(el);
     if (path) {
-      const structural = { by: 'css', value: path, stability: 'low' };
+      const structural = stampScore({ by: 'css', value: path, stability: 'low' });
       if (isUniqueLocator(el, structural)) verified.push(structural);
     }
   }
@@ -722,6 +745,7 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
           lines.push(ind + '  - {by: ' + l.by + ', value: "' + esc(l.value) + '"'
             + (l.name ? ', name: "' + esc(l.name) + '"' : '')
             + ', stability: ' + l.stability
+            + ', score: ' + (l.score != null ? l.score : locatorScore(l.by, l.matches))
             + (l.matches != null ? ', matches: ' + l.matches : '') + '}');
         }
         // Structured hint (framework dialect applied in Node, not here)

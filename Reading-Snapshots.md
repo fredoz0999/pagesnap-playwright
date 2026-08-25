@@ -13,10 +13,10 @@ Lean mode (default): only actionable controls have locators, and only ONE (highe
 
 ## How to read YAML
 - Tree: ARIA-inspired roles and accessible names. Flags: disabled, busy, invalid, required, checked, expanded/collapsed.
-- Under controls: value, one locators candidate (by + stability), native options:, dropdown:, error / validationMessage.
+- Under controls: value, one locators candidate (by + stability + score), native options:, dropdown:, error / validationMessage.
 - by values: testid | id | name | css | role | label | placeholder | linkText | xpath.
-- Prefer testid > id > name > role+name > label > placeholder > linkText > css > xpath.
-- Never use stability: low unless nothing else exists. A matches: N locator is not unique.
+- Locator score (higher is better): testid 98, role 95, label 90, id 90, name 88, placeholder 85, linkText 75, css 60, xpath 40. Prefer higher score; never use score <= 40 unless nothing else exists.
+- Never use stability: low unless nothing else exists. A matches: N locator is not unique (score capped at 40).
 - Native select: one snapshot (options:). Custom dropdown: closed then open; read Dropdown / options changes in NN_diff.md.
 
 ## Structured notes

@@ -92,11 +92,11 @@ export function buildPromptMd(opts: PromptOpts): string {
     lines.push("- Prefer YAML `by` in this order: testid -> getByTestId, role -> getByRole, label -> getByLabel, id -> locator(\"#id\").");
     lines.push("- Then name -> locator(\"[name=...]\"), placeholder -> getByPlaceholder.");
     lines.push("- `generic` nodes are testid-only (no ARIA role). Use getByTestId, never getByRole(\"generic\"). Do not goto a URL to skip a control that is in the YAML.");
-    lines.push("- Never use stability: low unless nothing else exists. Never page.waitForTimeout.");
+    lines.push("- Prefer higher `score`. Never use score <= 40 unless nothing else exists. Never use stability: low unless nothing else exists. Never page.waitForTimeout.");
     lines.push("- Web-first expect(); native <select> -> selectOption; frames -> frameLocator.");
   } else {
     lines.push("- YAML `by` is framework-neutral. Map testid/id/name/role/label from the snapshot; do not invent selectors.");
-    lines.push("- Prefer stability: high. Never use stability: low unless nothing else exists.");
+    lines.push("- Prefer higher `score`. Never use score <= 40 unless nothing else exists. Prefer stability: high. Never use stability: low unless nothing else exists.");
     lines.push("- " + blurb.waits);
   }
   lines.push("");
@@ -137,10 +137,10 @@ export function buildReadingSnapshotsMd(framework: string, style: string, waits:
   lines.push("");
   lines.push("## How to read YAML");
   lines.push("- Tree: ARIA-inspired roles and accessible names. Flags: disabled, busy, invalid, required, checked, expanded/collapsed.");
-  lines.push("- Under controls: value, one locators candidate (by + stability), native options:, dropdown:, error / validationMessage.");
+  lines.push("- Under controls: value, one locators candidate (by + stability + score), native options:, dropdown:, error / validationMessage.");
   lines.push("- by values: testid | id | name | css | role | label | placeholder | linkText | xpath.");
-  lines.push("- Prefer testid > id > name > role+name > label > placeholder > linkText > css > xpath.");
-  lines.push("- Never use stability: low unless nothing else exists. A matches: N locator is not unique.");
+  lines.push("- Locator score (higher is better): testid 98, role 95, label 90, id 90, name 88, placeholder 85, linkText 75, css 60, xpath 40. Prefer higher score; never use score <= 40 unless nothing else exists.");
+  lines.push("- Never use stability: low unless nothing else exists. A matches: N locator is not unique (score capped at 40).");
   lines.push("- Native select: one snapshot (options:). Custom dropdown: closed then open; read Dropdown / options changes in NN_diff.md.");
   lines.push("");
   lines.push("## Structured notes");

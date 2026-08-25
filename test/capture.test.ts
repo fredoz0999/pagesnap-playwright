@@ -4,7 +4,9 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { SnapshotCapture, printUsage } from "../src/capture.js";
 import { persistSnapshot, stripUrlLines } from "../src/snapshot-write.js";
+import { buildPromptMd, buildReadingSnapshotsMd } from "../src/prompt.js";
 import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 
 async function writeConfig(body: string): Promise<string> {
   const dir = await mkdtemp(path.join(tmpdir(), "ps-config-"));
@@ -325,5 +327,97 @@ describe("snapshot notes", () => {
     expect(yaml).toContain("# Title: Register");
     expect(yaml).toContain("# Viewport: 1280x720");
     expect(yaml).not.toContain("/url:");
+  });
+});
+
+
+describe("locator scores", () => {
+  const treeJs = path.join(path.dirname(fileURLToPath(import.meta.url)), "../src/injected/capture-tree.js");
+
+  async function loadScoreHelpers(): Promise<{
+    SCORE: Record<string, number>;
+    locatorScore: (by: string, matches?: number) => number;
+    stampScore: (loc: { by: string; matches?: number; score?: number }) => { by: string; matches?: number; score: number };
+  }> {
+    const src = await readFile(treeJs, "utf8");
+    const start = src.indexOf("const SCORE = {");
+    const end = src.indexOf("const repairLocator");
+    expect(start).toBeGreaterThan(-1);
+    expect(end).toBeGreaterThan(start);
+    const helpers = src.slice(start, end);
+    return new Function(helpers + "; return { SCORE, locatorScore, stampScore };")();
+  }
+
+  it("SCORE map matches LocatorLabs-style PageSnap by values", async () => {
+    const { SCORE, locatorScore, stampScore } = await loadScoreHelpers();
+    expect(SCORE).toEqual({
+      testid: 98,
+      role: 95,
+      label: 90,
+      id: 90,
+      name: 88,
+      placeholder: 85,
+      linkText: 75,
+      css: 60,
+      xpath: 40,
+    });
+    expect(locatorScore("testid")).toBe(98);
+    expect(locatorScore("role")).toBe(95);
+    expect(locatorScore("css")).toBe(60);
+    expect(locatorScore("xpath")).toBe(40);
+    expect(stampScore({ by: "id" }).score).toBe(90);
+  });
+
+  it("caps score at 40 when matches is present without raising xpath", async () => {
+    const { locatorScore } = await loadScoreHelpers();
+    expect(locatorScore("testid", 3)).toBe(40);
+    expect(locatorScore("css", 2)).toBe(40);
+    expect(locatorScore("xpath", 5)).toBe(40);
+    expect(locatorScore("xpath")).toBe(40);
+  });
+
+  it("YAML emit puts score after stability and before matches", async () => {
+    const src = await readFile(treeJs, "utf8");
+    const emit = src.slice(src.indexOf("locators:"), src.indexOf("Structured hint"));
+    const stab = emit.indexOf(", stability: ");
+    const score = emit.indexOf(", score: ");
+    const matches = emit.indexOf(", matches: ");
+    expect(stab).toBeGreaterThan(-1);
+    expect(score).toBeGreaterThan(stab);
+    expect(matches).toBeGreaterThan(score);
+  });
+
+  it("PROMPT tells the LLM to prefer higher score", () => {
+    const pw = buildPromptMd({
+      generated: "now",
+      startUrl: "https://app.test",
+      framework: "playwright",
+      style: "pageobject",
+      waits: "web-first",
+      goal: "",
+    });
+    expect(pw).toContain("Prefer higher `score`");
+    expect(pw).toContain("Never use score <= 40 unless nothing else exists");
+    const selenium = buildPromptMd({
+      generated: "now",
+      startUrl: "https://app.test",
+      framework: "selenium",
+      style: "pageobject",
+      waits: "explicit",
+      goal: "",
+    });
+    expect(selenium).toContain("Prefer higher `score`");
+    expect(selenium).toContain("Never use score <= 40 unless nothing else exists");
+  });
+
+  it("Reading-Snapshots documents the score table once", () => {
+    const md = buildReadingSnapshotsMd("playwright", "pageobject", "web-first");
+    const table =
+      "testid 98, role 95, label 90, id 90, name 88, placeholder 85, linkText 75, css 60, xpath 40";
+    expect(md).toContain(table);
+    expect(md.split(table).length - 1).toBe(1);
+    expect(md).toContain("Prefer higher score; never use score <= 40 unless nothing else exists");
+    expect(md).toContain("score capped at 40");
+    expect(md).toContain("by + stability + score");
   });
 });
