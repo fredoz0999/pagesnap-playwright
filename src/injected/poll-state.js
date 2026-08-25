@@ -14,5 +14,4 @@ if (out.capture) {
   w.__snapshotCapture = false;
   w.__snapshotNote = '';
 }
-if (w.__pagesnapActions && w.__pagesnapActions.length) { out.actions = w.__pagesnapActions; w.__pagesnapActions = []; }
 return out;

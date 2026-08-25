@@ -5,9 +5,28 @@ import { formatHint, hintsFooterTitle, type HintRec } from "./hints.js";
 import { sanitizeUrl } from "./session.js";
 import { isoNow, refreshFlow, type StepRecord } from "./session-pack.js";
 import type { SnapshotCapture } from "./capture.js";
-import { stripUrlLines } from "./action-log.js";
 
 const EMAIL = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+
+
+/** Strip Playwright-style `/url:` dumps and `[url=…]` attrs from YAML trees. */
+export function stripUrlLines(tree: string): string {
+  if (!tree) return tree;
+  const kept: string[] = [];
+  for (const line of tree.split(/\r?\n/)) {
+    const t = line.trim();
+    if (/^-?\s*\/url:/i.test(t)) continue;
+    if (/^\/url:/i.test(t)) continue;
+    if (!t.startsWith("#") && /^url:\s*\S/i.test(t)) continue;
+    kept.push(
+      line
+        .replace(/\s*\[\/?url=[^\]]*\]/gi, "")
+        .replace(/\s+\/url:\s*\S+/gi, "")
+    );
+  }
+  return kept.join("\n");
+}
+
 
 export function persistSnapshot(
   cap: SnapshotCapture,

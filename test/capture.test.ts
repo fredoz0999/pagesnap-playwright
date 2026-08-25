@@ -3,8 +3,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { SnapshotCapture, printUsage } from "../src/capture.js";
-import { persistSnapshot } from "../src/snapshot-write.js";
-import { formatActionLine, stripUrlLines } from "../src/action-log.js";
+import { persistSnapshot, stripUrlLines } from "../src/snapshot-write.js";
 import { readFile } from "node:fs/promises";
 
 async function writeConfig(body: string): Promise<string> {
@@ -241,7 +240,6 @@ describe("lean defaults", () => {
     expect(c.noUrls).toBe(true);
     expect(c.includeHints).toBe(false);
     expect(c.maxTableRows).toBe(3);
-    expect(c.writeAria).toBe(false);
   });
 
   it("full flips lean knobs back", () => {
@@ -263,7 +261,7 @@ describe("lean defaults", () => {
   });
 });
 
-describe("no-urls and aria", () => {
+describe("no-urls", () => {
   it("no-urls flag beats config", async () => {
     const cfg = await writeConfig("noUrls=false\n");
     const flagged = new SnapshotCapture();
@@ -281,12 +279,6 @@ describe("no-urls and aria", () => {
     expect(c.noUrls).toBe(false);
   });
 
-  it("aria flag is parsed", () => {
-    const c = new SnapshotCapture();
-    c.parseArgs(["https://app.test", "--aria"]);
-    expect(c.writeAria).toBe(true);
-    expect(new SnapshotCapture().writeAria).toBe(false);
-  });
 });
 
 describe("usage", () => {
@@ -294,15 +286,12 @@ describe("usage", () => {
     expect(() => printUsage()).not.toThrow();
     const s = printUsage();
     expect(s).toContain("--framework");
+    expect(s).not.toContain("steps.md");
+    expect(s).not.toContain("auto-record");
   });
 });
 
-describe("action log and notes", () => {
-  it("formats compact action lines", () => {
-    expect(formatActionLine(1, { kind: "click", by: "testid", value: "login-submit" })).toContain("testid=login-submit");
-    expect(formatActionLine(2, { kind: "fill", by: "id", value: "username", text: "jane" })).toContain("\"jane\"");
-    expect(formatActionLine(4, { kind: "snapshot", file: "01_app.yaml", note: "action: click Register" })).toContain("01_app.yaml");
-  });
+describe("snapshot notes", () => {
 
   it("strips /url: lines", () => {
     const tree = "- link \"Home\":\n  - /url: https://app.test/\n- button \"Go\"";

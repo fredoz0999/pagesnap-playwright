@@ -14,9 +14,8 @@ import {
 import { evalBody, evalNamed, injectedPath, loadInjected } from "./eval-scripts.js";
 import type { HintRec } from "./hints.js";
 import { printUsage } from "./usage.js";
-import { applySessionFolderName, sessionFolderTs, sanitizeUrl } from "./session.js";
-import { refreshFlow, writePromptPack, writeStepsMd, type StepRecord } from "./session-pack.js";
-import { redactActionText, stripUrlLines, type ActionRec } from "./action-log.js";
+import { applySessionFolderName, sessionFolderTs } from "./session.js";
+import { refreshFlow, writePromptPack, type StepRecord } from "./session-pack.js";
 import { persistSnapshot } from "./snapshot-write.js";
 
 interface TabState {
@@ -27,7 +26,6 @@ interface TabState {
   end?: boolean;
   name?: string;
   needsInject?: boolean;
-  actions?: ActionRec[];
 }
 
 export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<void> {
@@ -43,7 +41,6 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
   const captureTreeJs = loadInjected("capture-tree.js");
   const waitReadyJs = loadInjected("wait-ready.js");
   const pollStateJs = loadInjected("poll-state.js");
-  const actionListenJs = loadInjected("action-listen.js");
 
   const sessionStart = new Date();
   const sessionId = "session-" + sessionFolderTs(sessionStart, cap.timezone);
@@ -52,10 +49,10 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
   fs.mkdirSync(cap.sessionDir, { recursive: true });
   writePromptPack(cap, sessionStart);
   refreshFlow(cap, [], cap.writeDiff);
-  writeStepsMd(cap, []);
 
   console.log("Session: " + path.resolve(cap.sessionDir));
-  console.log("walk the app, Ctrl+M to checkpoint, Ctrl+Q to end — steps are recorded automatically.");
+  console.log("walk the app, Ctrl+M to capture, Ctrl+Q to end");
+  console.log("No auto-capture on navigation. Capture is manual only.");
   console.log(cap.lean ? "lean snapshot (use --full for verbose)" : "full snapshot (use --lean for compact YAML)");
   if (cap.goal) console.log("Goal: " + cap.goal);
   console.log();
@@ -64,19 +61,10 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
   let context: BrowserContext | null = null;
   const signals: { capture: { page: Page; note: string } | null; end: string | null } = { capture: null, end: null };
   const steps: StepRecord[] = [];
-  const actions: ActionRec[] = [];
   let step = 0;
   let lastTreeBody = "";
   let lastCaptureUrl = "";
   let captureCount = 0;
-  let lastNavUrl = "";
-  let firstNav = true;
-  const navInstalled = new WeakSet<Page>();
-
-  const pushAction = (rec: ActionRec): void => {
-    actions.push(redactActionText(rec, cap.redactEmails));
-    writeStepsMd(cap, actions);
-  };
 
   const installOnPage = async (page: Page) => {
     try {
@@ -89,28 +77,6 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
         signals.end = String(name ?? "");
       });
     } catch { /* already */ }
-    try {
-      await page.exposeFunction("__pagesnapBridgeAction", (rec: ActionRec) => {
-        if (rec && rec.kind) pushAction(rec);
-      });
-    } catch { /* already */ }
-    if (navInstalled.has(page)) { /* listener already */ } else {
-    navInstalled.add(page);
-    page.on("framenavigated", (frame) => {
-      if (frame !== page.mainFrame()) return;
-      const url = page.url();
-      if (!url || url === "about:blank") return;
-      if (firstNav) {
-        firstNav = false;
-        lastNavUrl = url;
-        pushAction({ kind: "goto", url });
-        return;
-      }
-      if (url === lastNavUrl) return;
-      lastNavUrl = url;
-      pushAction({ kind: "nav", url });
-    });
-    }
   };
 
   const injectUi = async (page: Page) => {
@@ -125,10 +91,6 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
         }
       }, cap.toolbarPosition);
       await page.evaluate(chromeJs);
-      await page.evaluate(({ redactPasswords, redactEmails }: { redactPasswords: boolean; redactEmails: boolean }) => {
-        (window as unknown as Record<string, unknown>).__pagesnapListenOpts = { redactPasswords, redactEmails };
-      }, { redactPasswords: cap.redactPasswords, redactEmails: cap.redactEmails });
-      await page.evaluate(actionListenJs);
     } catch { /* mid-nav */ }
   };
 
@@ -204,21 +166,6 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
     });
     lastTreeBody = saved.lastTreeBody;
     lastCaptureUrl = saved.lastCaptureUrl;
-    pushAction({ kind: "snapshot", file: saved.filename, note });
-    if (cap.writeAria) {
-      try {
-        const loc = page.locator("body");
-        const snapFn = (loc as unknown as { ariaSnapshot?: () => Promise<string> }).ariaSnapshot;
-        if (typeof snapFn === "function") {
-          let aria = await snapFn.call(loc);
-          if (cap.noUrls) aria = stripUrlLines(aria);
-          const ariaName = String(step).padStart(2, "0") + "_" + sanitizeUrl(url) + "_aria.yml";
-          fs.writeFileSync(path.join(cap.sessionDir, ariaName), aria.endsWith("\n") ? aria : aria + "\n", "utf8");
-          cap.ariaFiles.push(ariaName);
-          writePromptPack(cap, sessionStart);
-        }
-      } catch { /* skip; never fail the capture */ }
-    }
     await toast(page, "Saved snapshot #" + step, true);
     return true;
   };
@@ -247,10 +194,6 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
       }
     }, cap.toolbarPosition);
     await context.addInitScript({ path: injectedPath("snapshot-chrome.js") });
-    await context.addInitScript(({ redactPasswords, redactEmails }: { redactPasswords: boolean; redactEmails: boolean }) => {
-      (window as unknown as Record<string, unknown>).__pagesnapListenOpts = { redactPasswords, redactEmails };
-    }, { redactPasswords: cap.redactPasswords, redactEmails: cap.redactEmails });
-    await context.addInitScript({ path: injectedPath("action-listen.js") });
     context.on("page", (page) => { void installOnPage(page); });
 
     if (cap.loadStoragePath && cap.attached) {
@@ -297,12 +240,6 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
         process.exit(1);
       }
       page = existing;
-      const u = page.url();
-      if (u && u !== "about:blank" && firstNav) {
-        firstNav = false;
-        lastNavUrl = u;
-        pushAction({ kind: "goto", url: u });
-      }
     }
 
     cap.sessionStartUrl = startUrl || page.url();
@@ -343,9 +280,6 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
           } else {
             for (const pg of pages) {
               const state = await readTab(pg);
-              if (state.actions && state.actions.length) {
-                for (const rec of state.actions) pushAction(rec);
-              }
               if (state.needsInject) await injectUi(pg);
               if (state.end) {
                 renameSession(cap, state.name ?? "");
@@ -408,7 +342,6 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
   }
 
   refreshFlow(cap, steps, cap.writeDiff);
-  writeStepsMd(cap, actions);
   console.log("\nDone! " + captureCount + " capture(s) in " + path.resolve(cap.sessionDir));
 }
 

@@ -30,8 +30,6 @@ export class SnapshotCapture {
   toolbarPosition = "right";
   lean = true;
   noUrls = true;
-  writeAria = false;
-  ariaFiles: string[] = [];
 
   static sessionFolderTs = sessionFolderTs;
   static parseCookieJson = parseCookieJson;
@@ -94,7 +92,6 @@ export class SnapshotCapture {
     else if (a.startsWith("--save-storage=")) this.saveStoragePath = cut("--save-storage=");
     else if (a === "--no-urls") this.noUrls = true;
     else if (a === "--urls") this.noUrls = false;
-    else if (a === "--aria") this.writeAria = true;
     else if (a === "--lean") this.applyLean();
     else if (a === "--full") this.applyFull();
     else if (a === "--hints") this.includeHints = true;
@@ -124,7 +121,6 @@ export class SnapshotCapture {
       else this.applyFull();
     }
     if ("noUrls" in props) this.noUrls = parseBool(props.noUrls);
-    if ("writeAria" in props) this.writeAria = parseBool(props.writeAria);
     if ("outputDir" in props) this.outputRoot = path.resolve(props.outputDir);
     if ("sessionSubdir" in props) this.sessionSubdir = parseBool(props.sessionSubdir);
     if ("includeHints" in props) this.includeHints = parseBool(props.includeHints);

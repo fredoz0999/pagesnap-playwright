@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { buildPromptMd, buildReadingSnapshotsMd } from "./prompt.js";
 import type { SnapshotCapture } from "./capture.js";
-import { formatActionLine, type ActionRec } from "./action-log.js";
 
 export interface StepRecord {
   n: number;
@@ -26,7 +25,6 @@ export function writePromptPack(cap: SnapshotCapture, sessionStart: Date): void 
     style: cap.style,
     waits: cap.waits,
     goal: cap.goal,
-    ariaWritten: cap.ariaFiles.length > 0,
     lean: cap.lean,
   });
   fs.writeFileSync(path.join(cap.sessionDir, "PROMPT.md"), prompt, "utf8");
@@ -39,8 +37,7 @@ export function refreshFlow(cap: SnapshotCapture, steps: StepRecord[], writeDiff
   sb.push("- Updated: " + isoNow());
   sb.push("- Start URL: " + cap.sessionStartUrl);
   if (cap.goal) sb.push("- Goal: " + cap.goal);
-  sb.push("- Checkpoints captured: " + steps.length);
-  sb.push("- Action log: `steps.md` (every click/fill/nav; YAML is a checkpoint)");
+  sb.push("- Steps captured: " + steps.length);
   sb.push("");
   sb.push("## Steps");
   sb.push("");
@@ -61,23 +58,4 @@ export function refreshFlow(cap: SnapshotCapture, steps: StepRecord[], writeDiff
     }
   }
   fs.writeFileSync(path.join(cap.sessionDir, "flow.md"), sb.join("\n"), "utf8");
-}
-
-export function writeStepsMd(cap: SnapshotCapture, actions: ActionRec[]): void {
-  const sb: string[] = [];
-  sb.push("# steps");
-  sb.push("");
-  sb.push("Every recorded action in order. YAML files are checkpoints, not the whole walkthrough.");
-  sb.push("Treat action: / assert: / data: prefixes in notes as intended act / assertion / typed values.");
-  sb.push("");
-  if (actions.length === 0) {
-    sb.push("_No actions yet._");
-    sb.push("");
-  } else {
-    for (let i = 0; i < actions.length; i++) {
-      sb.push(formatActionLine(i + 1, actions[i]));
-    }
-    sb.push("");
-  }
-  fs.writeFileSync(path.join(cap.sessionDir, "steps.md"), sb.join("\n"), "utf8");
 }

@@ -1,13 +1,12 @@
 # Reading snapshots
 
-YAML trees plus a compact action log so you can generate **playwright** tests that actually run.
-Not a click recorder. Not Playwright ariaSnapshot() unless an NN_*_aria.yml sidecar is present.
+YAML trees so you can generate **playwright** tests that actually run.
+Not a click recorder. Not Playwright ariaSnapshot().
 
 ## Files
-- steps.md — every goto/click/fill/check/select/submit/nav, plus snapshot checkpoints. This is the walkthrough.
-- flow.md — checkpoint notes (honor action: / assert: / data: prefixes).
-- NN_<host>.yaml — page checkpoint. Header: URL, Title, Viewport, Step, Note, Goal.
-- NN_diff.md — what changed vs previous checkpoint.
+- flow.md — ordered steps and notes (the intended scenario narrative). Honor action: / assert: / data: prefixes.
+- NN_<host>.yaml — page snapshot. Header: URL, Title, Viewport, Step, Note, Goal.
+- NN_diff.md — what changed vs previous capture.
 - PROMPT.md — framework, style, waits, goal.
 
 Lean mode (default): only actionable controls have locators, and only ONE (highest stability). Empty nameless main/region wrappers are omitted.
@@ -24,8 +23,8 @@ Lean mode (default): only actionable controls have locators, and only ONE (highe
 If a note contains action:, assert:, or data:, treat them as the intended act, assertion, and typed values.
 
 ## Generate a test that runs
-Produce ONE complete runnable test covering EVERY steps.md line in order. Web-first expects; no waitForTimeout / Thread.sleep.
-Assert from assert: notes and checkpoints (visible text, URL, enabled/visible). Use filled values from the log. Do not invent steps or elements.
+Produce ONE complete runnable test covering EVERY flow.md step in order. Web-first expects; no waitForTimeout / Thread.sleep.
+Assert from notes and YAML snapshots (visible text, URL, enabled/visible). Do not invent steps or elements.
 
 ## Mapping to @playwright/test
 

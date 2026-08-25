@@ -1,8 +1,15 @@
 # PageSnap Playwright
 
-Manual checkpoints + an auto-recorded action log. You walk headed Chromium (or a browser you already opened). Clicks, fills, checks, selects, and navigations are recorded in `steps.md`. Press **Ctrl+M** when you want a YAML checkpoint (asserts, locators, dropdown options). An LLM generates tests from the session folder.
+Manual page snapshot tool using **TypeScript + Playwright** as the browser driver only.
 
-Clicks/fills are logged automatically in `steps.md`. YAML checkpoints are **manual** (Ctrl+M). This is **not** a spec.ts emitter and **not** Playwright `ariaSnapshot()`.
+Captures rich YAML snapshots so an LLM can generate tests with better locators and flow context.
+
+Playwright counterpart of [pagesnap-selenium](https://github.com/fredoz0999/pagesnap-selenium).
+
+Unlike auto-nav capture tools, this does **not** auto-capture on navigation.
+You capture only when you press **Ctrl+M** (Cmd+M on Mac).
+
+This is **not** a spec.ts emitter and **not** Playwright `ariaSnapshot()`.
 
 ## Demo
 
@@ -28,12 +35,12 @@ Full cheatsheet: **[Tutorial.md](Tutorial.md)**
 
 | Control | Action |
 |---------|--------|
-| **Toolbar** | Capture (checkpoint) · Note · End · dock L/M/R · minimize |
-| **Ctrl+M / Cmd+M** | Checkpoint snapshot (no note) |
-| **Ctrl+Shift+M / Cmd+Shift+M** | Checkpoint with note (`action:` / `assert:` / `data:` prefixes welcome) |
+| **Toolbar** | Capture · Note · End · dock L/M/R · minimize |
+| **Ctrl+M / Cmd+M** | Capture snapshot (no note) |
+| **Ctrl+Shift+M / Cmd+Shift+M** | Capture with note (`action:` / `assert:` / `data:` prefixes welcome) |
 | **Ctrl+Q / Cmd+Q** | End session |
 
-Never Ctrl+K. No auto-capture on navigation. Toast: Saved snapshot #N. `data-snapshot-tool` is excluded from YAML and from the action log.
+Never Ctrl+K. No auto-capture on navigation. Toast: Saved snapshot #N. `data-snapshot-tool` is excluded from YAML.
 
 ## Attach to Chrome
 
@@ -47,17 +54,22 @@ YAML `by` values: `id | name | css | testid | role | label | placeholder | linkT
 
 ## Options
 
-Flags beat `capture.config.properties`. Lean defaults: `--no-urls`, no hints, `maxTableRows=3`. Run `npm run capture -- --help` for the full list. Also: `--goal=` `--output=` `--flat` `--full` `--lean` `--hints` `--urls` `--aria` plus cookie/storage, timezone, toolbar, headless.
+Flags beat `capture.config.properties`. Lean defaults: `--no-urls`, no hints, `maxTableRows=3`. Run `npm run capture -- --help` for the full list. Also: `--goal=` `--output=` `--flat` `--full` `--lean` `--hints` `--urls` plus cookie/storage, timezone, toolbar, headless.
 
 ## Output
 
-`pageSnapshots/session-<ts>/` with `steps.md` (the walkthrough), `flow.md`, `01_<host_path>.yaml` checkpoints, `NN_diff.md`, `PROMPT.md`, `Reading-Snapshots.md`. Optional `NN_<host>_aria.yml` only with `--aria`.
+`pageSnapshots/session-<ts>/` with `flow.md`, `01_<host_path>.yaml`, `NN_diff.md`, `PROMPT.md`, `Reading-Snapshots.md`.
 
 ## LLM workflow
 
-1. Walk the app. Checkpoints with Ctrl+M when you need asserts / extra locators.
-2. Hand the session folder to the agent: read PROMPT.md, steps.md, Reading-Snapshots.md, flow.md, YAML.
-3. The agent should emit ONE complete runnable test covering every steps.md line. Do not invent elements. Native select: one snapshot (`options:`). Custom dropdown: closed then open.
+1. Walk the app. Press Ctrl+M on each UI state you care about.
+2. Hand the session folder to the agent: read PROMPT.md, Reading-Snapshots.md, flow.md, YAML.
+3. The agent should emit ONE complete runnable test covering every flow.md step. Do not invent elements. Native select: one snapshot (`options:`). Custom dropdown: closed then open.
 
-Cookie/storage files are secrets. No screenshots. Not ariaSnapshot() by default.
+Cookie/storage files are secrets. No screenshots. Not ariaSnapshot().
+
+## Sibling
+
+Selenium / Java capture: https://github.com/fredoz0999/pagesnap-selenium
+
 

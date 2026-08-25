@@ -7,7 +7,6 @@ export interface PromptOpts {
   style: string;
   waits: string;
   goal: string;
-  ariaWritten?: boolean;
   lean?: boolean;
 }
 
@@ -86,7 +85,7 @@ export function buildPromptMd(opts: PromptOpts): string {
   lines.push("");
   lines.push("## Task");
   lines.push("");
-  lines.push("Write ONE complete, runnable test file for " + blurb.tests + " covering EVERY step in `steps.md` (then `flow.md`) in order. Do not invent steps or elements. Do not emit extra spec files this tool did not ask for.");
+  lines.push("Using the YAML page snapshots and `flow.md` in this folder, generate " + blurb.tests + ". Do not invent steps or elements. Do not emit extra spec files this tool did not ask for.");
   lines.push("");
   lines.push("## Locators");
   if (family === "playwright") {
@@ -101,15 +100,12 @@ export function buildPromptMd(opts: PromptOpts): string {
   }
   lines.push("");
   lines.push("## Walkthrough");
-  lines.push("- `steps.md` is the story (goto/click/fill/check/select/submit/nav + snapshot checkpoints).");
+  lines.push("- Follow each step in `flow.md` and honor step notes as intended actions/assertions.");
   lines.push("- `action:` = intended act; `assert:` = assertion; `data:` = typed values. Honor those prefixes in notes.");
-  lines.push("- YAML snapshots are checkpoints: assert visible text, URL, enabled/visible. Wait for enabled/visible, never sleep.");
+  lines.push("- YAML snapshots are page states: assert visible text, URL, enabled/visible. Wait for enabled/visible, never sleep.");
   lines.push("- Independent test when possible; reuse storageState/cookies if this session loaded them.");
   lines.push("- Native select: one snapshot (`options:`). Custom dropdown: closed then open; read NN_diff.md.");
   lines.push("- Do not invent UI. Structure: " + opts.style + ".");
-  if (opts.ariaWritten) {
-    lines.push("- Optional `NN_*_aria.yml` is extra context only; custom YAML locators win.");
-  }
   if (opts.goal) {
     lines.push("");
     lines.push("User goal: " + opts.goal);
@@ -127,14 +123,13 @@ export function buildReadingSnapshotsMd(framework: string, style: string, waits:
   const lines: string[] = [];
   lines.push("# Reading snapshots");
   lines.push("");
-  lines.push("YAML trees plus a compact action log so you can generate **" + framework + "** tests that actually run.");
-  lines.push("Not a click recorder. Not Playwright ariaSnapshot() unless an NN_*_aria.yml sidecar is present.");
+  lines.push("YAML trees so you can generate **" + framework + "** tests that actually run.");
+  lines.push("Not a click recorder. Not Playwright ariaSnapshot().");
   lines.push("");
   lines.push("## Files");
-  lines.push("- steps.md — every goto/click/fill/check/select/submit/nav, plus snapshot checkpoints. This is the walkthrough.");
-  lines.push("- flow.md — checkpoint notes (honor action: / assert: / data: prefixes).");
-  lines.push("- NN_<host>.yaml — page checkpoint. Header: URL, Title, Viewport, Step, Note, Goal.");
-  lines.push("- NN_diff.md — what changed vs previous checkpoint.");
+  lines.push("- flow.md — ordered steps and notes (the intended scenario narrative). Honor action: / assert: / data: prefixes.");
+  lines.push("- NN_<host>.yaml — page snapshot. Header: URL, Title, Viewport, Step, Note, Goal.");
+  lines.push("- NN_diff.md — what changed vs previous capture.");
   lines.push("- PROMPT.md — framework, style, waits, goal.");
   lines.push("");
   lines.push(leanNote);
@@ -151,8 +146,8 @@ export function buildReadingSnapshotsMd(framework: string, style: string, waits:
   lines.push("If a note contains action:, assert:, or data:, treat them as the intended act, assertion, and typed values.");
   lines.push("");
   lines.push("## Generate a test that runs");
-  lines.push("Produce ONE complete runnable test covering EVERY steps.md line in order. Web-first expects; no waitForTimeout / Thread.sleep.");
-  lines.push("Assert from assert: notes and checkpoints (visible text, URL, enabled/visible). Use filled values from the log. Do not invent steps or elements.");
+  lines.push("Produce ONE complete runnable test covering EVERY flow.md step in order. Web-first expects; no waitForTimeout / Thread.sleep.");
+  lines.push("Assert from notes and YAML snapshots (visible text, URL, enabled/visible). Do not invent steps or elements.");
   lines.push("");
   lines.push(mapping.trimEnd());
   lines.push("");
