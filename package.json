@@ -1,0 +1,23 @@
+{
+  "name": "pagesnap-playwright",
+  "version": "1.0.0",
+  "description": "Manual page snapshot capture. YAML ARIA trees + verified locators for LLM test generation. Framework-agnostic output.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "capture": "tsx src/cli.ts",
+    "test": "vitest run",
+    "build": "tsc && mkdir -p dist/injected && cp src/injected/*.js dist/injected/"
+  },
+  "dependencies": {
+    "playwright": "^1.55.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.6"
+  }
+}

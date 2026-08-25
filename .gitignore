@@ -1,0 +1,9 @@
+node_modules/
+dist/
+pageSnapshots/
+cookies
+storageState
+*.cookies.json
+cookies.json
+storageState.json
+.DS_Store
