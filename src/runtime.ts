@@ -17,6 +17,7 @@ import { printUsage } from "./usage.js";
 import { applySessionFolderName, sessionFolderTs } from "./session.js";
 import { refreshFlow, writePromptPack, type StepRecord } from "./session-pack.js";
 import { persistSnapshot } from "./snapshot-write.js";
+import { normalizeNote } from "./util-parse.js";
 
 interface TabState {
   visible?: boolean;
@@ -116,8 +117,15 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
     } catch { /* ignore */ }
   };
 
+  let lastCapture: { at: number; url: string; note: string } | null = null;
   const saveFromPage = async (page: Page, note: string): Promise<boolean> => {
+    note = normalizeNote(note);
     const url = page.url();
+    const now = Date.now();
+    if (lastCapture && now - lastCapture.at < 600 && lastCapture.url === url && lastCapture.note === note) {
+      console.log("  Skipped duplicate capture");
+      return false;
+    }
     if (!url || url === "about:blank") {
       console.log("  Skipped: about:blank");
       await toast(page, "Skipped about:blank", false);
@@ -166,6 +174,7 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
     });
     lastTreeBody = saved.lastTreeBody;
     lastCaptureUrl = saved.lastCaptureUrl;
+    lastCapture = { at: now, url, note };
     await toast(page, "Saved snapshot #" + step, true);
     return true;
   };

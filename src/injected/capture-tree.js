@@ -611,8 +611,12 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
       name = capAlertText(redactText(collapsedText(el)));
     }
     if (role === 'generic' && !name) {
-      const tname = collapsedText(el);
-      if (tname && tname.length < 60) name = redactText(tname);
+      let own = '';
+      for (const n of el.childNodes) {
+        if (n.nodeType === 3) own += n.textContent || '';
+      }
+      own = own.replace(/\s+/g, ' ').trim();
+      if (own && own.length < 60) name = redactText(own);
     }
 
     skipWrapper = lean && !name && !ACTIONABLE.has(role) && (role === 'main' || role === 'region' || role === 'article' || role === 'navigation' || role === 'banner' || role === 'contentinfo' || role === 'complementary' || role === 'form');

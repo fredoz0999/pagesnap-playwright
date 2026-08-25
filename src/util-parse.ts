@@ -43,3 +43,15 @@ export function parseProperties(raw: string): Record<string, string> {
   }
   return out;
 }
+
+/** Collapse doubled prefixes and accidental glued duplicates from the note dialog. */
+export function normalizeNote(raw: string): string {
+  let n = String(raw ?? "").replace(/\s+/g, " ").trim();
+  n = n.replace(/^(action|assert|data):\s*(?:\1:\s*)+/i, (_, k: string) => k.toLowerCase() + ": ");
+  if (n.length >= 8 && n.length % 2 === 0) {
+    const half = n.length / 2;
+    if (n.slice(0, half) === n.slice(half)) n = n.slice(0, half).trim();
+  }
+  return n;
+}
+

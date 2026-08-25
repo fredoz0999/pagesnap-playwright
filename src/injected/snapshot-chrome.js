@@ -209,20 +209,24 @@
   }
 
   function fireCapture(note) {
-    w.__snapshotNote = note == null ? '' : String(note);
-    w.__snapshotCapture = true;
-    // Prefer Playwright exposeFunction when Node installed it; flags remain as fallback.
+    var text = note == null ? '' : String(note);
+    // Bridge OR poll flag, never both — both fired two YAML files for one click.
     if (typeof w.__pagesnapBridgeCapture === 'function') {
-      try { w.__pagesnapBridgeCapture(w.__snapshotNote); } catch (e) {}
+      try { w.__pagesnapBridgeCapture(text); } catch (e) {}
+      return;
     }
+    w.__snapshotNote = text;
+    w.__snapshotCapture = true;
   }
 
   function finalizeEnd(folderName) {
-    w.__snapshotSessionName = folderName == null ? '' : String(folderName).trim();
-    w.__snapshotEnd = true;
+    var name = folderName == null ? '' : String(folderName).trim();
     if (typeof w.__pagesnapBridgeEnd === 'function') {
-      try { w.__pagesnapBridgeEnd(w.__snapshotSessionName); } catch (e) {}
+      try { w.__pagesnapBridgeEnd(name); } catch (e) {}
+      return;
     }
+    w.__snapshotSessionName = name;
+    w.__snapshotEnd = true;
   }
 
   w.__snapshotToast = function (msg, ok) {
