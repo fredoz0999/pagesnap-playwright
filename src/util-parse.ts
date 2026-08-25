@@ -47,11 +47,27 @@ export function parseProperties(raw: string): Record<string, string> {
 /** Collapse doubled prefixes and accidental glued duplicates from the note dialog. */
 export function normalizeNote(raw: string): string {
   let n = String(raw ?? "").replace(/\s+/g, " ").trim();
+  // "2action:" / "fooassert:" from the note dialog concatenating two fields.
+  n = n.replace(/(\S)(?=(?:action|assert|data):)/gi, "$1 ");
   n = n.replace(/^(action|assert|data):\s*(?:\1:\s*)+/i, (_, k: string) => k.toLowerCase() + ": ");
+  n = n.replace(/\b(action|assert|data):\s+\1:\s+/gi, (_, k: string) => k.toLowerCase() + ": ");
   if (n.length >= 8 && n.length % 2 === 0) {
     const half = n.length / 2;
     if (n.slice(0, half) === n.slice(half)) n = n.slice(0, half).trim();
   }
-  return n;
+  return n.replace(/\s+/g, " ").trim();
+}
+
+/** Same URL + same note within this window is a double-fire, not a second step. */
+export const DUP_WINDOW_MS = 2500;
+
+export function isDuplicateCapture(
+  last: { at: number; url: string; note: string } | null,
+  now: number,
+  url: string,
+  note: string,
+): boolean {
+  if (!last) return false;
+  return now - last.at < DUP_WINDOW_MS && last.url === url && last.note === note;
 }
 

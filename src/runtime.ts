@@ -17,7 +17,7 @@ import { printUsage } from "./usage.js";
 import { applySessionFolderName, sessionFolderTs } from "./session.js";
 import { refreshFlow, writePromptPack, type StepRecord } from "./session-pack.js";
 import { persistSnapshot } from "./snapshot-write.js";
-import { normalizeNote } from "./util-parse.js";
+import { isDuplicateCapture, normalizeNote } from "./util-parse.js";
 
 interface TabState {
   visible?: boolean;
@@ -122,7 +122,7 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
     note = normalizeNote(note);
     const url = page.url();
     const now = Date.now();
-    if (lastCapture && now - lastCapture.at < 600 && lastCapture.url === url && lastCapture.note === note) {
+    if (isDuplicateCapture(lastCapture, now, url, note)) {
       console.log("  Skipped duplicate capture");
       return false;
     }

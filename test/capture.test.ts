@@ -6,6 +6,7 @@ import { SnapshotCapture, printUsage } from "../src/capture.js";
 import { persistSnapshot, stripUrlLines } from "../src/snapshot-write.js";
 import { buildPromptMd, buildReadingSnapshotsMd } from "../src/prompt.js";
 import { writePromptPack } from "../src/session-pack.js";
+import { DUP_WINDOW_MS, isDuplicateCapture, normalizeNote } from "../src/util-parse.js";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
@@ -516,5 +517,32 @@ describe("capture-tree locator ranking", () => {
     const body = src.slice(src.indexOf("const buildLocators"), src.indexOf("const readValue"));
     expect(body).toContain("b.score - a.score");
     expect(body).toContain("testid: 0, role: 1, label: 2, id: 3, name: 4");
+  });
+});
+
+describe("normalizeNote", () => {
+  it("inserts a space before a glued action/assert/data prefix", () => {
+    expect(normalizeNote("assert: cart badge is 2action: sort Price low to high")).toBe(
+      "assert: cart badge is 2 action: sort Price low to high",
+    );
+    expect(normalizeNote("data: firstName=Janeaction: click Continue")).toBe(
+      "data: firstName=Jane action: click Continue",
+    );
+  });
+
+  it("still collapses action: action: and doubled paste", () => {
+    expect(normalizeNote("action: action: click Login")).toBe("action: click Login");
+    expect(normalizeNote("hellohello")).toBe("hello");
+  });
+});
+
+describe("isDuplicateCapture", () => {
+  const last = { at: 1000, url: "https://www.saucedemo.com/checkout-step-one.html", note: "data: firstName=Jane" };
+  it("skips same url+note inside the window", () => {
+    expect(isDuplicateCapture(last, 1000 + DUP_WINDOW_MS - 1, last.url, last.note)).toBe(true);
+  });
+  it("allows the same page after the window or with a new note", () => {
+    expect(isDuplicateCapture(last, 1000 + DUP_WINDOW_MS, last.url, last.note)).toBe(false);
+    expect(isDuplicateCapture(last, 1100, last.url, "data: firstName=Jane lastName=Doe")).toBe(false);
   });
 });
