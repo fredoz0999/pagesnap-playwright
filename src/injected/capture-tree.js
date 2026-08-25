@@ -387,8 +387,8 @@ const ACTIONABLE = new Set([
 ]);
 
 // Token-lean multi-locator: keep the classic by/value/stability/score shape,
-// but emit at most two verified strategies and skip redundant twins
-// (id vs #id, name vs tag[name=…]).
+// but emit at most two verified unique strategies (lean: 1) after ranking by
+// score, and skip redundant twins (id vs #id, name vs tag[name=…]).
 const MAX_LOCATORS = lean ? 1 : 2;
 
 const buildLocators = (el) => {
@@ -435,24 +435,27 @@ const buildLocators = (el) => {
     }
   }
 
+  // Always collect semantic candidates even when a testid/id exists, so a
+  // non-unique testid still has a unique role/label/placeholder fallback.
   const ph = el.getAttribute && el.getAttribute('placeholder');
-  if (ph && ph.trim() && !(el.labels && el.labels.length) && !hasId && !hasTestId) {
+  if (ph && ph.trim()) {
     push('placeholder', ph.trim(), 'medium');
   }
 
   const roleForPw = el.getAttribute('role') || implicitRole(el);
   const anameForPw = accessibleName(el);
-  if (roleForPw && anameForPw && anameForPw.length < 60 && ACTIONABLE.has(roleForPw) && !hasId && !hasTestId) {
+  // generic is not a locator strategy (testid-only nodes). Never emit by: role, value: generic.
+  if (roleForPw && anameForPw && anameForPw.length < 60 && ACTIONABLE.has(roleForPw) && roleForPw !== 'generic') {
     push('role', roleForPw, 'medium', { name: anameForPw });
   }
 
   const aria = el.getAttribute('aria-label');
-  if (aria && aria.trim() && !hasId && !hasTestId) {
+  if (aria && aria.trim()) {
     push('css', '[aria-label="' + aria.trim().replace(/"/g, '\\"') + '"]', 'medium');
   }
 
   const type = (el.getAttribute('type') || '').toLowerCase();
-  if (el.tagName === 'INPUT' && type === 'submit' && el.value && !hasId && !hasTestId) {
+  if (el.tagName === 'INPUT' && type === 'submit' && el.value) {
     push('css', 'input[type="submit"][value="' + String(el.value).replace(/"/g, '\\"') + '"]', 'medium');
   }
 
@@ -465,11 +468,9 @@ const buildLocators = (el) => {
         if (bare) push('css', 'a[href*="' + bare.replace(/"/g, '\\"') + '"]', 'medium');
       }
     }
-    if (!hasId && !hasTestId) {
-      const linkName = accessibleName(el);
-      if (linkName && linkName.length < 60) {
-        push('linkText', linkName, 'medium');
-      }
+    const linkName = accessibleName(el);
+    if (linkName && linkName.length < 60) {
+      push('linkText', linkName, 'medium');
     }
   }
 
@@ -502,6 +503,8 @@ const buildLocators = (el) => {
     return true;
   });
 
+  // Do not early-break on the first unique locator: a later unique role/label
+  // may outrank a non-unique (matches-capped) testid after score sort.
   const verified = [];
   const ambiguous = [];
   for (const cand of candidates) {
@@ -509,17 +512,16 @@ const buildLocators = (el) => {
     if (!found) continue;
     if (found.length === 1 && found[0] === el) {
       verified.push(cand);
-      if (lean && cand.stability !== 'low') break;
       continue;
     }
     if (found.length > 1 && found.indexOf(el) >= 0) {
       const narrowed = repairLocator(el, cand);
       if (narrowed && !verified.some(v => v.by === narrowed.by && v.value === narrowed.value)) {
         verified.push(narrowed);
-        if (lean) break;
       } else if (!lean && ambiguous.length < 1) {
         const amb = { by: cand.by, value: cand.value, stability: cand.stability, matches: found.length };
         if (cand.name) amb.name = cand.name;
+        if (cand.attr) amb.attr = cand.attr;
         ambiguous.push(stampScore(amb));
       }
     }
@@ -544,8 +546,8 @@ const buildLocators = (el) => {
   });
 
   const rank = (st) => (st === 'high' ? 0 : st === 'medium' ? 1 : 2);
-  const byRank = (by) => ({ testid: 0, id: 1, name: 2, role: 3, label: 4, placeholder: 5, linkText: 6, css: 7, xpath: 8 }[by] ?? 9);
-  cleaned.sort((a, b) => rank(a.stability) - rank(b.stability) || byRank(a.by) - byRank(b.by) || a.by.localeCompare(b.by));
+  const byRank = (by) => ({ testid: 0, role: 1, label: 2, id: 3, name: 4, placeholder: 5, linkText: 6, css: 7, xpath: 8 }[by] ?? 9);
+  cleaned.sort((a, b) => (b.score - a.score) || rank(a.stability) - rank(b.stability) || byRank(a.by) - byRank(b.by));
 
   const picked = [];
   const bySeen = new Set();
@@ -744,6 +746,7 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
         for (const l of locators) {
           lines.push(ind + '  - {by: ' + l.by + ', value: "' + esc(l.value) + '"'
             + (l.name ? ', name: "' + esc(l.name) + '"' : '')
+            + (l.by === 'testid' && l.attr && l.attr !== 'data-testid' ? ', attr: ' + l.attr : '')
             + ', stability: ' + l.stability
             + ', score: ' + (l.score != null ? l.score : locatorScore(l.by, l.matches))
             + (l.matches != null ? ', matches: ' + l.matches : '') + '}');

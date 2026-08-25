@@ -85,18 +85,22 @@ export function buildPromptMd(opts: PromptOpts): string {
   lines.push("");
   lines.push("## Task");
   lines.push("");
+  lines.push("Read SESSION.md, then TEST_GUIDE.md, then flow.md, then YAML snapshots, then PROMPT.md / Reading-Snapshots.md.");
   lines.push("Using the YAML page snapshots and `flow.md` in this folder, generate " + blurb.tests + ". Do not invent steps or elements. Do not emit extra spec files this tool did not ask for.");
   lines.push("");
   lines.push("## Locators");
   if (family === "playwright") {
     lines.push("- Prefer YAML `by` in this order: testid -> getByTestId, role -> getByRole, label -> getByLabel, id -> locator(\"#id\").");
     lines.push("- Then name -> locator(\"[name=...]\"), placeholder -> getByPlaceholder.");
-    lines.push("- `generic` nodes are testid-only (no ARIA role). Use getByTestId, never getByRole(\"generic\"). Do not goto a URL to skip a control that is in the YAML.");
+    lines.push("- YAML `by: testid` maps to getByTestId even if `attr` is data-test / data-cy / data-qa (not data-testid). The `attr` field is informational; do not switch to a CSS attribute selector.");
+    lines.push("- `generic` nodes are testid-only (no ARIA role). Use getByTestId, never getByRole(\"generic\"). Do not goto a URL to skip a control that is in the YAML (especially cart).");
     lines.push("- Prefer higher `score`. Never use score <= 40 unless nothing else exists. Never use stability: low unless nothing else exists. Never page.waitForTimeout.");
     lines.push("- Web-first expect(); native <select> -> selectOption; frames -> frameLocator.");
   } else {
     lines.push("- YAML `by` is framework-neutral. Map testid/id/name/role/label from the snapshot; do not invent selectors.");
+    lines.push("- YAML `by: testid` still means the test-id value even when `attr` is data-test / data-cy (not data-testid). Never treat role generic as a locator.");
     lines.push("- Prefer higher `score`. Never use score <= 40 unless nothing else exists. Prefer stability: high. Never use stability: low unless nothing else exists.");
+    lines.push("- Do not goto a URL to skip a control that is in the YAML.");
     lines.push("- " + blurb.waits);
   }
   lines.push("");
@@ -106,7 +110,7 @@ export function buildPromptMd(opts: PromptOpts): string {
   lines.push("- YAML snapshots are page states: assert visible text, URL, enabled/visible. Wait for enabled/visible, never sleep.");
   lines.push("- Independent test when possible; reuse storageState/cookies if this session loaded them.");
   lines.push("- Native select: one snapshot (`options:`). Custom dropdown: closed then open; read NN_diff.md.");
-  lines.push("- Do not invent UI. Structure: " + opts.style + ".");
+  lines.push("- Do not invent UI. Do not goto a URL to skip a YAML control. Structure: " + opts.style + ".");
   if (opts.goal) {
     lines.push("");
     lines.push("User goal: " + opts.goal);
@@ -120,7 +124,7 @@ export function buildReadingSnapshotsMd(framework: string, style: string, waits:
   const mapping = mappingSection(family, framework);
   const leanNote = lean === false
     ? "Full mode: up to two locators per control; optional hint footer."
-    : "Lean mode (default): only actionable controls have locators, and only ONE (highest stability). Empty nameless main/region wrappers are omitted. Visible data-test/testid nodes with no ARIA role are kept as generic.";
+    : "Lean mode (default): only actionable controls have locators, and only ONE (highest score). Empty nameless main/region wrappers are omitted. Visible data-test/testid nodes with no ARIA role are kept as generic.";
   const lines: string[] = [];
   lines.push("# Reading snapshots");
   lines.push("");
@@ -128,20 +132,25 @@ export function buildReadingSnapshotsMd(framework: string, style: string, waits:
   lines.push("Not a click recorder. Not Playwright ariaSnapshot().");
   lines.push("");
   lines.push("## Files");
+  lines.push("- SESSION.md — start URL, goal, framework, style. Tiny index; read this first.");
+  lines.push("- TEST_GUIDE.md — short rules for a runnable test. Read second.");
   lines.push("- flow.md — ordered steps and notes (the intended scenario narrative). Honor action: / assert: / data: prefixes.");
   lines.push("- NN_<host>.yaml — page snapshot. Header: URL, Title, Viewport, Step, Note, Goal.");
   lines.push("- NN_diff.md — what changed vs previous capture.");
   lines.push("- PROMPT.md — framework, style, waits, goal.");
+  lines.push("- Reading-Snapshots.md — this file (locator mapping).");
   lines.push("");
   lines.push(leanNote);
   lines.push("");
   lines.push("## How to read YAML");
   lines.push("- Tree: ARIA-inspired roles and accessible names. Flags: disabled, busy, invalid, required, checked, expanded/collapsed.");
-  lines.push("- Under controls: value, one locators candidate (by + stability + score), native options:, dropdown:, error / validationMessage.");
+  lines.push("- Under controls: value, one locators candidate (by + optional attr + stability + score), native options:, dropdown:, error / validationMessage.");
   lines.push("- by values: testid | id | name | css | role | label | placeholder | linkText | xpath.");
+  lines.push("- Optional `attr` on testid locators names the source attribute when it is not data-testid (e.g. attr: data-test). Still map `by: testid` to getByTestId.");
   lines.push("- Locator score (higher is better): testid 98, role 95, label 90, id 90, name 88, placeholder 85, linkText 75, css 60, xpath 40. Prefer higher score; never use score <= 40 unless nothing else exists.");
   lines.push("- Never use stability: low unless nothing else exists. A matches: N locator is not unique (score capped at 40).");
   lines.push("- Native select: one snapshot (options:). Custom dropdown: closed then open; read Dropdown / options changes in NN_diff.md.");
+  lines.push("- Do not goto a URL to skip a control that is in the YAML (especially cart). Never getByRole(\"generic\").");
   lines.push("");
   lines.push("## Structured notes");
   lines.push("If a note contains action:, assert:, or data:, treat them as the intended act, assertion, and typed values.");
@@ -165,7 +174,7 @@ function mappingSection(family: FrameworkFamily, framework: string): string {
 
 | YAML \`by\` | Playwright |
 |-------------|------------|
-| testid | \`page.getByTestId('…')\` (or \`page.locator('[data-cy="…"]')\` if the attribute is not \`data-testid\`) |
+| testid | \`page.getByTestId('…')\` even when YAML \`attr\` is \`data-test\` / \`data-cy\` / \`data-qa\`. Never \`getByRole("generic")\`. |
 | id | \`page.locator('#id')\` |
 | name | \`page.locator('[name="…"]')\` |
 | role | \`page.getByRole('button', { name: '…' })\` |
@@ -246,6 +255,63 @@ Native \`<select>\`: options listed in YAML — click the select then the option
 YAML locators are framework-neutral. Translate each \`by\` using the table above into **${framework}**'s native selector API. Do not emit Playwright \`getByRole\` / Selenium \`By.id\` unless that is actually this stack. Prefer high-stability id/name/testid. Never invent elements.
 `;
   }
+}
+
+export function buildTestGuideMd(framework: string, style: string, waits: string): string {
+  const family = normalizeFramework(framework);
+  const testidLine = family === "playwright"
+    ? "- YAML `by: testid` → `getByTestId` even when `attr` is data-test / data-cy / data-qa. Never `getByRole(\"generic\")`."
+    : "- YAML `by: testid` maps to this stack's test-id API even when `attr` is data-test / data-cy (not data-testid). Never treat role `generic` as a locator.";
+  const waitLine = family === "playwright"
+    ? "- Web-first expects only. Never `waitForTimeout` / `Thread.sleep` / `cy.wait(ms)`."
+    : "- Honor waits=" + waits + ". Never `waitForTimeout` / `Thread.sleep` / `cy.wait(ms)`.";
+  const lines: string[] = [];
+  lines.push("# Test generation guide");
+  lines.push("");
+  lines.push("Read in this order: SESSION.md → TEST_GUIDE.md → flow.md → YAML snapshots → PROMPT.md / Reading-Snapshots.md");
+  lines.push("");
+  lines.push("## Goal");
+  lines.push("Produce ONE runnable test covering EVERY flow.md step in order. Do not invent steps or elements.");
+  lines.push("");
+  lines.push("## Locators");
+  lines.push("- Prefer higher `score`. Never use score <= 40 unless nothing else exists. Never use stability: low unless nothing else exists.");
+  lines.push(testidLine);
+  lines.push("- Do not goto a URL to skip a control that is in the YAML (especially cart).");
+  lines.push("");
+  lines.push("## Actions");
+  lines.push("- Native `<select>`: `selectOption` from `options:`. Custom dropdown: closed then open; read NN_diff.md.");
+  lines.push(waitLine);
+  lines.push("- Honor `action:` / `assert:` / `data:` prefixes in notes.");
+  lines.push("- Iframes: YAML `iframe \"name\":` → frameLocator. Nested path uses `/`.");
+  lines.push("");
+  lines.push("Framework=" + framework + ". Style=" + style + ". Waits=" + waits + ".");
+  lines.push("");
+  return lines.join("\n");
+}
+
+export interface SessionMdOpts {
+  startUrl: string;
+  goal: string;
+  generated: string;
+  framework: string;
+  style: string;
+}
+
+export function buildSessionMd(opts: SessionMdOpts): string {
+  const lines: string[] = [];
+  lines.push("# PageSnap session");
+  lines.push("");
+  lines.push("- Start URL: " + opts.startUrl);
+  if (opts.goal) lines.push("- Goal: " + opts.goal);
+  lines.push("- Framework: " + opts.framework);
+  lines.push("- Style: " + opts.style);
+  lines.push("- Generated: " + opts.generated);
+  lines.push("");
+  lines.push("Steps: see flow.md (updated as you capture)");
+  lines.push("");
+  lines.push("Read order: SESSION.md → TEST_GUIDE.md → flow.md → YAML snapshots → PROMPT.md / Reading-Snapshots.md");
+  lines.push("");
+  return lines.join("\n");
 }
 
 export function defaultAgentInstructions(framework: string, style: string, waits: string): string {

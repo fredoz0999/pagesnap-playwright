@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { buildPromptMd, buildReadingSnapshotsMd } from "./prompt.js";
+import { buildPromptMd, buildReadingSnapshotsMd, buildTestGuideMd, buildSessionMd } from "./prompt.js";
 import type { SnapshotCapture } from "./capture.js";
 
 export interface StepRecord {
@@ -16,10 +16,11 @@ export function isoNow(d = new Date()): string {
 }
 
 export function writePromptPack(cap: SnapshotCapture, sessionStart: Date): void {
+  const generated = isoNow(sessionStart);
   const reading = buildReadingSnapshotsMd(cap.framework, cap.style, cap.waits, cap.lean);
   fs.writeFileSync(path.join(cap.sessionDir, "Reading-Snapshots.md"), reading, "utf8");
   const prompt = buildPromptMd({
-    generated: isoNow(sessionStart),
+    generated,
     startUrl: cap.sessionStartUrl,
     framework: cap.framework,
     style: cap.style,
@@ -28,6 +29,14 @@ export function writePromptPack(cap: SnapshotCapture, sessionStart: Date): void 
     lean: cap.lean,
   });
   fs.writeFileSync(path.join(cap.sessionDir, "PROMPT.md"), prompt, "utf8");
+  fs.writeFileSync(path.join(cap.sessionDir, "TEST_GUIDE.md"), buildTestGuideMd(cap.framework, cap.style, cap.waits), "utf8");
+  fs.writeFileSync(path.join(cap.sessionDir, "SESSION.md"), buildSessionMd({
+    startUrl: cap.sessionStartUrl,
+    goal: cap.goal,
+    generated,
+    framework: cap.framework,
+    style: cap.style,
+  }), "utf8");
 }
 
 export function refreshFlow(cap: SnapshotCapture, steps: StepRecord[], writeDiff: boolean): void {

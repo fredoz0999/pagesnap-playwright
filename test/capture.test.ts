@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { SnapshotCapture, printUsage } from "../src/capture.js";
 import { persistSnapshot, stripUrlLines } from "../src/snapshot-write.js";
 import { buildPromptMd, buildReadingSnapshotsMd } from "../src/prompt.js";
+import { writePromptPack } from "../src/session-pack.js";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
@@ -379,10 +380,12 @@ describe("locator scores", () => {
   it("YAML emit puts score after stability and before matches", async () => {
     const src = await readFile(treeJs, "utf8");
     const emit = src.slice(src.indexOf("locators:"), src.indexOf("Structured hint"));
+    const attr = emit.indexOf(", attr:");
     const stab = emit.indexOf(", stability: ");
     const score = emit.indexOf(", score: ");
     const matches = emit.indexOf(", matches: ");
-    expect(stab).toBeGreaterThan(-1);
+    expect(attr).toBeGreaterThan(-1);
+    expect(stab).toBeGreaterThan(attr);
     expect(score).toBeGreaterThan(stab);
     expect(matches).toBeGreaterThan(score);
   });
@@ -418,6 +421,100 @@ describe("locator scores", () => {
     expect(md.split(table).length - 1).toBe(1);
     expect(md).toContain("Prefer higher score; never use score <= 40 unless nothing else exists");
     expect(md).toContain("score capped at 40");
-    expect(md).toContain("by + stability + score");
+    expect(md).toContain("by + optional attr + stability + score");
+  });
+
+  it("repo Reading-Snapshots.md matches builder for playwright/pageobject/web-first", async () => {
+    const repo = await readFile(
+      path.join(path.dirname(fileURLToPath(import.meta.url)), "../Reading-Snapshots.md"),
+      "utf8"
+    );
+    expect(repo).toBe(buildReadingSnapshotsMd("playwright", "pageobject", "web-first"));
+  });
+});
+
+describe("session pack TEST_GUIDE / SESSION", () => {
+  it("writePromptPack writes TEST_GUIDE.md and SESSION.md", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "ps-pack-"));
+    const cap = new SnapshotCapture();
+    cap.sessionDir = dir;
+    cap.sessionStartUrl = "https://www.saucedemo.com";
+    cap.goal = "Add backpack to cart";
+    cap.framework = "playwright";
+    cap.style = "pageobject";
+    cap.waits = "web-first";
+    writePromptPack(cap, new Date("2026-08-25T16:00:00Z"));
+    const guide = await readFile(path.join(dir, "TEST_GUIDE.md"), "utf8");
+    const session = await readFile(path.join(dir, "SESSION.md"), "utf8");
+    expect(guide).toContain("getByTestId");
+    expect(guide).toContain("data-test");
+    expect(guide).toContain('Never `getByRole("generic")`');
+    expect(guide).toContain("SESSION.md");
+    expect(guide).toContain("flow.md");
+    expect(guide).toContain("selectOption");
+    expect(guide).toContain("frameLocator");
+    expect(session).toContain("# PageSnap session");
+    expect(session).toContain("https://www.saucedemo.com");
+    expect(session).toContain("Add backpack to cart");
+    expect(session).toContain("playwright");
+    expect(session).toContain("pageobject");
+    expect(session).toContain("2026-08-25T16:00:00Z");
+    expect(session).toContain("Steps: see flow.md (updated as you capture)");
+    expect(session).toContain("Read order:");
+    expect(await readFile(path.join(dir, "PROMPT.md"), "utf8")).toContain("TEST_GUIDE.md");
+    expect(await readFile(path.join(dir, "Reading-Snapshots.md"), "utf8")).toContain("SESSION.md");
+  });
+
+  it("Prompt and Reading mention data-test → getByTestId, TEST_GUIDE.md, SESSION.md", () => {
+    const pw = buildPromptMd({
+      generated: "now",
+      startUrl: "https://www.saucedemo.com",
+      framework: "playwright",
+      style: "pageobject",
+      waits: "web-first",
+      goal: "checkout",
+    });
+    expect(pw).toContain("TEST_GUIDE.md");
+    expect(pw).toContain("SESSION.md");
+    expect(pw).toContain("data-test");
+    expect(pw).toContain("getByTestId");
+    expect(pw).toContain("attr");
+    expect(pw).toContain("Do not invent");
+    expect(pw).toContain("goto");
+    const md = buildReadingSnapshotsMd("playwright", "pageobject", "web-first");
+    expect(md).toContain("TEST_GUIDE.md");
+    expect(md).toContain("SESSION.md");
+    expect(md).toContain("data-test");
+    expect(md).toContain("getByTestId");
+    expect(md).toContain('Never `getByRole("generic")`');
+  });
+});
+
+describe("capture-tree locator ranking", () => {
+  const treeJs = path.join(path.dirname(fileURLToPath(import.meta.url)), "../src/injected/capture-tree.js");
+
+  it("collects role candidates even when a testid exists", async () => {
+    const src = await readFile(treeJs, "utf8");
+    const body = src.slice(src.indexOf("const buildLocators"), src.indexOf("const readValue"));
+    const roleIf = body.slice(body.indexOf("roleForPw"), body.indexOf("push('role'"));
+    expect(roleIf).toContain("ACTIONABLE.has(roleForPw)");
+    expect(roleIf).not.toContain("!hasId && !hasTestId");
+    expect(roleIf).toContain("roleForPw !== 'generic'");
+    expect(body).not.toContain("if (lean && cand.stability !== 'low') break");
+  });
+
+  it("emit includes attr on non-default testid locators", async () => {
+    const src = await readFile(treeJs, "utf8");
+    const emit = src.slice(src.indexOf("locators:"), src.indexOf("Structured hint"));
+    expect(emit).toContain("l.by === 'testid'");
+    expect(emit).toContain("l.attr !== 'data-testid'");
+    expect(emit).toContain(", attr: ");
+  });
+
+  it("picks locators sorted by score descending then stability then byRank", async () => {
+    const src = await readFile(treeJs, "utf8");
+    const body = src.slice(src.indexOf("const buildLocators"), src.indexOf("const readValue"));
+    expect(body).toContain("b.score - a.score");
+    expect(body).toContain("testid: 0, role: 1, label: 2, id: 3, name: 4");
   });
 });
