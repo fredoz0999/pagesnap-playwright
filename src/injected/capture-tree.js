@@ -19,7 +19,7 @@ const INTERESTING = new Set([
   'heading', 'img', 'table', 'row', 'cell', 'columnheader', 'rowheader',
   'list', 'listitem', 'navigation', 'main', 'banner', 'contentinfo',
   'form', 'region', 'article', 'complementary', 'toolbar', 'progressbar',
-  'slider', 'spinbutton', 'tree', 'treeitem', 'grid', 'gridcell'
+  'slider', 'spinbutton', 'tree', 'treeitem', 'grid', 'gridcell', 'generic'
 ]);
 
 const esc = (s) => String(s == null ? '' : s)
@@ -360,7 +360,7 @@ const repairLocator = (el, cand) => {
 const ACTIONABLE = new Set([
   'button', 'link', 'textbox', 'searchbox', 'combobox', 'listbox', 'option',
   'checkbox', 'radio', 'switch', 'tab', 'menuitem', 'slider', 'spinbutton',
-  'form'
+  'form', 'generic'
 ]);
 
 // Token-lean multi-locator: keep the classic by/value/stability shape,
@@ -594,6 +594,13 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
   if (!role && !inAlert && el.matches && el.matches(BANNER_SELECTOR) && isVisible(el)) {
     if (collapsedText(el)) { role = 'alert'; }
   }
+  // Keep visible testid nodes even with no ARIA role (cart badge, inventory-list, title).
+  if (!role) {
+    const tid = el.getAttribute('data-testid') || el.getAttribute('data-test')
+      || el.getAttribute('data-test-id') || el.getAttribute('data-cy')
+      || el.getAttribute('data-qa');
+    if (tid) role = 'generic';
+  }
   const interesting = role && INTERESTING.has(role) && isVisible(el);
   let skipWrapper = false;
 
@@ -602,6 +609,10 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
     // role=alert text is the alert; without this the text is invisible in-tree
     if (role === 'alert' && !name) {
       name = capAlertText(redactText(collapsedText(el)));
+    }
+    if (role === 'generic' && !name) {
+      const tname = collapsedText(el);
+      if (tname && tname.length < 60) name = redactText(tname);
     }
 
     skipWrapper = lean && !name && !ACTIONABLE.has(role) && (role === 'main' || role === 'region' || role === 'article' || role === 'navigation' || role === 'banner' || role === 'contentinfo' || role === 'complementary' || role === 'form');

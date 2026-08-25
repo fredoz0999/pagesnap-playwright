@@ -91,6 +91,7 @@ export function buildPromptMd(opts: PromptOpts): string {
   if (family === "playwright") {
     lines.push("- Prefer YAML `by` in this order: testid -> getByTestId, role -> getByRole, label -> getByLabel, id -> locator(\"#id\").");
     lines.push("- Then name -> locator(\"[name=...]\"), placeholder -> getByPlaceholder.");
+    lines.push("- `generic` nodes are testid-only (no ARIA role). Use getByTestId, never getByRole(\"generic\"). Do not goto a URL to skip a control that is in the YAML.");
     lines.push("- Never use stability: low unless nothing else exists. Never page.waitForTimeout.");
     lines.push("- Web-first expect(); native <select> -> selectOption; frames -> frameLocator.");
   } else {
@@ -119,7 +120,7 @@ export function buildReadingSnapshotsMd(framework: string, style: string, waits:
   const mapping = mappingSection(family, framework);
   const leanNote = lean === false
     ? "Full mode: up to two locators per control; optional hint footer."
-    : "Lean mode (default): only actionable controls have locators, and only ONE (highest stability). Empty nameless main/region wrappers are omitted.";
+    : "Lean mode (default): only actionable controls have locators, and only ONE (highest stability). Empty nameless main/region wrappers are omitted. Visible data-test/testid nodes with no ARIA role are kept as generic.";
   const lines: string[] = [];
   lines.push("# Reading snapshots");
   lines.push("");
