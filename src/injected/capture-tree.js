@@ -141,19 +141,47 @@ const implicitRole = (el) => {
   return null;
 };
 
+// Accname-ish visible text: skip aria-hidden nodes (required "*" is often hidden).
+const visibleNameText = (el) => {
+  if (!el) return '';
+  let out = '';
+  const walk = (n) => {
+    if (!n) return;
+    if (n.nodeType === 3) { out += n.textContent || ''; return; }
+    if (n.nodeType !== 1) return;
+    try {
+      if (n.hidden || (n.getAttribute && n.getAttribute('aria-hidden') === 'true')) return;
+    } catch (e) { /* ignore */ }
+    const kids = n.childNodes;
+    for (let i = 0; i < kids.length; i++) walk(kids[i]);
+  };
+  walk(el);
+  return out.replace(/\s+/g, ' ').trim();
+};
+
+// Playwright getByRole name is the computed accessible name, not raw label innerText.
+const cleanAccName = (s) => {
+  let t = String(s == null ? '' : s).replace(/\s+/g, ' ').trim();
+  t = t.replace(/^\*\s+/, '');
+  t = t.replace(/\s*\*+\s*$/g, '');
+  t = t.replace(/\s*\((?:required|optional)\)\s*$/i, '');
+  t = t.replace(/\s+[•·]\s*$/g, '');
+  return t.replace(/\s+/g, ' ').trim();
+};
+
 const accessibleName = (el) => {
   const aria = el.getAttribute('aria-label');
-  if (aria && aria.trim()) return redactText(aria.trim());
+  if (aria && aria.trim()) return redactText(cleanAccName(aria));
 
   const labelledBy = el.getAttribute('aria-labelledby');
   if (labelledBy) {
     const text = labelledBy.split(/\s+/)
       .map(id => el.ownerDocument.getElementById(id))
       .filter(Boolean)
-      .map(n => (n.innerText || n.textContent || '').trim())
+      .map(n => visibleNameText(n) || (n.textContent || '').trim())
       .filter(Boolean)
       .join(' ');
-    if (text) return redactText(text);
+    if (text) return redactText(cleanAccName(text));
   }
 
   if (el.tagName === 'IMG') {
@@ -163,8 +191,8 @@ const accessibleName = (el) => {
 
   if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') {
     if (el.labels && el.labels.length) {
-      const lt = Array.from(el.labels).map(l => (l.innerText || '').trim()).filter(Boolean).join(' ');
-      if (lt) return redactText(lt);
+      const lt = Array.from(el.labels).map(l => visibleNameText(l) || (l.innerText || '').trim()).filter(Boolean).join(' ');
+      if (lt) return redactText(cleanAccName(lt));
     }
     const ph = el.getAttribute('placeholder');
     if (ph && ph.trim()) return redactText(ph.trim());
@@ -175,8 +203,8 @@ const accessibleName = (el) => {
   }
 
   if (el.tagName === 'BUTTON' || el.tagName === 'A' || el.getAttribute('role') === 'button') {
-    const t = (el.innerText || el.textContent || '').replace(/\s+/g, ' ').trim();
-    if (t) return redactText(t.slice(0, 120));
+    const t = visibleNameText(el) || (el.innerText || el.textContent || '').replace(/\s+/g, ' ').trim();
+    if (t) return redactText(cleanAccName(t).slice(0, 120));
   }
 
   // Native <option> and ARIA options (custom listboxes) - text content is the name
@@ -187,16 +215,16 @@ const accessibleName = (el) => {
     el.getAttribute('role') === 'treeitem' ||
     el.getAttribute('role') === 'tab'
   ) {
-    const t = (el.innerText || el.textContent || '').replace(/\s+/g, ' ').trim();
-    if (t) return redactText(t.slice(0, 120));
+    const t = visibleNameText(el) || (el.innerText || el.textContent || '').replace(/\s+/g, ' ').trim();
+    if (t) return redactText(cleanAccName(t).slice(0, 120));
   }
 
   if (/^H[1-6]$/.test(el.tagName)) {
-    return redactText((el.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 120));
+    return redactText(cleanAccName((el.innerText || '').replace(/\s+/g, ' ').trim()).slice(0, 120));
   }
 
   const title = el.getAttribute('title');
-  if (title && title.trim()) return redactText(title.trim());
+  if (title && title.trim()) return redactText(cleanAccName(title));
   return '';
 };
 
@@ -281,7 +309,7 @@ const resolveLocator = (el, cand) => {
       const add = (n) => { if (n && !seenEl.has(n)) { seenEl.add(n); out.push(n); } };
       try {
         for (const lab of scope.querySelectorAll('label')) {
-          const t = (lab.innerText || '').replace(/\s+/g, ' ').trim();
+          const t = cleanAccName(visibleNameText(lab) || (lab.innerText || '').replace(/\s+/g, ' ').trim());
           if (t !== want) continue;
           if (lab.control) add(lab.control);
           else {
@@ -429,7 +457,7 @@ const buildLocators = (el) => {
   }
 
   if (el.labels && el.labels.length) {
-    const lt = Array.from(el.labels).map(l => (l.innerText || '').replace(/\s+/g, ' ').trim()).filter(Boolean).join(' ');
+    const lt = Array.from(el.labels).map(l => cleanAccName(visibleNameText(l) || (l.innerText || '').replace(/\s+/g, ' ').trim())).filter(Boolean).join(' ');
     if (lt && lt.length < 80) {
       push('label', lt, 'medium');
     }

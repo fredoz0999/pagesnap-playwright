@@ -546,3 +546,39 @@ describe("isDuplicateCapture", () => {
     expect(isDuplicateCapture(last, 1100, last.url, "data: firstName=Jane lastName=Doe")).toBe(false);
   });
 });
+
+describe("accessible name cleanup", () => {
+  const treeJs = path.join(path.dirname(fileURLToPath(import.meta.url)), "../src/injected/capture-tree.js");
+
+  async function loadCleanAccName(): Promise<(s: string) => string> {
+    const src = await readFile(treeJs, "utf8");
+    const start = src.indexOf("const cleanAccName = (s) => {");
+    const end = src.indexOf("const accessibleName = (el) => {");
+    expect(start).toBeGreaterThan(-1);
+    expect(end).toBeGreaterThan(start);
+    const helpers = src.slice(start, end);
+    return new Function(helpers + "; return { cleanAccName };")().cleanAccName;
+  }
+
+  it("strips required markers Playwright accname omits", async () => {
+    const cleanAccName = await loadCleanAccName();
+    expect(cleanAccName("Email *")).toBe("Email");
+    expect(cleanAccName("Email*")).toBe("Email");
+    expect(cleanAccName("* Username")).toBe("Username");
+    expect(cleanAccName("Password (required)")).toBe("Password");
+    expect(cleanAccName("Phone (optional)")).toBe("Phone");
+    expect(cleanAccName("Username")).toBe("Username");
+    expect(cleanAccName("Add to cart")).toBe("Add to cart");
+    expect(cleanAccName("Login")).toBe("Login");
+  });
+
+  it("accessibleName uses cleanAccName and skips aria-hidden", async () => {
+    const src = await readFile(treeJs, "utf8");
+    const body = src.slice(src.indexOf("const visibleNameText"), src.indexOf("const isVisible"));
+    expect(body).toContain("aria-hidden");
+    expect(body).toContain("cleanAccName");
+    expect(body).toContain("visibleNameText");
+    expect(src.slice(src.indexOf("if (cand.by === 'label')"), src.indexOf("if (cand.by === 'placeholder')"))).toContain("cleanAccName");
+  });
+});
+
