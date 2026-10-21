@@ -107,14 +107,32 @@ Embedders: `hash` (default) is offline, dependency-free feature hashing. `--embe
 through the optional `@huggingface/transformers` package (`npm i -D @huggingface/transformers`, ~23 MB model download on
 first use). The MiniLM path is optional and has not been exercised in CI yet.
 
-Suggested `.github/copilot-instructions.md` lines:
+### Ready-made prompts
+
+Every build writes two prompts into the session, with paths and spec name filled in:
+
+- `lean/AUTOMATE_PROMPT.md` - query each flow step, write one Playwright spec, validate, run, fix (max 3 tries)
+- `lean/TESTCASES_PROMPT.md` - manual test cases table (happy, negative, edge) from the captured screens only
+
+Print one to paste into Copilot agent mode or Claude Code:
 
 ```
-- Test data comes from PageSnap sessions in pageSnapshots/. Do not read NN_*.yaml directly.
-- For each flow.md step run: npm run pack -- query <session> "<step text>" and use only locators shown after `=>`.
-- After writing a spec run: npm run pack -- validate <session> <spec>; fix every MISS before running tests.
-- Snapshots use data-test: keep use.testIdAttribute = 'data-test' in playwright.config.
+npm run pack -- prompt latest --name=checkout-flow        # automate
+npm run pack -- prompt latest --cases                     # manual test cases
 ```
+
+Or install them once as slash commands in your test repo:
+
+```
+npm run pack -- install-prompts /path/to/your/test-repo
+```
+
+| Tool | Command |
+|---|---|
+| Copilot (VS Code, agent mode) | `/pagesnap-automate`, `/pagesnap-testcases` (asks for the session folder and spec name) |
+| Claude Code | `/pagesnap-automate <session-folder> <spec-name>`, `/pagesnap-testcases <session-folder> <name>` |
+
+The prompts call this tool with `npm --prefix <this repo> run -s pack -- ...`, so they work from any test repo.
 
 ## Sibling
 

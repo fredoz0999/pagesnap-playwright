@@ -8,6 +8,7 @@ import { chunkSnapshot, dedupeChunks, type Chunk, type ChunkOptions, type PageEn
 import { LEGEND } from "./compact.js";
 import { cosine, expand, makeEmbedder, tokenize } from "./embed.js";
 import { estimateTokens, parseSnapshot } from "./parse.js";
+import { writeSessionPrompts } from "./prompts.js";
 
 export const LEAN_DIR = "lean";
 export const INDEX_FILE = "index.json";
@@ -25,6 +26,8 @@ export interface SessionIndex {
 
 export interface BuildOptions extends ChunkOptions {
   embedder?: string;
+  /** spec name used in the generated prompts (default: slug of the session goal) */
+  name?: string;
 }
 
 export function snapshotFiles(sessionDir: string): string[] {
@@ -69,6 +72,7 @@ export async function buildIndex(sessionDir: string, opts: BuildOptions = {}): P
   };
   fs.writeFileSync(path.join(leanDir, INDEX_FILE), JSON.stringify(index), "utf8");
   fs.writeFileSync(path.join(leanDir, "PACK.md"), packMd(index), "utf8");
+  writeSessionPrompts(sessionDir, opts.name);
   return index;
 }
 
@@ -218,6 +222,8 @@ export function packMd(idx: SessionIndex): string {
     "# Lean pack",
     "",
     "Token-lean view of this session. Agents: do NOT read every NN_*.yaml.",
+    "",
+    "Ready-to-paste prompts: lean/AUTOMATE_PROMPT.md (Playwright spec) and lean/TESTCASES_PROMPT.md (manual cases).",
     "",
     "1. Read SESSION.md, TEST_GUIDE.md and flow.md (small).",
     "2. For each flow step, fetch only the UI you need:",

@@ -158,3 +158,46 @@ describe("capture flag", () => {
     expect(c.buildPack).toBe(false);
   });
 });
+
+describe("prompts", () => {
+  it("builds a session prompt with absolute paths and the goal-based spec name", async () => {
+    const { automatePrompt, testCasesPrompt, slugify, sessionGoal } = await import("../src/pack/prompts.js");
+    expect(sessionGoal(FIXTURE)).toBe("Log in, add two items, verify cart");
+    expect(slugify("Log in, add two items, verify cart")).toBe("log-in-add-two-items-verify-cart");
+    const p = automatePrompt({ session: "/abs/session", name: "cart-flow", tool: "/tools/pagesnap" });
+    expect(p).toContain('PACK query "/abs/session"');
+    expect(p).toContain("tests/cart-flow.spec.ts");
+    expect(p).toContain('npm --prefix "/tools/pagesnap" run -s pack --');
+    expect(p).toContain("PACK validate");
+    expect(p).not.toMatch(/\n\n\n/);
+    expect(testCasesPrompt({ session: "/abs/session", name: "cart-flow", tool: "/t" })).toContain("Gaps to capture");
+  });
+
+  it("build writes AUTOMATE_PROMPT.md and TESTCASES_PROMPT.md", async () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "ps-prompt-"));
+    cpSync(FIXTURE, dir, { recursive: true });
+    await buildIndex(dir, { name: "cart-flow" });
+    const a = readFileSync(path.join(dir, "lean", "AUTOMATE_PROMPT.md"), "utf8");
+    expect(a).toContain("tests/cart-flow.spec.ts");
+    expect(a).toContain(path.resolve(dir));
+    expect(existsSync(path.join(dir, "lean", "TESTCASES_PROMPT.md"))).toBe(true);
+  });
+
+  it("install-prompts writes Copilot prompt files and Claude Code commands", async () => {
+    const { installPrompts } = await import("../src/pack/prompts.js");
+    const repo = mkdtempSync(path.join(tmpdir(), "ps-repo-"));
+    const files = installPrompts(repo, "/tools/pagesnap");
+    expect(files.map((f) => path.relative(repo, f)).sort()).toEqual([
+      ".claude/commands/pagesnap-automate.md",
+      ".claude/commands/pagesnap-testcases.md",
+      ".github/prompts/pagesnap-automate.prompt.md",
+      ".github/prompts/pagesnap-testcases.prompt.md",
+    ]);
+    const copilot = readFileSync(path.join(repo, ".github/prompts/pagesnap-automate.prompt.md"), "utf8");
+    expect(copilot.startsWith("---\nmode: agent\n")).toBe(true);
+    expect(copilot).toContain("${input:session:");
+    const claude = readFileSync(path.join(repo, ".claude/commands/pagesnap-automate.md"), "utf8");
+    expect(claude).toContain('PACK query "$1"');
+    expect(claude).toContain("tests/$2.spec.ts");
+  });
+});
