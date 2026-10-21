@@ -8,6 +8,7 @@
   },
   "scripts": {
     "capture": "node ./node_modules/tsx/dist/cli.mjs src/cli.ts",
+    "pack": "node ./node_modules/tsx/dist/cli.mjs src/pack/cli.ts",
     "test": "vitest run",
     "build": "tsc && mkdir -p dist/injected && cp src/injected/*.js dist/injected/"
   },

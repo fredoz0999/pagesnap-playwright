@@ -18,6 +18,8 @@ export class SnapshotCapture {
   redactPasswords = true;
   redactEmails = true;
   writeDiff = true;
+  /** build lean/ (compact + chunk index) when the session ends */
+  buildPack = true;
   headless = false;
   connectUrl: string | null = null;
   attached = false;
@@ -77,6 +79,7 @@ export class SnapshotCapture {
     else if (a === "--no-hints") this.includeHints = false;
     else if (a === "--no-redact") { this.redactPasswords = false; this.redactEmails = false; }
     else if (a === "--no-diff") this.writeDiff = false;
+    else if (a === "--no-pack") this.buildPack = false;
     else if (a === "--flat") this.sessionSubdir = false;
     else if (a.startsWith("--output=")) this.outputRoot = path.resolve(cut("--output="));
     else if (a.startsWith("--framework=")) this.framework = cut("--framework=");
@@ -127,6 +130,7 @@ export class SnapshotCapture {
     if ("redactPasswords" in props) this.redactPasswords = parseBool(props.redactPasswords);
     if ("redactEmails" in props) this.redactEmails = parseBool(props.redactEmails);
     if ("writeDiff" in props) this.writeDiff = parseBool(props.writeDiff);
+    if ("buildPack" in props) this.buildPack = parseBool(props.buildPack);
     if ("maxTableRows" in props) this.maxTableRows = parseIntOr(props.maxTableRows, this.maxTableRows, "maxTableRows");
     if ("framework" in props) this.framework = props.framework.trim();
     if ("style" in props) this.style = props.style.trim();

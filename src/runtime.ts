@@ -17,6 +17,7 @@ import { printUsage } from "./usage.js";
 import { applySessionFolderName, sessionFolderTs } from "./session.js";
 import { refreshFlow, writePromptPack, type StepRecord } from "./session-pack.js";
 import { persistSnapshot } from "./snapshot-write.js";
+import { buildIndex } from "./pack/index.js";
 import { isDuplicateCapture, normalizeNote } from "./util-parse.js";
 
 interface TabState {
@@ -352,6 +353,16 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
 
   refreshFlow(cap, steps, cap.writeDiff);
   console.log("\nDone! " + captureCount + " capture(s) in " + path.resolve(cap.sessionDir));
+  if (cap.buildPack && captureCount > 0) {
+    try {
+      const idx = await buildIndex(cap.sessionDir);
+      const pct = Math.round((1 - idx.stats.compactTokens / Math.max(1, idx.stats.rawTokens)) * 100);
+      console.log("Lean pack: ~" + idx.stats.rawTokens + " -> ~" + idx.stats.compactTokens + " tokens (-" + pct + "%), "
+        + idx.stats.chunkCount + " chunks. See lean/PACK.md");
+    } catch (e) {
+      console.error("Lean pack skipped:", e instanceof Error ? e.message : e);
+    }
+  }
 }
 
 function renameSession(cap: SnapshotCapture, optionalName: string): void {

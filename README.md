@@ -68,6 +68,54 @@ Flags beat `capture.config.properties`. Lean defaults: `--no-urls`, no hints, `m
 
 Cookie/storage files are secrets. No screenshots. Not ariaSnapshot().
 
+## Token-lean pack (compact + retrieval)
+
+At session end PageSnap also writes `lean/`: compact snapshots, a chunk index and `lean/PACK.md`.
+Coding agents (Copilot agent mode, Claude Code) then fetch only the UI each step needs instead of every YAML.
+
+```
+npm run pack -- build    latest                     # rebuild lean/ (also runs automatically at Ctrl+Q; --no-pack to skip)
+npm run pack -- query    latest "add the Fleece Jacket to the cart" [--step=2] [--k=4]
+npm run pack -- validate latest tests/cart.spec.ts  # exit 1 if a locator is not in any snapshot
+npm run pack -- stats    latest
+```
+
+`latest` is the newest `pageSnapshots/session-*`; any session folder path works too.
+
+What it does:
+
+- **Compact**: one line per node, one inline locator (implied when it equals role + name), no stability/score noise,
+  structural `nth-child` css dropped from non-actionable wrappers, nameless wrappers flattened,
+  repeated same-shape siblings (product cards, rows) collapsed to two examples + a name list.
+- **Chunk**: split by UI region with a breadcrumb; collapsed items stay retrievable as their own small chunks;
+  identical chunks across steps (header, footer) are stored once.
+- **Query**: hybrid ranking = BM25 keywords + vector cosine + exact accessible-name bonus, with a small UI synonym
+  table (sign in/login, basket/cart, ...). Returns the page outline plus the top chunks. A weak match falls back to the
+  whole compact page instead of guessing.
+- **Validate**: checks every `getByTestId / getByRole / getByLabel / getByPlaceholder / getByText / locator()` in a spec
+  against the snapshots. No LLM tokens. Reports ok / missing / ambiguous / unverified.
+
+Measured on the Sauce Demo fixture (`test/fixtures/saucedemo`, 4 captures, ~4 chars/token estimate):
+
+| | tokens |
+|---|---|
+| raw YAML, all 4 steps | ~7,455 |
+| compact `lean/*.txt`, all 4 steps | ~1,173 (-84%) |
+| one `query` answer | ~180-440 |
+
+Embedders: `hash` (default) is offline, dependency-free feature hashing. `--embedder=minilm` uses all-MiniLM-L6-v2
+through the optional `@huggingface/transformers` package (`npm i -D @huggingface/transformers`, ~23 MB model download on
+first use). The MiniLM path is optional and has not been exercised in CI yet.
+
+Suggested `.github/copilot-instructions.md` lines:
+
+```
+- Test data comes from PageSnap sessions in pageSnapshots/. Do not read NN_*.yaml directly.
+- For each flow.md step run: npm run pack -- query <session> "<step text>" and use only locators shown after `=>`.
+- After writing a spec run: npm run pack -- validate <session> <spec>; fix every MISS before running tests.
+- Snapshots use data-test: keep use.testIdAttribute = 'data-test' in playwright.config.
+```
+
 ## Sibling
 
 Selenium / Java capture: https://github.com/fredoz0999/pagesnap-selenium

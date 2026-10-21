@@ -1,0 +1,32 @@
+# URL: https://www.saucedemo.com/
+# Title: Swag Labs
+# Viewport: 1280x900
+# Captured: 2026-10-21T15:01:00Z
+# Trigger: manual
+# Step: 1
+# Note: Open the login page
+# Session goal: Log in, add two items, verify cart
+
+- form:
+  locators:
+    - {by: css, value: "#login_button_container > div:nth-child(1) > form:nth-child(1)", stability: low, score: 60}
+  - textbox "Username":
+    value: ""
+    locators:
+      - {by: testid, value: "username", attr: data-test, stability: high, score: 98}
+  - textbox "Password":
+    value: "***"
+    locators:
+      - {by: testid, value: "password", attr: data-test, stability: high, score: 98}
+  - button "login-button":
+    value: "Login"
+    locators:
+      - {by: testid, value: "login-button", attr: data-test, stability: high, score: 98}
+- generic:
+  locators:
+    - {by: testid, value: "login-credentials", attr: data-test, stability: high, score: 98}
+  - heading "Accepted usernames are:" [level=4]
+- generic "secret_sauce":
+  locators:
+    - {by: testid, value: "login-password", attr: data-test, stability: high, score: 98}
+  - heading "Password for all users:" [level=4]

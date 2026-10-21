@@ -311,6 +311,9 @@ export function buildSessionMd(opts: SessionMdOpts): string {
   lines.push("");
   lines.push("Read order: SESSION.md → TEST_GUIDE.md → flow.md → YAML snapshots → PROMPT.md / Reading-Snapshots.md");
   lines.push("");
+  lines.push("Token-lean (coding agents): instead of reading every YAML, see lean/PACK.md and fetch per step with");
+  lines.push("`npm run pack -- query <this-folder> \"<step text>\"`; check the spec with `npm run pack -- validate <this-folder> <spec>`.");
+  lines.push("");
   return lines.join("\n");
 }
 

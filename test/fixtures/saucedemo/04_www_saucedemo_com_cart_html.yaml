@@ -1,0 +1,100 @@
+# URL: https://www.saucedemo.com/cart.html
+# Title: Swag Labs
+# Viewport: 1280x900
+# Captured: 2026-10-21T15:04:00Z
+# Trigger: manual
+# Step: 4
+# Note: action: open cart | assert: both items listed, Checkout enabled
+# Session goal: Log in, add two items, verify cart
+
+- generic:
+  locators:
+    - {by: testid, value: "primary-header", attr: data-test, stability: high, score: 98}
+  - button "Open Menu":
+    locators:
+      - {by: role, value: "button", name: "Open Menu", stability: medium, score: 95}
+  - link "2":
+    locators:
+      - {by: testid, value: "shopping-cart-link", attr: data-test, stability: high, score: 98}
+    - generic "2":
+      locators:
+        - {by: testid, value: "shopping-cart-badge", attr: data-test, stability: high, score: 98}
+- generic:
+  locators:
+    - {by: testid, value: "secondary-header", attr: data-test, stability: high, score: 98}
+  - generic "Your Cart":
+    locators:
+      - {by: testid, value: "title", attr: data-test, stability: high, score: 98}
+- generic:
+  locators:
+    - {by: testid, value: "cart-list", attr: data-test, stability: high, score: 98}
+  - generic "QTY":
+    locators:
+      - {by: testid, value: "cart-quantity-label", attr: data-test, stability: high, score: 98}
+  - generic "Description":
+    locators:
+      - {by: testid, value: "cart-desc-label", attr: data-test, stability: high, score: 98}
+  - generic:
+    locators:
+      - {by: css, value: "#cart_contents_container > div:nth-child(1) > div:nth-child(1) > div:nth-child(3)", stability: low, score: 60}
+    - generic "1" [dup 1/2]:
+      locators:
+        - {by: css, value: "#cart_contents_container > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1)", stability: low, score: 60}
+    - link "Sauce Labs Backpack":
+      locators:
+        - {by: testid, value: "item-4-title-link", attr: data-test, stability: high, score: 98}
+      - generic "Sauce Labs Backpack":
+        locators:
+          - {by: css, value: "#item_4_title_link > div:nth-child(1)", stability: low, score: 60}
+    - generic:
+      locators:
+        - {by: css, value: "#cart_contents_container > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
+    - generic "$29.99":
+      locators:
+        - {by: css, value: "#cart_contents_container > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1)", stability: low, score: 60}
+    - button "Remove" [dup 1/2]:
+      locators:
+        - {by: testid, value: "remove-sauce-labs-backpack", attr: data-test, stability: high, score: 98}
+  - generic:
+    locators:
+      - {by: css, value: "#cart_contents_container > div:nth-child(1) > div:nth-child(1) > div:nth-child(4)", stability: low, score: 60}
+    - generic "1" [dup 2/2]:
+      locators:
+        - {by: css, value: "#cart_contents_container > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1)", stability: low, score: 60}
+    - link "Sauce Labs Bike Light":
+      locators:
+        - {by: testid, value: "item-0-title-link", attr: data-test, stability: high, score: 98}
+      - generic "Sauce Labs Bike Light":
+        locators:
+          - {by: css, value: "#item_0_title_link > div:nth-child(1)", stability: low, score: 60}
+    - generic:
+      locators:
+        - {by: css, value: "#cart_contents_container > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
+    - generic "$9.99":
+      locators:
+        - {by: css, value: "#cart_contents_container > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1)", stability: low, score: 60}
+    - button "Remove" [dup 2/2]:
+      locators:
+        - {by: testid, value: "remove-sauce-labs-bike-light", attr: data-test, stability: high, score: 98}
+- button "Continue Shopping":
+  locators:
+    - {by: testid, value: "continue-shopping", attr: data-test, stability: high, score: 98}
+- button "Checkout":
+  locators:
+    - {by: testid, value: "checkout", attr: data-test, stability: high, score: 98}
+- list
+  - listitem
+    - link "Twitter":
+      locators:
+        - {by: testid, value: "social-twitter", attr: data-test, stability: high, score: 98}
+  - listitem
+    - link "Facebook":
+      locators:
+        - {by: testid, value: "social-facebook", attr: data-test, stability: high, score: 98}
+  - listitem
+    - link "LinkedIn":
+      locators:
+        - {by: testid, value: "social-linkedin", attr: data-test, stability: high, score: 98}
+- generic:
+  locators:
+    - {by: testid, value: "footer-copy", attr: data-test, stability: high, score: 98}
