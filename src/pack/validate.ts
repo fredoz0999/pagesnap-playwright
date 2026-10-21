@@ -17,7 +17,7 @@ export interface Finding {
   detail: string;
 }
 
-interface Inventory {
+export interface Inventory {
   step: number;
   testids: Map<string, number>;
   ids: Map<string, number>;
@@ -39,7 +39,40 @@ const LABELABLE = new Set(["textbox", "searchbox", "combobox", "checkbox", "radi
 
 const inc = (m: Map<string, number>, k: string) => m.set(k, (m.get(k) || 0) + 1);
 
-export function inventoryOf(snap: Snapshot): Inventory {
+export interface SidecarLocator {
+  ctl?: number;
+  by: string;
+  value: string;
+  role?: string;
+  name?: string;
+  locName?: string;
+  attr?: string;
+  score?: number;
+}
+
+/** Read NN_<host>.locators.json (all verified locators) when the capture wrote one. */
+export function readSidecar(sessionDir: string, yamlFile: string): SidecarLocator[] | null {
+  const p = path.join(sessionDir, yamlFile.replace(/\.ya?ml$/i, ".locators.json"));
+  if (!fs.existsSync(p)) return null;
+  try {
+    const j = JSON.parse(fs.readFileSync(p, "utf8")) as { locators?: SidecarLocator[] };
+    return Array.isArray(j.locators) ? j.locators : null;
+  } catch {
+    return null;
+  }
+}
+
+function addLocator(inv: Inventory, l: { by: string; value: string; attr?: string }): void {
+  if (l.by === "testid") { inc(inv.testids, l.value); inv.testIdAttrs.add(l.attr || "data-testid"); }
+  else if (l.by === "id") inc(inv.ids, l.value);
+  else if (l.by === "name") inc(inv.names, l.value);
+  else if (l.by === "label") inv.labels.push(l.value);
+  else if (l.by === "placeholder") inc(inv.placeholders, l.value);
+  else if (l.by === "css") inv.css.add(l.value);
+  else if (l.by === "xpath") inv.xpath.add(l.value);
+}
+
+export function inventoryOf(snap: Snapshot, sidecar?: SidecarLocator[] | null): Inventory {
   const inv: Inventory = {
     step: snap.step, testids: new Map(), ids: new Map(), names: new Map(), roleNames: [], labels: [],
     placeholders: new Map(), css: new Set(), xpath: new Set(), text: [], testIdAttrs: new Set(),
@@ -52,17 +85,16 @@ export function inventoryOf(snap: Snapshot): Inventory {
     if (LABELABLE.has(n.role) && n.name) inv.labels.push(n.name);
     if ((n.role === "textbox" || n.role === "searchbox" || n.role === "combobox") && n.name) inv.fieldNames.push(n.name);
     if (n.locators.length > 1) inv.lean = false;
+    if (sidecar) return; // sidecar is the complete superset; avoid double counting
     for (const l of n.locators) {
       if (l.matches != null) continue;
-      if (l.by === "testid") { inc(inv.testids, l.value); inv.testIdAttrs.add(l.attr || "data-testid"); }
-      else if (l.by === "id") inc(inv.ids, l.value);
-      else if (l.by === "name") inc(inv.names, l.value);
-      else if (l.by === "label") inv.labels.push(l.value);
-      else if (l.by === "placeholder") inc(inv.placeholders, l.value);
-      else if (l.by === "css") inv.css.add(l.value);
-      else if (l.by === "xpath") inv.xpath.add(l.value);
+      addLocator(inv, l);
     }
   });
+  if (sidecar) {
+    inv.lean = false;
+    for (const l of sidecar) addLocator(inv, l);
+  }
   for (const t of snap.tail) inv.text.push(t);
   return inv;
 }
@@ -183,6 +215,11 @@ function check(call: Call, invs: Inventory[]): Finding {
   return f("unverified", "unsupported call");
 }
 
+export function loadInventories(sessionDir: string): Inventory[] {
+  return snapshotFiles(sessionDir).map((f) =>
+    inventoryOf(parseSnapshot(fs.readFileSync(path.join(sessionDir, f), "utf8"), f), readSidecar(sessionDir, f)));
+}
+
 export interface ValidateReport {
   findings: Finding[];
   counts: Record<Status, number>;
@@ -191,7 +228,7 @@ export interface ValidateReport {
 }
 
 export function validateSpec(sessionDir: string, specPath: string): ValidateReport {
-  const invs = snapshotFiles(sessionDir).map((f) => inventoryOf(parseSnapshot(fs.readFileSync(path.join(sessionDir, f), "utf8"), f)));
+  const invs = loadInventories(sessionDir);
   const src = fs.readFileSync(specPath, "utf8");
   const findings = extractCalls(src).map((c) => check(c, invs));
   const counts: Record<Status, number> = { ok: 0, missing: 0, ambiguous: 0, unverified: 0 };

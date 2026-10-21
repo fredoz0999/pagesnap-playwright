@@ -75,9 +75,14 @@ Coding agents (Copilot agent mode, Claude Code) then fetch only the UI each step
 
 ```
 npm run pack -- build    latest                     # rebuild lean/ (also runs automatically at Ctrl+Q; --no-pack to skip)
-npm run pack -- query    latest "add the Fleece Jacket to the cart" [--step=2] [--k=4]
+npm run pack -- query    latest "add the Fleece Jacket to the cart" [--step=2] [--diff] [--k=4]
+npm run pack -- pom      latest --out=tests/pages   # page objects from verified locators, no LLM
 npm run pack -- validate latest tests/cart.spec.ts  # exit 1 if a locator is not in any snapshot
+npm run pack -- heal     latest tests/cart.spec.ts [--log=pw-output.txt] [--write]
+npm run pack -- verify   latest [--storage=state.json]   # live drift check, exit 1 if a locator is gone
+npm run pack -- bench    latest [--md]               # tokens per approach for the whole flow
 npm run pack -- stats    latest
+npm run mcp                                          # same tools as an MCP server (stdio)
 ```
 
 `latest` is the newest `pageSnapshots/session-*`; any session folder path works too.
@@ -92,16 +97,37 @@ What it does:
 - **Query**: hybrid ranking = BM25 keywords + vector cosine + exact accessible-name bonus, with a small UI synonym
   table (sign in/login, basket/cart, ...). Returns the page outline plus the top chunks. A weak match falls back to the
   whole compact page instead of guessing.
+- **Diff** (`--diff` with `--step`): regions unchanged since the previous step on the same page become a one-line
+  reference; regions that changed are added even when they rank lower, since that is usually what the step asserts.
+- **All locators kept**: the YAML still shows one locator per control, but every verified unique locator is written
+  to `NN_<host>.locators.json`. `validate`, `heal` and `verify` accept any of them, so `#checkout` validates even when
+  the YAML shows `testid=checkout`.
+- **Page objects** (`pom`): one class per URL path plus a `BasePage` for controls on 2+ pages, every getter backed by a
+  verified locator, and `PAGES.md` (member map) for the agent. The agent writes only the flow.
 - **Validate**: checks every `getByTestId / getByRole / getByLabel / getByPlaceholder / getByText / locator()` in a spec
   against the snapshots. No LLM tokens. Reports ok / missing / ambiguous / unverified.
+- **Heal**: for missing / ambiguous locators, or ones a Playwright run reported (`--log`), ranks the closest captured
+  controls (word overlap weighted by rarity, plus character bigrams for respellings like `user_name` -> `username`).
+  `--write` replaces a call only when the winner is clear (confidence >= 0.75 and 0.15 ahead of the runner-up).
+- **Verify**: reopens each captured page headless and counts matches for every recorded locator: ok / gone / ambiguous.
+  Pages behind login need `--storage` (save it during capture with `--save-storage`).
+- **Scripted capture**: `ScriptedSession` (`src/scripted.ts`) captures from your own Playwright code, same output as
+  Ctrl+M, for CI smoke runs or regenerating fixtures.
 
-Measured on the Sauce Demo fixture (`test/fixtures/saucedemo`, 4 captures, ~4 chars/token estimate):
+`npm run pack -- bench test/fixtures/saucedemo` (4 captures, ~4 chars/token, whole flow):
 
-| | tokens |
-|---|---|
-| raw YAML, all 4 steps | ~7,455 |
-| compact `lean/*.txt`, all 4 steps | ~1,173 (-84%) |
-| one `query` answer | ~180-440 |
+| Approach | Tokens | vs raw |
+|---|---|---|
+| raw YAML | 7,455 | baseline |
+| compact lean | 1,173 | -84% |
+| query per step | 1,330 | -82% |
+| query --diff per step | 1,232 | -83% |
+| PAGES.md + query --diff | 1,759 | -76% |
+| Playwright ariaSnapshot, one per step | 1,600 | -79% |
+
+On pages this small the lean pack and a raw ariaSnapshot are about the same size; the difference is that the lean pack
+carries verified locators (test ids, ids) that ariaSnapshot does not, and a live MCP browser re-sends a snapshot after
+most actions rather than once per step. Run `bench` on your own app before quoting numbers.
 
 Embedders: `hash` (default) is offline, dependency-free feature hashing. `--embedder=minilm` uses all-MiniLM-L6-v2
 through the optional `@huggingface/transformers` package (`npm i -D @huggingface/transformers`, ~23 MB model download on
@@ -133,6 +159,22 @@ npm run pack -- install-prompts /path/to/your/test-repo
 | Claude Code | `/pagesnap-automate <session-folder> <spec-name>`, `/pagesnap-testcases <session-folder> <name>` |
 
 The prompts call this tool with `npm --prefix <this repo> run -s pack -- ...`, so they work from any test repo.
+`install-prompts` also writes `.vscode/mcp.json` (if absent) so Copilot agent mode gets the `pagesnap_*` tools.
+
+### MCP server
+
+`npm run mcp` serves `pagesnap_overview`, `pagesnap_query`, `pagesnap_pom`, `pagesnap_validate`, `pagesnap_heal`,
+`pagesnap_verify` and `pagesnap_build` over stdio (no extra dependencies). Relative paths resolve against
+`PAGESNAP_CWD` (your test repo).
+
+```
+claude mcp add pagesnap -e PAGESNAP_CWD="$PWD" -- npm --prefix /path/to/pagesnap-playwright run -s mcp
+```
+
+### Browser for verify / live tests
+
+Installed Google Chrome by default. `PS_CHROMIUM=/path/to/chrome` uses that executable; `PS_BROWSER=bundled` uses
+Playwright's own Chromium (CI). `test/live.test.ts` runs only when one of those is set.
 
 ## Sibling
 

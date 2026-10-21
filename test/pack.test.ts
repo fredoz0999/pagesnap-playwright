@@ -15,7 +15,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const FIXTURE = path.join(here, "fixtures", "saucedemo");
 const SPEC = path.join(here, "fixtures", "specs", "cart.spec.ts");
 const read = (f: string) => readFileSync(path.join(FIXTURE, f), "utf8");
-const INVENTORY = "02_www_saucedemo_com_inventory_html.yaml";
+const INVENTORY = "02_www.saucedemo.com_inventory.html.yaml";
 
 describe("parse", () => {
   it("reads a locator line", () => {
@@ -110,7 +110,7 @@ describe("index + query", () => {
   });
 
   it("returns far fewer tokens than the raw snapshots", async () => {
-    const raw = ["01_www_saucedemo_com.yaml", INVENTORY, "03_www_saucedemo_com_inventory_html.yaml", "04_www_saucedemo_com_cart_html.yaml"]
+    const raw = ["01_www.saucedemo.com_root.yaml", INVENTORY, "03_www.saucedemo.com_inventory.html.yaml", "04_www.saucedemo.com_cart.html.yaml"]
       .reduce((a, f) => a + estimateTokens(read(f)), 0);
     const r = await queryIndex(dir, "add the Fleece Jacket to the cart");
     expect(r.tokens).toBeLessThan(raw * 0.15);
@@ -141,12 +141,29 @@ describe("validate", () => {
     expect(byLine.get(5)).toBe("ok");        // getByTestId username
     expect(byLine.get(6)).toBe("ok");        // placeholder matches field name
     expect(byLine.get(11)).toBe("ok");       // ambiguous but narrowed with .first()
-    expect(byLine.get(15)).toBe("unverified"); // #checkout not kept in lean capture
+    expect(byLine.get(15)).toBe("ok");       // #checkout: not shown in YAML, but in the locators sidecar
     expect(byLine.get(16)).toBe("missing");  // invented testid
     expect(byLine.get(17)).toBe("missing");  // page never captured
     expect(byLine.get(18)).toBe("unverified"); // template string
     expect(rep.testIdAttrs).toEqual(["data-test"]);
     expect(rep.text).toContain("testIdAttribute");
+  });
+});
+
+describe("locators sidecar", () => {
+  it("lists every verified locator, not only the YAML one", () => {
+    const side = JSON.parse(read("04_www.saucedemo.com_cart.html.locators.json"));
+    const checkout = side.locators.filter((l: { name: string }) => l.name === "Checkout").map((l: { by: string }) => l.by);
+    expect(checkout).toEqual(["testid", "role", "id", "name"]);
+    expect(read("04_www.saucedemo.com_cart.html.yaml")).not.toContain("by: id, value: \"checkout\"");
+  });
+
+  it("without a sidecar, lean gaps stay unverified instead of missing", async () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "ps-noside-"));
+    cpSync(FIXTURE, dir, { recursive: true });
+    for (const f of (await import("node:fs")).readdirSync(dir)) if (f.endsWith(".locators.json")) (await import("node:fs")).rmSync(path.join(dir, f));
+    const rep = validateSpec(dir, SPEC);
+    expect(rep.findings.find((f) => f.line === 15)?.status).toBe("unverified");
   });
 });
 
@@ -192,12 +209,132 @@ describe("prompts", () => {
       ".claude/commands/pagesnap-testcases.md",
       ".github/prompts/pagesnap-automate.prompt.md",
       ".github/prompts/pagesnap-testcases.prompt.md",
+      ".vscode/mcp.json",
     ]);
+    const mcp = JSON.parse(readFileSync(path.join(repo, ".vscode/mcp.json"), "utf8"));
+    expect(mcp.servers.pagesnap.args).toEqual(["--prefix", "/tools/pagesnap", "run", "-s", "mcp"]);
+    // an existing config is never overwritten
+    expect(installPrompts(repo, "/other").map((f) => path.relative(repo, f))).not.toContain(".vscode/mcp.json");
     const copilot = readFileSync(path.join(repo, ".github/prompts/pagesnap-automate.prompt.md"), "utf8");
     expect(copilot.startsWith("---\nmode: agent\n")).toBe(true);
     expect(copilot).toContain("${input:session:");
     const claude = readFileSync(path.join(repo, ".claude/commands/pagesnap-automate.md"), "utf8");
     expect(claude).toContain('PACK query "$1"');
     expect(claude).toContain("tests/$2.spec.ts");
+  });
+});
+
+describe("pom", () => {
+  it("generates page classes, a shared BasePage and a member map", async () => {
+    const { writePom, locatorCode } = await import("../src/pack/pom.js");
+    const out = mkdtempSync(path.join(tmpdir(), "ps-pom-"));
+    const r = writePom(FIXTURE, out);
+    expect(r.pages.map((p) => p.className)).toEqual(["SwagLabsPage", "InventoryPage", "CartPage"]);
+    expect(r.testIdAttribute).toBe("data-test");
+    const inv = r.pages.find((p) => p.className === "InventoryPage")!;
+    expect(inv.steps).toEqual([2, 3]);
+    const names = inv.members.map((m) => m.prop);
+    expect(names).toContain("addToCartSauceLabsFleeceJacketButton");
+    expect(new Set(names).size).toBe(names.length);
+    expect(r.base.map((m) => m.prop)).toContain("shoppingCartLink");
+    const cart = readFileSync(path.join(out, "cart.page.ts"), "utf8");
+    expect(cart).toContain("export class CartPage extends BasePage");
+    expect(cart).toContain("return this.page.getByTestId('checkout');");
+    expect(readFileSync(path.join(out, "PAGES.md"), "utf8")).toContain("testIdAttribute: 'data-test'");
+    expect(locatorCode({ by: "role", value: "button", name: "Log In" })).toBe("this.page.getByRole('button', { name: 'Log In', exact: true })");
+    expect(locatorCode({ by: "name", value: "it's" })).toBe("this.page.locator('[name=\"it\\'s\"]')");
+  });
+});
+
+describe("diff query", () => {
+  it("omits regions unchanged since the previous step and adds changed ones", async () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "ps-diff-"));
+    cpSync(FIXTURE, dir, { recursive: true });
+    await buildIndex(dir);
+    const plain = await queryIndex(dir, "cart badge shows 2", { step: 3, legend: false });
+    const diff = await queryIndex(dir, "cart badge shows 2", { step: 3, legend: false, diff: true });
+    expect(diff.text).toContain("unchanged since step 2");
+    expect(diff.text).toContain("testid=shopping-cart-badge");
+    expect(diff.text).toContain("testid=remove-sauce-labs-backpack");
+    expect(diff.text).toMatch(/CHANGED/);
+    expect(plain.text).not.toContain("unchanged since");
+    // step 3 hits are shown under step 3 even when shared with step 2
+    expect(plain.text).not.toContain("@ step 2");
+  });
+});
+
+describe("heal", () => {
+  it("suggests and safely applies replacements for invented locators", async () => {
+    const { healSpec, replaceCall, failingCallsFromLog } = await import("../src/pack/heal.js");
+    const dir = mkdtempSync(path.join(tmpdir(), "ps-heal-"));
+    cpSync(FIXTURE, dir, { recursive: true });
+    const spec = path.join(dir, "x.spec.ts");
+    (await import("node:fs")).writeFileSync(spec, [
+      "await page.getByTestId('checkout-button').click();",
+      "await page.getByTestId('add-to-cart-fleece-jacket').click();",
+      "await page.locator('#user_name').fill('x');",
+      "await page.getByTestId('username').fill('ok');",
+    ].join("\n") + "\n");
+    const r = healSpec(dir, spec, { write: true });
+    expect(r.suggestions.map((s) => s.line)).toEqual([1, 2, 3]);
+    expect(r.suggestions[1].candidates[0].code).toBe('getByTestId("add-to-cart-sauce-labs-fleece-jacket")');
+    expect(r.suggestions[1].applied).toBeUndefined(); // too close to the other add-to-cart buttons
+    const out = readFileSync(spec, "utf8").split("\n");
+    expect(out[0]).toBe('await page.getByTestId("checkout").click();');
+    expect(out[2]).toBe('await page.getByTestId("username").fill(\'x\');');
+    expect(out[3]).toBe("await page.getByTestId('username').fill('ok');");
+    expect(replaceCall("a.locator('x(y)').click()", "locator('x(y)'", "getByTestId(\"z\")")).toBe('a.getByTestId("z").click()');
+    expect(failingCallsFromLog("Error: locator.click: Timeout\n  - waiting for getByTestId('checkout-button')\n")).toEqual(["getByTestId('checkout-button')"]);
+  });
+});
+
+describe("mcp server", () => {
+  it("speaks MCP over stdio: initialize, tools/list, tools/call", async () => {
+    const { spawn } = await import("node:child_process");
+    const dir = mkdtempSync(path.join(tmpdir(), "ps-mcp-"));
+    cpSync(FIXTURE, dir, { recursive: true });
+    const root = path.resolve(here, "..");
+    const child = spawn(process.execPath, [path.join(root, "node_modules/tsx/dist/cli.mjs"), path.join(root, "src/pack/mcp.ts")], { cwd: root });
+    const lines: string[] = [];
+    let buf = "";
+    child.stdout.on("data", (d) => { buf += d; let i; while ((i = buf.indexOf("\n")) >= 0) { lines.push(buf.slice(0, i)); buf = buf.slice(i + 1); } });
+    const send = (o: object) => child.stdin.write(JSON.stringify(o) + "\n");
+    const waitFor = async (id: number) => {
+      for (let t = 0; t < 200; t++) {
+        const hit = lines.map((l) => JSON.parse(l)).find((j) => j.id === id);
+        if (hit) return hit;
+        await new Promise((r) => setTimeout(r, 50));
+      }
+      throw new Error("no reply for " + id);
+    };
+    send({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "t", version: "1" } } });
+    expect((await waitFor(1)).result.serverInfo.name).toBe("pagesnap");
+    send({ jsonrpc: "2.0", method: "notifications/initialized" });
+    send({ jsonrpc: "2.0", id: 2, method: "tools/list" });
+    expect((await waitFor(2)).result.tools.map((t: { name: string }) => t.name)).toContain("pagesnap_query");
+    send({ jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "pagesnap_query", arguments: { session: dir, query: "click Checkout", step: 4 } } });
+    const q = await waitFor(3);
+    expect(q.result.isError).toBe(false);
+    expect(q.result.content[0].text).toContain("testid=checkout");
+    send({ jsonrpc: "2.0", id: 4, method: "tools/call", params: { name: "pagesnap_validate", arguments: { session: dir, spec: SPEC } } });
+    const v = await waitFor(4);
+    expect(v.result.isError).toBe(true); // the fixture spec has invented locators
+    expect(v.result.content[0].text).toContain("MISS");
+    send({ jsonrpc: "2.0", id: 5, method: "nope" });
+    expect((await waitFor(5)).error.code).toBe(-32601);
+    child.kill();
+  }, 30000);
+});
+
+describe("bench", () => {
+  it("measures every approach on the same session", async () => {
+    const { bench, benchTmpCopy } = await import("../src/pack/bench.js");
+    const r = await bench(benchTmpCopy(FIXTURE), "saucedemo");
+    const by = Object.fromEntries(r.rows.map((x) => [x.approach, x.tokens]));
+    expect(r.steps).toBe(4);
+    expect(by["compact lean (all steps)"]).toBeLessThan(by["raw YAML (all steps)"] * 0.3);
+    expect(by["query --diff per step"]).toBeLessThanOrEqual(by["query per step"]);
+    expect(r.rows.some((x) => x.approach.startsWith("Playwright ariaSnapshot"))).toBe(true);
+    expect(r.markdown).toContain("| Approach |");
   });
 });

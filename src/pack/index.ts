@@ -126,10 +126,20 @@ export interface QueryOptions {
   legend?: boolean;
   /** drop hits scoring below this fraction of the best hit (default 0.5) */
   relCutoff?: number;
+  /**
+   * With `step`: chunks unchanged since the previous step on the same page are
+   * shown as one-line references, and regions that changed are added even if
+   * they rank lower (that is usually what the step asserts on).
+   */
+  diff?: boolean;
 }
 
 export interface Hit {
   chunk: Chunk;
+  /** set in diff mode: unchanged since this step, rendered as a reference */
+  sameAs?: number;
+  /** set in diff mode: region changed vs previous step */
+  changed?: boolean;
   score: number;
   bm25: number;
   vec: number;
@@ -180,15 +190,34 @@ export async function queryIndex(sessionDir: string, query: string, opts: QueryO
   const best = hits.length ? hits[0].score : 0;
   const top = hits.slice(0, k).filter((h, i) => i === 0 || h.score >= best * (opts.relCutoff ?? 0.5));
   const lowConfidence = !top.length || top[0].score < (opts.minScore ?? 0.18);
-  const text = renderResult(idx, query, top, lowConfidence, sessionDir, opts.legend !== false);
+  if (opts.diff && opts.step != null && !lowConfidence) applyDiff(idx, hits, top, opts.step);
+  const text = renderResult(idx, query, top, lowConfidence, sessionDir, opts.legend !== false, opts.step);
   return { hits: top, lowConfidence, text, tokens: estimateTokens(text) };
 }
 
-function renderResult(idx: SessionIndex, query: string, hits: Hit[], low: boolean, sessionDir: string, legend: boolean): string {
+function pathOf(url: string): string {
+  try { return new URL(url).pathname; } catch { return url; }
+}
+
+/** Mark unchanged hits and append changed regions (max 2) for step-to-step diffs. */
+function applyDiff(idx: SessionIndex, ranked: Hit[], top: Hit[], step: number): void {
+  const cur = idx.pages.find((p) => p.step === step);
+  const prev = idx.pages.find((p) => p.step === step - 1);
+  if (!cur || !prev || pathOf(cur.url) !== pathOf(prev.url)) return;
+  for (const h of top) {
+    if (h.chunk.steps.includes(prev.step)) h.sameAs = prev.step;
+    else h.changed = true;
+  }
+  const extra = ranked.filter((h) => !top.includes(h) && !h.chunk.steps.includes(prev.step) && h.chunk.kind !== "item").slice(0, 2);
+  for (const h of extra) { h.changed = true; top.push(h); }
+}
+
+function renderResult(idx: SessionIndex, query: string, hits: Hit[], low: boolean, sessionDir: string, legend: boolean, step?: number): string {
   const out: string[] = [];
   out.push("# pagesnap query: " + JSON.stringify(query));
   if (legend) out.push(LEGEND);
-  const steps = [...new Set(hits.flatMap((h) => h.chunk.steps.slice(0, 1)))].sort((a, b) => a - b);
+  const shownStep = (h: Hit) => (step != null && h.chunk.steps.includes(step) ? step : h.chunk.steps[0]);
+  const steps = [...new Set(hits.map(shownStep))].sort((a, b) => a - b);
   if (low) {
     const best = hits[0] ? idx.pages.find((p) => p.step === hits[0].chunk.steps[0]) : idx.pages[idx.pages.length - 1];
     out.push("");
@@ -205,9 +234,17 @@ function renderResult(idx: SessionIndex, query: string, hits: Hit[], low: boolea
     out.push("");
     out.push(page.header);
     if (page.outline.length) out.push("outline:", ...page.outline.map((l) => " " + l));
-    for (const h of hits.filter((x) => x.chunk.steps[0] === s)) {
-      const also = h.chunk.steps.length > 1 ? " (also steps " + h.chunk.steps.slice(1).join(",") + ")" : "";
-      out.push("--- " + h.chunk.path + " [" + h.chunk.kind + ", score " + h.score.toFixed(2) + "]" + also);
+    const mine = hits.filter((x) => shownStep(x) === s);
+    const same = mine.filter((h) => h.sameAs != null);
+    if (same.length) {
+      out.push("--- " + same.length + " matching region(s) unchanged since step " + same[0].sameAs + " (omitted): "
+        + [...new Set(same.map((h) => h.chunk.path))].join("; "));
+    }
+    for (const h of mine) {
+      if (h.sameAs != null) continue;
+      const others = h.chunk.steps.filter((x) => x !== s);
+      const also = others.length ? " (also steps " + others.join(",") + ")" : "";
+      out.push("--- " + h.chunk.path + " [" + h.chunk.kind + (h.changed ? ", CHANGED" : "") + ", score " + h.score.toFixed(2) + "]" + also);
       out.push(h.chunk.text);
     }
   }

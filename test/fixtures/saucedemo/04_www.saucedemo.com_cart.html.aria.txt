@@ -1,0 +1,28 @@
+- button "Open Menu"
+- text: Swag Labs
+- link "2":
+  - /url: cart.html
+- text: Your Cart QTY Description 1
+- link "Sauce Labs Backpack":
+  - /url: "#"
+- text: carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection. $29.99
+- button "Remove"
+- text: "1"
+- link "Sauce Labs Bike Light":
+  - /url: "#"
+- text: A red light isn't the desired state in testing but it sure helps when riding your bike at night. Water-resistant with 3 lighting modes, 1 AAA battery included. $9.99
+- button "Remove"
+- button "Continue Shopping"
+- button "Checkout"
+- contentinfo:
+  - list:
+    - listitem:
+      - link "Twitter":
+        - /url: https://twitter.com/saucelabs
+    - listitem:
+      - link "Facebook":
+        - /url: https://www.facebook.com/saucelabs
+    - listitem:
+      - link "LinkedIn":
+        - /url: https://www.linkedin.com/company/sauce-labs/
+  - text: Â© 2026 Sauce Labs. All Rights Reserved. Terms of Service | Privacy Policy

@@ -28,6 +28,24 @@ export function stripUrlLines(tree: string): string {
 }
 
 
+/** Every verified unique locator for a control, as returned by capture-tree.js. */
+export interface AltLocator {
+  /** control number within the capture; rows with the same ctl are one element */
+  ctl?: number;
+  by: string;
+  value: string;
+  score?: number;
+  role: string;
+  name: string;
+  locName?: string;
+  attr?: string;
+}
+
+/** Sidecar next to NN_<host>.yaml listing all verified locators (YAML shows only the best). */
+export function locatorsSidecarName(yamlFile: string): string {
+  return yamlFile.replace(/\.ya?ml$/i, ".locators.json");
+}
+
 export function persistSnapshot(
   cap: SnapshotCapture,
   steps: StepRecord[],
@@ -42,6 +60,7 @@ export function persistSnapshot(
     step: number;
     title?: string;
     viewport?: { w: number; h: number };
+    altLocators?: AltLocator[];
   }
 ): { filename: string; step: number; lastTreeBody: string; lastCaptureUrl: string } {
   let tree = state.tree;
@@ -78,6 +97,14 @@ export function persistSnapshot(
 
   fs.mkdirSync(cap.sessionDir, { recursive: true });
   fs.writeFileSync(filepath, content.join("\n") + "\n", "utf8");
+  if (state.altLocators && state.altLocators.length) {
+    let alts = state.altLocators;
+    if (cap.redactEmails) {
+      const red = (v?: string) => (v == null ? v : v.replace(EMAIL, "***@***.***"));
+      alts = alts.map((a) => ({ ...a, value: red(a.value)!, name: red(a.name)!, locName: red(a.locName) }));
+    }
+    fs.writeFileSync(path.join(cap.sessionDir, locatorsSidecarName(filename)), JSON.stringify({ step: stepN, url: state.url, locators: alts }) + "\n", "utf8");
+  }
 
   if (cap.writeDiff && state.lastTreeBody.trim() && tree.trim()) {
     const diff = simpleDiff(state.lastTreeBody, tree);

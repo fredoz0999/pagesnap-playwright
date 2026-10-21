@@ -63,15 +63,19 @@ export function automatePrompt(o: PromptOpts): string {
     "",
     "Session: " + S,
     o.goal ? "Goal: " + o.goal : "",
-    "Spec: tests/" + o.name + ".spec.ts (page objects in tests/pages/)",
+    "Spec: tests/" + o.name + ".spec.ts (generated page objects in tests/pages/)",
     "PACK means: " + PACK,
     "",
     "Read ONLY these for context (do NOT open the NN_*.yaml files):",
     "- " + S + "/SESSION.md, TEST_GUIDE.md, flow.md, lean/PACK.md",
     "",
+    "First generate the page objects (no LLM needed, locators are already verified):",
+    "   PACK pom \"" + S + "\" --out=tests/pages",
+    "   Then read tests/pages/PAGES.md (member names per page). Do not edit the generated locators.",
+    "",
     "For EACH step in flow.md, in order:",
-    "1. Run: PACK query \"" + S + "\" \"<step note text>\" --step=<N>",
-    "2. Use ONLY locators shown after `=>` in the result. Never invent selectors.",
+    "1. Run: PACK query \"" + S + "\" \"<step note text>\" --step=<N> --diff",
+    "2. Use the page-object members from PAGES.md. If something is not there, use ONLY a locator shown after `=>` in the query result. Never invent selectors.",
     "3. `action:` notes -> actions, `assert:` notes -> web-first expects, `data:` notes -> input values.",
     "4. If the query says low-confidence, read only that lean/NN_*.txt page.",
     "",
@@ -85,9 +89,11 @@ export function automatePrompt(o: PromptOpts): string {
     "",
     "When the spec is written:",
     "1. Run: PACK validate \"" + S + "\" tests/" + o.name + ".spec.ts",
-    "   Fix every MISS and AMBG and re-run until it reports missing 0.",
-    "2. Run: npx playwright test tests/" + o.name + ".spec.ts",
-    "   On failure read the error and trace, fix, re-run. Max 3 attempts, then stop and report.",
+    "   For every MISS / AMBG run: PACK heal \"" + S + "\" tests/" + o.name + ".spec.ts and use its candidates. Re-run until missing 0.",
+    "2. Run: npx playwright test tests/" + o.name + ".spec.ts > pw-output.txt 2>&1",
+    "   On a locator failure run: PACK heal \"" + S + "\" tests/" + o.name + ".spec.ts --log=pw-output.txt",
+    "   (if every candidate is wrong the app changed: PACK verify \"" + S + "\" shows what drifted).",
+    "   Fix and re-run. Max 3 attempts, then stop and report.",
     "3. Reply with: files changed, the validate summary line, the test result. No code recap.",
     "",
   ].filter((l, i, a) => !(l === "" && a[i - 1] === "")).join("\n");
@@ -155,6 +161,20 @@ export function installPrompts(repoDir: string, tool = toolDir()): string[] {
   put(".claude/commands/pagesnap-automate.md",
     "---\ndescription: Automate a PageSnap capture session as one Playwright test (token-lean)\nargument-hint: <session-folder> <spec-name>\n---\n" +
     automatePrompt({ session: "$1", name: "$2", tool }));
+  // MCP server for VS Code (Copilot agent mode). Never overwrite an existing config.
+  const vscode = path.join(repoDir, ".vscode", "mcp.json");
+  if (!fs.existsSync(vscode)) {
+    put(".vscode/mcp.json", JSON.stringify({
+      servers: {
+        pagesnap: {
+          type: "stdio",
+          command: "npm",
+          args: ["--prefix", tool, "run", "-s", "mcp"],
+          env: { PAGESNAP_CWD: "${workspaceFolder}" },
+        },
+      },
+    }, null, 2) + "\n");
+  }
   put(".claude/commands/pagesnap-testcases.md",
     "---\ndescription: Write manual test cases from a PageSnap capture session\nargument-hint: <session-folder> <name>\n---\n" +
     testCasesPrompt({ session: "$1", name: "$2", tool }));

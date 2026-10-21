@@ -16,7 +16,7 @@ import type { HintRec } from "./hints.js";
 import { printUsage } from "./usage.js";
 import { applySessionFolderName, sessionFolderTs } from "./session.js";
 import { refreshFlow, writePromptPack, type StepRecord } from "./session-pack.js";
-import { persistSnapshot } from "./snapshot-write.js";
+import { persistSnapshot, type AltLocator } from "./snapshot-write.js";
 import { buildIndex } from "./pack/index.js";
 import { isDuplicateCapture, normalizeNote } from "./util-parse.js";
 
@@ -141,8 +141,9 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
     let tree = "";
     let hints: HintRec[] = [];
     let hintsTruncated = 0;
+    let altLocators: AltLocator[] = [];
     try {
-      const result = await evalNamed<{ tree?: string; hints?: HintRec[]; hintsTruncated?: number }>(
+      const result = await evalNamed<{ tree?: string; hints?: HintRec[]; hintsTruncated?: number; locators?: AltLocator[] }>(
         page,
         ["opts"],
         captureTreeJs,
@@ -152,6 +153,7 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
         tree = result.tree != null ? String(result.tree) : "";
         if (Array.isArray(result.hints)) hints = result.hints.filter(Boolean) as HintRec[];
         hintsTruncated = Number(result.hintsTruncated ?? 0);
+        if (Array.isArray(result.locators)) altLocators = result.locators;
       } else if (result != null) tree = String(result);
     } finally {
       try {
@@ -171,7 +173,7 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
     } catch { /* ignore */ }
     step++;
     const saved = persistSnapshot(cap, steps, {
-      url, note, tree, hints, hintsTruncated, lastTreeBody, lastCaptureUrl, step, title, viewport,
+      url, note, tree, hints, hintsTruncated, lastTreeBody, lastCaptureUrl, step, title, viewport, altLocators,
     });
     lastTreeBody = saved.lastTreeBody;
     lastCaptureUrl = saved.lastCaptureUrl;

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * npm run pack -- build    <session|latest> [--embedder=hash|minilm] [--max-tokens=200]
- * npm run pack -- query    <session|latest> "<step text>" [--k=4] [--step=N] [--url=part] [--no-legend] [--json]
+ * npm run pack -- query    <session|latest> "<step text>" [--k=4] [--step=N] [--diff] [--url=part] [--no-legend] [--json]
  * npm run pack -- validate <session|latest> <spec.ts>
  * npm run pack -- stats    <session|latest>
  * npm run pack -- prompt   <session|latest> [--cases] [--name=x]
@@ -9,16 +9,25 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { buildIndex, indexIsStale, loadIndex, queryIndex, LEAN_DIR } from "./index.js";
+import { buildIndex, loadIndex, queryIndex, LEAN_DIR } from "./index.js";
+import { ensureIndex, resolveSession, userPath } from "./paths.js";
 import { validateSpec } from "./validate.js";
+import { writePom } from "./pom.js";
+import { verifySession } from "./verify.js";
+import { healSpec } from "./heal.js";
+import { bench, benchTmpCopy } from "./bench.js";
 import { automatePrompt, installPrompts, sessionGoal, slugify, testCasesPrompt, writeSessionPrompts } from "./prompts.js";
 
 const USAGE = `pagesnap lean pack - token-lean snapshots for coding agents
 
   npm run pack -- build    <session|latest> [--embedder=hash|minilm] [--max-tokens=200]
-  npm run pack -- query    <session|latest> "<step text>" [--k=4] [--step=N] [--url=part] [--no-legend] [--json]
+  npm run pack -- query    <session|latest> "<step text>" [--k=4] [--step=N] [--diff] [--url=part] [--no-legend] [--json]
   npm run pack -- validate <session|latest> <spec.ts>
   npm run pack -- stats    <session|latest>
+  npm run pack -- bench    <session|latest> [--md]
+  npm run pack -- pom      <session|latest> [--out=tests/pages]
+  npm run pack -- verify   <session|latest> [--storage=state.json] [--step=N]
+  npm run pack -- heal     <session|latest> <spec.ts> [--log=playwright-output.txt] [--write]
   npm run pack -- prompt   <session|latest> [--cases] [--name=checkout-flow]
   npm run pack -- install-prompts <test-repo-dir>
 
@@ -26,36 +35,19 @@ build     compact every NN_*.yaml into lean/NN_*.txt, chunk by UI region, write 
 query     hybrid search (keyword + vector + exact name) -> page outline + the few chunks that matter
 validate  check every locator in a spec against the snapshots (no LLM tokens). Exit 1 if any is missing.
 stats     raw vs compact token estimate per page
+bench     tokens an agent reads for the whole flow: raw / compact / query / query+diff / PAGES.md / ariaSnapshot
+verify    reopen each captured page and count matches for every recorded locator (drift check)
+heal      suggest replacements for missing / ambiguous / failing locators; --write applies clear winners
+pom       generate Playwright page objects from the verified locators (no LLM) + PAGES.md map
 prompt    print a ready-to-paste agent prompt for this session (--cases: manual test cases)
 install-prompts  add /pagesnap-automate and /pagesnap-testcases to a test repo
                  (.github/prompts for Copilot, .claude/commands for Claude Code)
 
 <session> is a session folder, or "latest" for the newest pageSnapshots/session-*.`;
 
-/** npm run changes cwd to the tool folder; INIT_CWD is where the user (or agent) ran it. */
-export function userPath(p: string): string {
-  return path.resolve(process.env.INIT_CWD || process.cwd(), p);
-}
-
 function flag(args: string[], name: string): string | undefined {
   const hit = args.find((a) => a.startsWith("--" + name + "="));
   return hit ? hit.slice(name.length + 3) : undefined;
-}
-
-export function resolveSession(arg: string, root = "pageSnapshots"): string {
-  if (arg !== "latest") return userPath(arg);
-  if (!fs.existsSync(root)) throw new Error("No " + root + "/ folder here");
-  const dirs = fs.readdirSync(root).filter((d) => d.startsWith("session-") && fs.statSync(path.join(root, d)).isDirectory()).sort();
-  if (!dirs.length) throw new Error("No session-* folders in " + root);
-  return path.resolve(root, dirs[dirs.length - 1]);
-}
-
-async function ensureIndex(dir: string): Promise<void> {
-  if (indexIsStale(dir)) {
-    let embedder: string | undefined;
-    try { embedder = loadIndex(dir).embedder; } catch { /* first build */ }
-    await buildIndex(dir, { embedder });
-  }
 }
 
 async function main(argv: string[]): Promise<number> {
@@ -69,10 +61,43 @@ async function main(argv: string[]): Promise<number> {
     const files = installPrompts(userPath(sess));
     console.log("Installed:\n" + files.map((f) => "  " + f).join("\n"));
     console.log("Copilot (agent mode): type /pagesnap-automate.  Claude Code: /pagesnap-automate <session-folder> <spec-name>");
+    console.log("MCP tools: VS Code reads .vscode/mcp.json (created if absent). Claude Code:");
+    console.log('  claude mcp add pagesnap -e PAGESNAP_CWD="$PWD" -- npm --prefix "' + path.resolve(".") + '" run -s mcp');
     return 0;
   }
   const dir = resolveSession(sess);
   switch (cmd) {
+    case "bench": {
+      const rep = await bench(benchTmpCopy(dir), path.basename(dir));
+      process.stdout.write(rest.includes("--md") ? rep.markdown : rep.text);
+      return 0;
+    }
+    case "verify": {
+      const st = flag(rest, "step");
+      const storage = flag(rest, "storage");
+      const rep = await verifySession(dir, { storage: storage ? userPath(storage) : undefined, steps: st ? st.split(",").map(Number) : undefined });
+      process.stdout.write(rep.text);
+      return rep.counts.gone > 0 ? 1 : 0;
+    }
+    case "heal": {
+      const spec = pos[0];
+      if (!spec) { console.error("heal needs a spec file"); return 1; }
+      const logFile = flag(rest, "log");
+      const rep = healSpec(dir, userPath(spec), {
+        write: rest.includes("--write"),
+        log: logFile ? fs.readFileSync(userPath(logFile), "utf8") : undefined,
+      });
+      process.stdout.write(rep.text);
+      return 0;
+    }
+    case "pom": {
+      const out = userPath(flag(rest, "out") || "tests/pages");
+      const r = writePom(dir, out);
+      const members = r.base.length + r.pages.reduce((a, p) => a + p.members.length, 0);
+      console.log("Wrote " + r.files.length + " files to " + out + ": " + r.pages.length + " page classes + BasePage, " + members + " members");
+      if (r.testIdAttribute) console.log("Set use.testIdAttribute = '" + r.testIdAttribute + "' in playwright.config");
+      return 0;
+    }
     case "prompt": {
       const name = flag(rest, "name");
       const goal = sessionGoal(dir);
@@ -100,6 +125,7 @@ async function main(argv: string[]): Promise<number> {
         step: st ? Number(st) : undefined,
         urlContains: flag(rest, "url"),
         legend: !rest.includes("--no-legend"),
+        diff: rest.includes("--diff"),
       });
       if (rest.includes("--json")) {
         console.log(JSON.stringify({ tokens: res.tokens, lowConfidence: res.lowConfidence, hits: res.hits.map((h) => ({ id: h.chunk.id, steps: h.chunk.steps, path: h.chunk.path, score: +h.score.toFixed(3), text: h.chunk.text })) }, null, 2));

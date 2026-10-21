@@ -419,7 +419,12 @@ const ACTIONABLE = new Set([
 // score, and skip redundant twins (id vs #id, name vs tag[name=…]).
 const MAX_LOCATORS = lean ? 1 : 2;
 
-const buildLocators = (el) => {
+// Every verified unique locator per control (not only the one shown in YAML).
+// Written to NN_<host>.locators.json so validate/verify/heal can accept any of them.
+const allLocators = [];
+let controlSeq = 0;
+
+const buildLocators = (el, nodeRole, nodeName) => {
   const locators = [];
   let hasId = false;
   let hasName = false;
@@ -577,6 +582,14 @@ const buildLocators = (el) => {
   const byRank = (by) => ({ testid: 0, role: 1, label: 2, id: 3, name: 4, placeholder: 5, linkText: 6, css: 7, xpath: 8 }[by] ?? 9);
   cleaned.sort((a, b) => (b.score - a.score) || rank(a.stability) - rank(b.stability) || byRank(a.by) - byRank(b.by));
 
+  const ctl = ++controlSeq;
+  for (const l of cleaned) {
+    const rec = { ctl: ctl, by: l.by, value: l.value, score: l.score, role: nodeRole || '', name: nodeName || '' };
+    if (l.name) rec.locName = l.name;
+    if (l.attr) rec.attr = l.attr;
+    allLocators.push(rec);
+  }
+
   const picked = [];
   const bySeen = new Set();
   for (const l of cleaned) {
@@ -727,7 +740,7 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
     if (extras.length) line += ' [' + extras.join(', ') + ']';
 
     const roleForLoc = role;
-    const locators = ACTIONABLE.has(roleForLoc) ? buildLocators(el) : [];
+    const locators = ACTIONABLE.has(roleForLoc) ? buildLocators(el, roleForLoc, name) : [];
     const value = readValue(el);
     // Native <select> options exist in DOM even when the list is closed
     const isNativeSelect = el.tagName === 'SELECT';
@@ -942,5 +955,10 @@ const truncated = hints.length > 24 ? (hints.length - 24) : 0;
 return {
   tree: treeOut,
   hints: hintsOut,
-  hintsTruncated: truncated
+  hintsTruncated: truncated,
+  locators: allLocators.map(l => Object.assign({}, l, {
+    value: sweepSecrets(l.value),
+    name: sweepSecrets(l.name),
+    locName: l.locName ? sweepSecrets(l.locName) : undefined
+  }))
 };

@@ -1,0 +1,186 @@
+#!/usr/bin/env node
+/**
+ * PageSnap MCP server (stdio). Exposes the lean pack as native agent tools so
+ * Copilot / Claude Code call them directly instead of shelling out.
+ *
+ * VS Code (.vscode/mcp.json):
+ *   { "servers": { "pagesnap": { "command": "npm", "args": ["--prefix", "/path/to/pagesnap-playwright", "run", "-s", "mcp"],
+ *     "env": { "PAGESNAP_CWD": "${workspaceFolder}" } } } }
+ * Claude Code:
+ *   claude mcp add pagesnap -e PAGESNAP_CWD="$PWD" -- npm --prefix /path/to/pagesnap-playwright run -s mcp
+ *
+ * Zero dependencies: newline-delimited JSON-RPC 2.0 per the MCP stdio transport.
+ * Relative paths resolve against PAGESNAP_CWD (your test repo), else INIT_CWD / cwd.
+ */
+import fs from "node:fs";
+import path from "node:path";
+import readline from "node:readline";
+import { buildIndex, LEAN_DIR, queryIndex } from "./index.js";
+import { ensureIndex, resolveSession, userPath } from "./paths.js";
+import { validateSpec } from "./validate.js";
+import { healSpec } from "./heal.js";
+import { writePom } from "./pom.js";
+import { verifySession } from "./verify.js";
+
+export const PROTOCOL_VERSION = "2025-06-18";
+
+type Args = Record<string, unknown>;
+interface Tool {
+  name: string;
+  description: string;
+  inputSchema: object;
+  run(a: Args): Promise<{ text: string; isError?: boolean }>;
+}
+
+const session = { type: "string", description: "Session folder (absolute or relative to the repo) or \"latest\"" };
+const str = (a: Args, k: string): string | undefined => (typeof a[k] === "string" && (a[k] as string).trim() ? String(a[k]) : undefined);
+const num = (a: Args, k: string): number | undefined => (typeof a[k] === "number" ? (a[k] as number) : undefined);
+const need = (a: Args, k: string): string => {
+  const v = str(a, k);
+  if (!v) throw new Error("missing required argument: " + k);
+  return v;
+};
+
+export const TOOLS: Tool[] = [
+  {
+    name: "pagesnap_overview",
+    description: "Start here. Session flow (steps + notes) and lean pack summary for a PageSnap capture session. Small.",
+    inputSchema: { type: "object", properties: { session }, required: ["session"] },
+    async run(a) {
+      const dir = resolveSession(need(a, "session"));
+      await ensureIndex(dir);
+      const read = (f: string) => (fs.existsSync(f) ? fs.readFileSync(f, "utf8").trim() : "");
+      return { text: [read(path.join(dir, "flow.md")), read(path.join(dir, LEAN_DIR, "PACK.md"))].filter(Boolean).join("\n\n") + "\nSession: " + dir + "\n" };
+    },
+  },
+  {
+    name: "pagesnap_query",
+    description: "Token-lean lookup of the captured UI for one test step: page outline + the few relevant regions with verified locators (after =>). Use diff=true with step to skip regions unchanged since the previous step.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        session,
+        query: { type: "string", description: "The step text, e.g. the flow.md note" },
+        step: { type: "integer", description: "Restrict to this capture step" },
+        diff: { type: "boolean", description: "Omit regions unchanged since step-1 on the same page" },
+        k: { type: "integer", description: "Max regions (default 4)" },
+      },
+      required: ["session", "query"],
+    },
+    async run(a) {
+      const dir = resolveSession(need(a, "session"));
+      await ensureIndex(dir);
+      const r = await queryIndex(dir, need(a, "query"), { step: num(a, "step"), k: num(a, "k"), diff: a.diff === true });
+      return { text: r.text };
+    },
+  },
+  {
+    name: "pagesnap_pom",
+    description: "Generate Playwright page objects from the verified locators (no LLM). Returns PAGES.md, the member map to use in specs.",
+    inputSchema: { type: "object", properties: { session, out: { type: "string", description: "Output folder (default tests/pages)" } }, required: ["session"] },
+    async run(a) {
+      const dir = resolveSession(need(a, "session"));
+      const out = userPath(str(a, "out") || "tests/pages");
+      writePom(dir, out);
+      return { text: "Wrote page objects to " + out + "\n\n" + fs.readFileSync(path.join(out, "PAGES.md"), "utf8") };
+    },
+  },
+  {
+    name: "pagesnap_validate",
+    description: "Check every locator in a spec against the snapshots without running it. MISS = not captured (invented), AMBG = matches several elements.",
+    inputSchema: { type: "object", properties: { session, spec: { type: "string" } }, required: ["session", "spec"] },
+    async run(a) {
+      const rep = validateSpec(resolveSession(need(a, "session")), userPath(need(a, "spec")));
+      return { text: rep.text, isError: rep.counts.missing > 0 };
+    },
+  },
+  {
+    name: "pagesnap_heal",
+    description: "Suggest replacements for missing/ambiguous locators, or for locators a Playwright run reported (pass its output as log). write=true applies only clear winners.",
+    inputSchema: {
+      type: "object",
+      properties: { session, spec: { type: "string" }, log: { type: "string", description: "Playwright output text (or a path to it)" }, write: { type: "boolean" } },
+      required: ["session", "spec"],
+    },
+    async run(a) {
+      let log = str(a, "log");
+      if (log && log.length < 300 && fs.existsSync(userPath(log))) log = fs.readFileSync(userPath(log), "utf8");
+      const rep = healSpec(resolveSession(need(a, "session")), userPath(need(a, "spec")), { log, write: a.write === true });
+      return { text: rep.text };
+    },
+  },
+  {
+    name: "pagesnap_verify",
+    description: "Reopen each captured page in a headless browser and count matches for every recorded locator (drift check). Needs network access to the app; storage = Playwright storageState for logged-in pages.",
+    inputSchema: { type: "object", properties: { session, storage: { type: "string" }, step: { type: "integer" } }, required: ["session"] },
+    async run(a) {
+      const storage = str(a, "storage");
+      const step = num(a, "step");
+      const rep = await verifySession(resolveSession(need(a, "session")), { storage: storage ? userPath(storage) : undefined, steps: step != null ? [step] : undefined });
+      return { text: rep.text, isError: rep.counts.gone > 0 };
+    },
+  },
+  {
+    name: "pagesnap_build",
+    description: "Rebuild the lean pack (compact snapshots, index, prompts) after new captures. Query/overview do this automatically when stale.",
+    inputSchema: { type: "object", properties: { session }, required: ["session"] },
+    async run(a) {
+      const idx = await buildIndex(resolveSession(need(a, "session")));
+      return { text: "Built: " + idx.pages.length + " pages, " + idx.stats.chunkCount + " chunks, ~" + idx.stats.rawTokens + " -> ~" + idx.stats.compactTokens + " tokens\n" };
+    },
+  },
+];
+
+interface Req { jsonrpc: "2.0"; id?: number | string | null; method: string; params?: Record<string, unknown> }
+
+export async function handle(req: Req): Promise<object | null> {
+  const reply = (result: object) => ({ jsonrpc: "2.0", id: req.id ?? null, result });
+  const fail = (code: number, message: string) => ({ jsonrpc: "2.0", id: req.id ?? null, error: { code, message } });
+  switch (req.method) {
+    case "initialize":
+      return reply({
+        protocolVersion: typeof req.params?.protocolVersion === "string" ? req.params.protocolVersion : PROTOCOL_VERSION,
+        capabilities: { tools: {} },
+        serverInfo: { name: "pagesnap", version: "1.1.0" },
+        instructions: "PageSnap lean pack. Call pagesnap_overview first, pagesnap_pom for page objects, pagesnap_query per step, pagesnap_validate before running a spec.",
+      });
+    case "ping":
+      return reply({});
+    case "tools/list":
+      return reply({ tools: TOOLS.map(({ name, description, inputSchema }) => ({ name, description, inputSchema })) });
+    case "tools/call": {
+      const name = String(req.params?.name ?? "");
+      const tool = TOOLS.find((t) => t.name === name);
+      if (!tool) return fail(-32602, "Unknown tool: " + name);
+      try {
+        const r = await tool.run((req.params?.arguments as Args) ?? {});
+        return reply({ content: [{ type: "text", text: r.text }], isError: !!r.isError });
+      } catch (e) {
+        return reply({ content: [{ type: "text", text: "Error: " + (e instanceof Error ? e.message : String(e)) }], isError: true });
+      }
+    }
+    default:
+      if (req.id === undefined) return null; // notification (e.g. notifications/initialized)
+      return fail(-32601, "Method not found: " + req.method);
+  }
+}
+
+export function serve(input: NodeJS.ReadableStream = process.stdin, output: NodeJS.WritableStream = process.stdout): void {
+  const rl = readline.createInterface({ input });
+  // Tool calls may be slow (verify); answer in order of completion, each line is self-contained.
+  rl.on("line", async (line) => {
+    if (!line.trim()) return;
+    let req: Req;
+    try {
+      req = JSON.parse(line);
+    } catch {
+      output.write(JSON.stringify({ jsonrpc: "2.0", id: null, error: { code: -32700, message: "Parse error" } }) + "\n");
+      return;
+    }
+    const res = await handle(req);
+    if (res) output.write(JSON.stringify(res) + "\n");
+  });
+}
+
+const isMain = process.argv[1] && /mcp\.(ts|js)$/.test(process.argv[1]);
+if (isMain) serve();
