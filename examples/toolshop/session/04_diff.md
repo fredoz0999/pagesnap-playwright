@@ -1,7 +1,7 @@
 # Diff step 3 → 4
 
 - Step 3 URL: https://practicesoftwaretesting.com/
-- Step 4 URL: https://practicesoftwaretesting.com/product/01M5GND76XN01H7QVXZRB78RDZ
+- Step 4 URL: https://practicesoftwaretesting.com/product/01M5GRV27BBGJKW219TYFHXV5Y
 
 _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with notes)._
 
@@ -89,18 +89,18 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - text "Hammer"
 + - text "MightyCraft Hardware"
 + - text "Photo by on ."
-+ - {by: css, value: "a[href*=\"/product/01M5GND76DX63X0V1S632TWZFC\"]", stability: medium, score: 60}
-+ - {by: css, value: "a[href*=\"/product/01M5GND76N9P1WQ5T8HJVJ5N3F\"]", stability: medium, score: 60}
-+ - {by: css, value: "a[href*=\"/product/01M5GND773BS12QCXFZNCMJA07\"]", stability: medium, score: 60}
-+ - {by: css, value: "a[href*=\"/product/01M5GND77768V5FAP7XFFEBM79\"]", stability: medium, score: 60}
-+ - {by: css, value: "a[href*=\"/product/01M5GND77A1MZV5GJHM225X0Q5\"]", stability: medium, score: 60}
-+ - {by: css, value: "a[href*=\"/product/01M5GND77C8TVM5Q0SM5PNNXTM\"]", stability: medium, score: 60}
++ - {by: css, value: "a[href*=\"/product/01M5GRV27324JGRQE7C1JSPR0X\"]", stability: medium, score: 60}
++ - {by: css, value: "a[href*=\"/product/01M5GRV27732J62Z8CGJ3E67SD\"]", stability: medium, score: 60}
++ - {by: css, value: "a[href*=\"/product/01M5GRV27F7FKGJCQHW5YDTY7W\"]", stability: medium, score: 60}
++ - {by: css, value: "a[href*=\"/product/01M5GRV27N1VYEGTT63SWF2DZB\"]", stability: medium, score: 60}
++ - {by: css, value: "a[href*=\"/product/01M5GRV27V8V5FM02QDJ5CJ4E7\"]", stability: medium, score: 60}
++ - {by: css, value: "a[href*=\"/product/01M5GRV27YDM25GNQSJ2RR01ET\"]", stability: medium, score: 60}
 + - {by: css, value: "a[href*=\"https://unsplash.com/photos/YU2mCvXR0wA\"]", stability: medium, score: 60}
-+ - {by: css, value: "a[href*=\"https://unsplash.com/photos/t5YUoHW6zRo\"]", stability: medium, score: 60}
-+ - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
-+ - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
-+ - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > span:nth-child(2)", stability: low, score: 60}
-+ - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
++ - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1)", stability: low, score: 60}
++ - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2)", stability: low, score: 60}
++ - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3)", stability: low, score: 60}
++ - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(4)", stability: low, score: 60}
++ - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5)", stability: low, score: 60}
 
 ## Removed
 
@@ -178,7 +178,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - heading "Sort" [level=4]
 - - heading "Sustainability:" [level=4]
 - - heading "Thor Hammer" [level=5]:
-- - img "Banner"
+- - img "Banner":
 - - link "Claw Hammer ABCDE$11.48":
 - - link "Claw Hammer with Fiberglass Handle ABCDE$20.14":
 - - link "Claw Hammer with Shock Reduction Grip ABCDE$13.41":

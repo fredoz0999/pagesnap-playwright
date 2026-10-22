@@ -69,37 +69,37 @@
 - separator
 - heading "Related products" [level=2]
 - link "Claw Hammer with Shock Reduction Grip Claw Hammer with Shock Reduction Grip More information":
-  - /url: /product/01M5GND76DX63X0V1S632TWZFC
+  - /url: /product/01M5GRV27324JGRQE7C1JSPR0X
   - img "Claw Hammer with Shock Reduction Grip"
   - heading "Claw Hammer with Shock Reduction Grip" [level=5]
   - link "More information":
     - /url: "#"
 - link "Hammer Hammer More information":
-  - /url: /product/01M5GND76N9P1WQ5T8HJVJ5N3F
+  - /url: /product/01M5GRV27732J62Z8CGJ3E67SD
   - img "Hammer"
   - heading "Hammer" [level=5]
   - link "More information":
     - /url: "#"
 - link "Thor Hammer Thor Hammer More information":
-  - /url: /product/01M5GND773BS12QCXFZNCMJA07
+  - /url: /product/01M5GRV27F7FKGJCQHW5YDTY7W
   - img "Thor Hammer"
   - heading "Thor Hammer" [level=5]
   - link "More information":
     - /url: "#"
 - link "Sledgehammer Sledgehammer More information":
-  - /url: /product/01M5GND77768V5FAP7XFFEBM79
+  - /url: /product/01M5GRV27N1VYEGTT63SWF2DZB
   - img "Sledgehammer"
   - heading "Sledgehammer" [level=5]
   - link "More information":
     - /url: "#"
 - link "Claw Hammer with Fiberglass Handle Claw Hammer with Fiberglass Handle More information":
-  - /url: /product/01M5GND77A1MZV5GJHM225X0Q5
+  - /url: /product/01M5GRV27V8V5FM02QDJ5CJ4E7
   - img "Claw Hammer with Fiberglass Handle"
   - heading "Claw Hammer with Fiberglass Handle" [level=5]
   - link "More information":
     - /url: "#"
 - link "Court Hammer Court Hammer More information":
-  - /url: /product/01M5GND77C8TVM5Q0SM5PNNXTM
+  - /url: /product/01M5GRV27YDM25GNQSJ2RR01ET
   - img "Court Hammer"
   - heading "Court Hammer" [level=5]
   - link "More information":

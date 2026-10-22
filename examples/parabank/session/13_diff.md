@@ -43,8 +43,6 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - listitem
 - - {by: css, value: "#rightPanel > p:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
 - - {by: css, value: "#rightPanel > p:nth-child(7) > a:nth-child(1)", stability: low, score: 60}
-- - {by: css, value: "#rightPanel > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
-- - {by: css, value: "#rightPanel > ul:nth-child(3) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
 - - {by: role, value: "link", name: "Account History", stability: medium, score: 95}
 - - {by: role, value: "link", name: "Bill Pay", stability: medium, score: 95}
 - - {by: role, value: "link", name: "Check Balances", stability: medium, score: 95}
@@ -52,6 +50,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - {by: role, value: "link", name: "New! Online Account Transfers", stability: medium, score: 95}
 - - {by: role, value: "link", name: "New! Online Bill Pay", stability: medium, score: 95}
 - - {by: role, value: "link", name: "ParaBank Is Now Re-Opened", stability: medium, score: 95}
+- - {by: role, value: "link", name: "Transfer Funds", scopeBy: role, scopeValue: "list", scopeText: "Account History", stability: medium, score: 95}
+- - {by: role, value: "link", name: "Transfer Funds", scopeBy: role, scopeValue: "list", scopeText: "Make Deposits", stability: medium, score: 95}
 - - {by: role, value: "link", name: "Withdraw Funds", stability: medium, score: 95}
 - locators:
 - locators:

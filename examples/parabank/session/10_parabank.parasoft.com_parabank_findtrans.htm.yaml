@@ -1,33 +1,35 @@
 # URL: https://parabank.parasoft.com/parabank/findtrans.htm
 # Title: ParaBank | Find Transactions
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:36:11Z
+# Captured: 2026-10-22T03:17:49Z
 # Trigger: manual
 # Step: 10
 # Note: action: open Find Transactions | data: account used for the bill payment, find by amount 12.34
 # Session goal: Parabank: register, open savings account, transfer, pay bill, find transaction
 
 - img
-- img "ParaBank"
+- img "ParaBank":
+  locators:
+    - {by: alt, value: "ParaBank", stability: medium, score: 89}
 - text "Experience the difference"
 - list
   - listitem
   - listitem
     - link "About Us" [dup 1/2]:
       locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "About Us", scopeBy: role, scopeValue: "list", scopeText: "Admin Page", stability: medium, score: 95}
   - listitem
     - link "Services" [dup 1/2]:
       locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Services", scopeBy: role, scopeValue: "list", scopeText: "Admin Page", stability: medium, score: 95}
   - listitem
     - link "Products" [dup 1/2]:
       locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Products", scopeBy: role, scopeValue: "list", scopeText: "Admin Page", stability: medium, score: 95}
   - listitem
     - link "Locations" [dup 1/2]:
       locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Locations", scopeBy: role, scopeValue: "list", scopeText: "Admin Page", stability: medium, score: 95}
   - listitem
     - link "Admin Page":
       locators:
@@ -84,53 +86,53 @@
 - heading "Find Transactions" [level=1]
 - form:
   locators:
-    - {by: id, value: "transactionForm", stability: high, score: 90}
+    - {by: id, value: "transactionForm", stability: high, score: 80}
   - text "Select an account"
   - combobox "accountId":
-    value: "21669"
+    value: "15120"
     locators:
-      - {by: id, value: "accountId", stability: high, score: 90}
+      - {by: id, value: "accountId", stability: high, score: 80}
     options:  # native <select> - available without opening UI
-      - option "21669" [selected]
-      - option "21558"
+      - option "15120" [selected]
+      - option "15009"
   - text "Find by Transaction ID"
   - textbox "transactionId":
     value: ""
     locators:
-      - {by: id, value: "transactionId", stability: high, score: 90}
+      - {by: id, value: "transactionId", stability: high, score: 80}
   - button "Find Transactions" [dup 1/4]:
     locators:
-      - {by: id, value: "findById", stability: high, score: 90}
+      - {by: id, value: "findById", stability: high, score: 80}
   - text ": ( MM-DD-YYYY )"
   - text "Find by Date"
   - textbox "transactionDate":
     value: ""
     locators:
-      - {by: id, value: "transactionDate", stability: high, score: 90}
+      - {by: id, value: "transactionDate", stability: high, score: 80}
   - button "Find Transactions" [dup 2/4]:
     locators:
-      - {by: id, value: "findByDate", stability: high, score: 90}
+      - {by: id, value: "findByDate", stability: high, score: 80}
   - text "Find by Date Range"
   - text "Between and ( MM-DD-YYYY )"
   - textbox "fromDate":
     value: ""
     locators:
-      - {by: id, value: "fromDate", stability: high, score: 90}
+      - {by: id, value: "fromDate", stability: high, score: 80}
   - textbox "toDate":
     value: ""
     locators:
-      - {by: id, value: "toDate", stability: high, score: 90}
+      - {by: id, value: "toDate", stability: high, score: 80}
   - button "Find Transactions" [dup 3/4]:
     locators:
-      - {by: id, value: "findByDateRange", stability: high, score: 90}
+      - {by: id, value: "findByDateRange", stability: high, score: 80}
   - text "Find by Amount"
   - textbox "amount":
     value: ""
     locators:
-      - {by: id, value: "amount", stability: high, score: 90}
+      - {by: id, value: "amount", stability: high, score: 80}
   - button "Find Transactions" [dup 4/4]:
     locators:
-      - {by: id, value: "findByAmount", stability: high, score: 90}
+      - {by: id, value: "findByAmount", stability: high, score: 80}
 - list
   - listitem
     - link "Home":
@@ -139,19 +141,19 @@
   - listitem
     - link "About Us" [dup 2/2]:
       locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "About Us", scopeBy: role, scopeValue: "list", scopeText: "Site Map", stability: medium, score: 95}
   - listitem
     - link "Services" [dup 2/2]:
       locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Services", scopeBy: role, scopeValue: "list", scopeText: "Site Map", stability: medium, score: 95}
   - listitem
     - link "Products" [dup 2/2]:
       locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Products", scopeBy: role, scopeValue: "list", scopeText: "Site Map", stability: medium, score: 95}
   - listitem
     - link "Locations" [dup 2/2]:
       locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Locations", scopeBy: role, scopeValue: "list", scopeText: "Site Map", stability: medium, score: 95}
   - listitem
     - link "Site Map":
       locators:
@@ -170,5 +172,5 @@
 
 # --- All <select> options ---
 # <select> "accountId":
-#   - 21669 (selected)
-#   - 21558
+#   - 15120 (selected)
+#   - 15009

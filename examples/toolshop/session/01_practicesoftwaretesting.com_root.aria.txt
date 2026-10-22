@@ -114,55 +114,55 @@
   - checkbox "Show only eco-friendly products"
   - text: Show only eco-friendly products
 - 'link "Combination Pliers Compare Combination Pliers CO₂: A B C D E $14.15"':
-  - /url: /product/01M5GND75DE8R8JBHYD9G7GTRH
+  - /url: /product/01M5GRV25C64E8PFTV6R9KJQJX
   - img "Combination Pliers"
   - button "Compare"
   - heading "Combination Pliers" [level=5]
   - text: "CO₂: A B C D E $14.15"
 - 'link "Pliers Compare Pliers CO₂: A B C D E $12.01"':
-  - /url: /product/01M5GND75HPV0PQ72MQXKN112F
+  - /url: /product/01M5GRV25SJSQYJVRJDBG307S6
   - img "Pliers"
   - button "Compare"
   - heading "Pliers" [level=5]
   - text: "CO₂: A B C D E $12.01"
 - 'link "Bolt Cutters Compare Bolt Cutters CO₂: A B C D E $48.41"':
-  - /url: /product/01M5GND75N0P5KPN5W7QFYXQJV
+  - /url: /product/01M5GRV25ZC9JAR3RS0C6ETN6X
   - img "Bolt Cutters"
   - button "Compare"
   - heading "Bolt Cutters" [level=5]
   - text: "CO₂: A B C D E $48.41"
 - 'link "Long Nose Pliers Compare Long Nose Pliers CO₂: A B C D E Out of stock $14.24"':
-  - /url: /product/01M5GND761K2NTWCZDBNNVZF7Z
+  - /url: /product/01M5GRV26SRDKAETFSS8EQB6S3
   - img "Long Nose Pliers"
   - button "Compare"
   - heading "Long Nose Pliers" [level=5]
   - text: "CO₂: A B C D E Out of stock $14.24"
 - 'link "Slip Joint Pliers Compare Slip Joint Pliers CO₂: A B C D E $9.17"':
-  - /url: /product/01M5GND7662H72M48DH88MBZ04
+  - /url: /product/01M5GRV26YD1K18K6PVVHKT84N
   - img "Slip Joint Pliers"
   - button "Compare"
   - heading "Slip Joint Pliers" [level=5]
   - text: "CO₂: A B C D E $9.17"
 - 'link "Claw Hammer with Shock Reduction Grip Compare Claw Hammer with Shock Reduction Grip CO₂: A B C D E $13.41"':
-  - /url: /product/01M5GND76DX63X0V1S632TWZFC
+  - /url: /product/01M5GRV27324JGRQE7C1JSPR0X
   - img "Claw Hammer with Shock Reduction Grip"
   - button "Compare"
   - heading "Claw Hammer with Shock Reduction Grip" [level=5]
   - text: "CO₂: A B C D E $13.41"
 - 'link "Hammer Compare Hammer CO₂: A B C D E $12.58"':
-  - /url: /product/01M5GND76N9P1WQ5T8HJVJ5N3F
+  - /url: /product/01M5GRV27732J62Z8CGJ3E67SD
   - img "Hammer"
   - button "Compare"
   - heading "Hammer" [level=5]
   - text: "CO₂: A B C D E $12.58"
 - 'link "Claw Hammer Compare Claw Hammer CO₂: A B C D E $11.48"':
-  - /url: /product/01M5GND76XN01H7QVXZRB78RDZ
+  - /url: /product/01M5GRV27BBGJKW219TYFHXV5Y
   - img "Claw Hammer"
   - button "Compare"
   - heading "Claw Hammer" [level=5]
   - text: "CO₂: A B C D E $11.48"
 - 'link "Thor Hammer Compare Thor Hammer CO₂: A B C D E $11.14"':
-  - /url: /product/01M5GND773BS12QCXFZNCMJA07
+  - /url: /product/01M5GRV27F7FKGJCQHW5YDTY7W
   - img "Thor Hammer"
   - button "Compare"
   - heading "Thor Hammer" [level=5]

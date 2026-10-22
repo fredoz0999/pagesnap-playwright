@@ -59,7 +59,7 @@
   - listitem:
     - link "Log Out":
       - /url: logout.htm
-- heading "Welcome psmvixixfe" [level=1]
+- heading "Welcome psmviz0h21" [level=1]
 - paragraph: Your account was created successfully. You are now logged in.
 - list:
   - listitem:

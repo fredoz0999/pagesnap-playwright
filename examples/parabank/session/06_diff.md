@@ -10,37 +10,37 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + # <select> "toAccountId":
 + - combobox "fromAccountId":
 + - combobox "toAccountId":
-+ - option "21558" [selected]
-+ - option "21558" [selected]
-+ - option "21669"
-+ - option "21669"
++ - option "15009" [selected]
++ - option "15009" [selected]
++ - option "15120"
++ - option "15120"
 + options:  # native <select> - available without opening UI
 + options:  # native <select> - available without opening UI
 - # <select> "type":
 
 ## Added
 
-+ #   - 21558 (selected)
-+ #   - 21669
-+ #   - 21669
++ #   - 15009 (selected)
++ #   - 15120
++ #   - 15120
 + - button "Transfer":
 + - form:
 + - heading "Transfer Funds" [level=1]
 + - text "Amount:"
 + - text "From account # to account #"
 + - textbox "input":
-+ - {by: id, value: "amount", stability: high, score: 90}
-+ - {by: id, value: "fromAccountId", stability: high, score: 90}
-+ - {by: id, value: "toAccountId", stability: high, score: 90}
-+ - {by: id, value: "transferForm", stability: high, score: 90}
++ - {by: id, value: "amount", stability: high, score: 80}
++ - {by: id, value: "fromAccountId", stability: high, score: 80}
++ - {by: id, value: "toAccountId", stability: high, score: 80}
++ - {by: id, value: "transferForm", stability: high, score: 80}
 + - {by: role, value: "button", name: "Transfer", stability: medium, score: 95}
 + locators:
 + locators:
 + locators:
 + locators:
 + value: ""
-+ value: "21558"
-+ value: "21558"
++ value: "15009"
++ value: "15009"
 + value: "Transfer"
 
 ## Removed
@@ -48,7 +48,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - #   - CHECKING
 - #   - SAVINGS (selected)
 - - heading "Account Opened!" [level=1]
-- - link "21669":
+- - link "15120":
 - - text "Congratulations, your account is now open."
 - - text "Your new account number:"
-- - {by: role, value: "link", name: "21669", stability: medium, score: 95}
+- - {by: role, value: "link", name: "15120", stability: medium, score: 95}

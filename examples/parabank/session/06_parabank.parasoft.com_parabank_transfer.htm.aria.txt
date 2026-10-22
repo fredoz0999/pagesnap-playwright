@@ -65,12 +65,12 @@
   - textbox
 - text: "From account #"
 - combobox:
-  - option "21558" [selected]
-  - option "21669"
+  - option "15009" [selected]
+  - option "15120"
 - text: "to account #"
 - combobox:
-  - option "21558" [selected]
-  - option "21669"
+  - option "15009" [selected]
+  - option "15120"
 - button "Transfer"
 - list:
   - listitem:

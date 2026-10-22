@@ -1,7 +1,7 @@
 # URL: https://practicesoftwaretesting.com/
 # Title: Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:38:08Z
+# Captured: 2026-10-22T03:19:49Z
 # Trigger: manual
 # Step: 2
 # Note: action: search 'hammer' | assert: caption 'Searched for: hammer', only hammer products listed
@@ -52,7 +52,9 @@
   locators:
     - {by: testid, value: "language-select", attr: data-test, stability: high, score: 98}
 - heading "Practice Software Testing - Toolshop" [level=1]
-- img "Banner"
+- img "Banner":
+  locators:
+    - {by: alt, value: "Banner", stability: medium, score: 89}
 - generic:
   locators:
     - {by: testid, value: "course-promo", attr: data-test, stability: high, score: 98}
@@ -62,7 +64,7 @@
       - {by: testid, value: "course-promo-link", attr: data-test, stability: high, score: 98}
 - generic:
   locators:
-    - {by: id, value: "filters", stability: high, score: 90}
+    - {by: id, value: "filters", stability: high, score: 80}
   - heading "Sort" [level=4]
   - form:
     locators:
@@ -104,97 +106,97 @@
   - heading "By category:" [level=4]
   - text "Categories"
   - checkbox "Hand Tools":
-    value: "01M5GND71MK3KFRVGTBV1QE4ZQ"
+    value: "01M5GRV22NM2WR40M136X6ZWY5"
     locators:
-      - {by: testid, value: "category-01M5GND71MK3KFRVGTBV1QE4ZQ", attr: data-test, stability: high, score: 98}
+      - {by: testid, value: "category-01M5GRV22NM2WR40M136X6ZWY5", attr: data-test, stability: high, score: 98}
   - list
     - text "Categories"
     - checkbox "Hammer":
-      value: "01M5GND72GRNKJ0VS990Z1N3CF"
+      value: "01M5GRV23NZSG5E72TBY6RQBTH"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CF", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTH", attr: data-test, stability: high, score: 98}
     - checkbox "Hand Saw":
-      value: "01M5GND72GRNKJ0VS990Z1N3CG"
+      value: "01M5GRV23NZSG5E72TBY6RQBTJ"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CG", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTJ", attr: data-test, stability: high, score: 98}
     - checkbox "Wrench":
-      value: "01M5GND72GRNKJ0VS990Z1N3CH"
+      value: "01M5GRV23NZSG5E72TBY6RQBTK"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CH", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTK", attr: data-test, stability: high, score: 98}
     - checkbox "Screwdriver":
-      value: "01M5GND72GRNKJ0VS990Z1N3CJ"
+      value: "01M5GRV23NZSG5E72TBY6RQBTM"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CJ", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTM", attr: data-test, stability: high, score: 98}
     - checkbox "Pliers":
-      value: "01M5GND72GRNKJ0VS990Z1N3CK"
+      value: "01M5GRV23NZSG5E72TBY6RQBTN"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CK", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTN", attr: data-test, stability: high, score: 98}
     - checkbox "Chisels":
-      value: "01M5GND72GRNKJ0VS990Z1N3CM"
+      value: "01M5GRV23NZSG5E72TBY6RQBTP"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CM", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTP", attr: data-test, stability: high, score: 98}
     - checkbox "Measures":
-      value: "01M5GND72GRNKJ0VS990Z1N3CN"
+      value: "01M5GRV23NZSG5E72TBY6RQBTQ"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CN", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTQ", attr: data-test, stability: high, score: 98}
   - checkbox "Power Tools":
-    value: "01M5GND71MK3KFRVGTBV1QE4ZR"
+    value: "01M5GRV22NM2WR40M136X6ZWY6"
     locators:
-      - {by: testid, value: "category-01M5GND71MK3KFRVGTBV1QE4ZR", attr: data-test, stability: high, score: 98}
+      - {by: testid, value: "category-01M5GRV22NM2WR40M136X6ZWY6", attr: data-test, stability: high, score: 98}
   - list
     - text "Categories"
     - checkbox "Grinder":
-      value: "01M5GND72GRNKJ0VS990Z1N3CP"
+      value: "01M5GRV23NZSG5E72TBY6RQBTR"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CP", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTR", attr: data-test, stability: high, score: 98}
     - checkbox "Sander":
-      value: "01M5GND72GRNKJ0VS990Z1N3CQ"
+      value: "01M5GRV23NZSG5E72TBY6RQBTS"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CQ", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTS", attr: data-test, stability: high, score: 98}
     - checkbox "Saw":
-      value: "01M5GND72GRNKJ0VS990Z1N3CR"
+      value: "01M5GRV23NZSG5E72TBY6RQBTT"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CR", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTT", attr: data-test, stability: high, score: 98}
     - checkbox "Drill":
-      value: "01M5GND72GRNKJ0VS990Z1N3CS"
+      value: "01M5GRV23NZSG5E72TBY6RQBTV"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CS", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTV", attr: data-test, stability: high, score: 98}
   - checkbox "Other":
-    value: "01M5GND71MK3KFRVGTBV1QE4ZS"
+    value: "01M5GRV22NM2WR40M136X6ZWY7"
     locators:
-      - {by: testid, value: "category-01M5GND71MK3KFRVGTBV1QE4ZS", attr: data-test, stability: high, score: 98}
+      - {by: testid, value: "category-01M5GRV22NM2WR40M136X6ZWY7", attr: data-test, stability: high, score: 98}
   - list
     - text "Categories"
     - checkbox "Tool Belts":
-      value: "01M5GND72GRNKJ0VS990Z1N3CT"
+      value: "01M5GRV23NZSG5E72TBY6RQBTW"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CT", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTW", attr: data-test, stability: high, score: 98}
     - checkbox "Storage Solutions":
-      value: "01M5GND72GRNKJ0VS990Z1N3CV"
+      value: "01M5GRV23NZSG5E72TBY6RQBTX"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CV", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTX", attr: data-test, stability: high, score: 98}
     - checkbox "Workbench":
-      value: "01M5GND72GRNKJ0VS990Z1N3CW"
+      value: "01M5GRV23NZSG5E72TBY6RQBTY"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CW", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTY", attr: data-test, stability: high, score: 98}
     - checkbox "Safety Gear":
-      value: "01M5GND72GRNKJ0VS990Z1N3CX"
+      value: "01M5GRV23NZSG5E72TBY6RQBTZ"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CX", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBTZ", attr: data-test, stability: high, score: 98}
     - checkbox "Fasteners":
-      value: "01M5GND72GRNKJ0VS990Z1N3CY"
+      value: "01M5GRV23NZSG5E72TBY6RQBV0"
       locators:
-        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CY", attr: data-test, stability: high, score: 98}
+        - {by: testid, value: "category-01M5GRV23NZSG5E72TBY6RQBV0", attr: data-test, stability: high, score: 98}
   - heading "By brand:" [level=4]
   - text "Brands"
   - checkbox "ForgeFlex Tools":
-    value: "01M5GND6PZKTEJF24A041V4AWN"
+    value: "01M5GRV1QAJ50R00Z7JXND2J0S"
     locators:
-      - {by: testid, value: "brand-01M5GND6PZKTEJF24A041V4AWN", attr: data-test, stability: high, score: 98}
+      - {by: testid, value: "brand-01M5GRV1QAJ50R00Z7JXND2J0S", attr: data-test, stability: high, score: 98}
   - checkbox "MightyCraft Hardware":
-    value: "01M5GND6PZKTEJF24A041V4AWP"
+    value: "01M5GRV1QAJ50R00Z7JXND2J0T"
     locators:
-      - {by: testid, value: "brand-01M5GND6PZKTEJF24A041V4AWP", attr: data-test, stability: high, score: 98}
+      - {by: testid, value: "brand-01M5GRV1QAJ50R00Z7JXND2J0T", attr: data-test, stability: high, score: 98}
   - heading "Sustainability:" [level=4]
   - text "Eco-Friendly Products"
   - checkbox "Show only eco-friendly products":
@@ -215,8 +217,10 @@
     - {by: testid, value: "search_completed", attr: data-test, stability: high, score: 98}
   - link "Claw Hammer with Shock Reduction Grip ABCDE$13.41":
     locators:
-      - {by: testid, value: "product-01M5GND76DX63X0V1S632TWZFC", attr: data-test, stability: high, score: 98}
-    - img "Claw Hammer with Shock Reduction Grip"
+      - {by: testid, value: "product-01M5GRV27324JGRQE7C1JSPR0X", attr: data-test, stability: high, score: 98}
+    - img "Claw Hammer with Shock Reduction Grip":
+      locators:
+        - {by: alt, value: "Claw Hammer with Shock Reduction Grip", stability: medium, score: 89}
     - button "Compare" [dup 1/6]:
       locators:
         - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(1) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
@@ -231,8 +235,10 @@
         - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(1) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
   - link "Hammer ABCDE$12.58":
     locators:
-      - {by: testid, value: "product-01M5GND76N9P1WQ5T8HJVJ5N3F", attr: data-test, stability: high, score: 98}
-    - img "Hammer"
+      - {by: testid, value: "product-01M5GRV27732J62Z8CGJ3E67SD", attr: data-test, stability: high, score: 98}
+    - img "Hammer":
+      locators:
+        - {by: alt, value: "Hammer", stability: medium, score: 89}
     - button "Compare" [dup 2/6]:
       locators:
         - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(2) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
@@ -247,8 +253,10 @@
         - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(2) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
   - link "Claw Hammer ABCDE$11.48":
     locators:
-      - {by: testid, value: "product-01M5GND76XN01H7QVXZRB78RDZ", attr: data-test, stability: high, score: 98}
-    - img "Claw Hammer"
+      - {by: testid, value: "product-01M5GRV27BBGJKW219TYFHXV5Y", attr: data-test, stability: high, score: 98}
+    - img "Claw Hammer":
+      locators:
+        - {by: alt, value: "Claw Hammer", stability: medium, score: 89}
     - button "Compare" [dup 3/6]:
       locators:
         - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(3) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
@@ -263,8 +271,10 @@
         - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(3) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
   - link "Thor Hammer ABCDE$11.14":
     locators:
-      - {by: testid, value: "product-01M5GND773BS12QCXFZNCMJA07", attr: data-test, stability: high, score: 98}
-    - img "Thor Hammer"
+      - {by: testid, value: "product-01M5GRV27F7FKGJCQHW5YDTY7W", attr: data-test, stability: high, score: 98}
+    - img "Thor Hammer":
+      locators:
+        - {by: alt, value: "Thor Hammer", stability: medium, score: 89}
     - button "Compare" [dup 4/6]:
       locators:
         - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(4) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
@@ -279,8 +289,10 @@
         - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(4) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
   - link "Claw Hammer with Fiberglass Handle ABCDE$20.14":
     locators:
-      - {by: testid, value: "product-01M5GND77A1MZV5GJHM225X0Q5", attr: data-test, stability: high, score: 98}
-    - img "Claw Hammer with Fiberglass Handle"
+      - {by: testid, value: "product-01M5GRV27V8V5FM02QDJ5CJ4E7", attr: data-test, stability: high, score: 98}
+    - img "Claw Hammer with Fiberglass Handle":
+      locators:
+        - {by: alt, value: "Claw Hammer with Fiberglass Handle", stability: medium, score: 89}
     - button "Compare" [dup 5/6]:
       locators:
         - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(5) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
@@ -295,8 +307,10 @@
         - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(5) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
   - link "Court Hammer ABCDE$18.63":
     locators:
-      - {by: testid, value: "product-01M5GND77C8TVM5Q0SM5PNNXTM", attr: data-test, stability: high, score: 98}
-    - img "Court Hammer"
+      - {by: testid, value: "product-01M5GRV27YDM25GNQSJ2RR01ET", attr: data-test, stability: high, score: 98}
+    - img "Court Hammer":
+      locators:
+        - {by: alt, value: "Court Hammer", stability: medium, score: 89}
     - button "Compare" [dup 6/6]:
       locators:
         - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(6) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}

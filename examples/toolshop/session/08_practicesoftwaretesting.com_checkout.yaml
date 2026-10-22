@@ -1,7 +1,7 @@
 # URL: https://practicesoftwaretesting.com/checkout
 # Title: Checkout - Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:38:16Z
+# Captured: 2026-10-22T03:19:58Z
 # Trigger: manual
 # Step: 8
 # Note: action: log in with a wrong password | assert: login error shown, still on Sign in

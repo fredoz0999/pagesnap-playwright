@@ -114,12 +114,12 @@
       - cell
     - row:
       - cell
-    - 'row "From account #: 21558"':
+    - 'row "From account #: 15009"':
       - 'cell "From account #:"'
-      - cell "21558":
+      - cell "15009":
         - combobox:
-          - option "21558" [selected]
-          - option "21669"
+          - option "15009" [selected]
+          - option "15120"
     - row "Send Payment":
       - cell
       - cell "Send Payment":

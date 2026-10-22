@@ -1,6 +1,6 @@
 # Diff step 5 → 6
 
-- Step 5 URL: https://practicesoftwaretesting.com/product/01M5GND76XN01H7QVXZRB78RDZ
+- Step 5 URL: https://practicesoftwaretesting.com/product/01M5GRV27BBGJKW219TYFHXV5Y
 - Step 6 URL: https://practicesoftwaretesting.com/checkout
 
 _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with notes)._
@@ -138,13 +138,13 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - heading "Sledgehammer" [level=5]
 - - heading "Specifications" [level=3]:
 - - heading "Thor Hammer" [level=5]
-- - img "Claw Hammer with Fiberglass Handle"
-- - img "Claw Hammer with Shock Reduction Grip"
-- - img "Claw Hammer"
-- - img "Court Hammer"
-- - img "Hammer"
-- - img "Sledgehammer"
-- - img "Thor Hammer"
+- - img "Claw Hammer with Fiberglass Handle":
+- - img "Claw Hammer with Shock Reduction Grip":
+- - img "Claw Hammer":
+- - img "Court Hammer":
+- - img "Hammer":
+- - img "Sledgehammer":
+- - img "Thor Hammer":
 - - link "Andrew George":
 - - link "Claw Hammer with Fiberglass Handle More information":
 - - link "Claw Hammer with Shock Reduction Grip More information":
@@ -171,8 +171,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - text "Hammer"
 - - text "MightyCraft Hardware"
 - - text "Photo by on ."
-- - {by: css, value: "a[href*=\"/product/01M5GND76DX63X0V1S632TWZFC\"]", stability: medium, score: 60}
-- - {by: css, value: "a[href*=\"/product/01M5GND76N9P1WQ5T8HJVJ5N3F\"]", stability: medium, score: 60}
-- - {by: css, value: "a[href*=\"/product/01M5GND773BS12QCXFZNCMJA07\"]", stability: medium, score: 60}
-- - {by: css, value: "a[href*=\"/product/01M5GND77768V5FAP7XFFEBM79\"]", stability: medium, score: 60}
-- - {by: css, value: "a[href*=\"/product/01M5GND77A1MZV5GJHM225X0Q5\"]", stability: medium, score: 60}
+- - {by: alt, value: "Claw Hammer with Fiberglass Handle", stability: medium, score: 89}
+- - {by: alt, value: "Claw Hammer with Shock Reduction Grip", stability: medium, score: 89}
+- - {by: alt, value: "Claw Hammer", stability: medium, score: 89}
+- - {by: alt, value: "Court Hammer", stability: medium, score: 89}
+- - {by: alt, value: "Hammer", stability: medium, score: 89}

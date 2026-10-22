@@ -7,6 +7,7 @@ Produce ONE runnable test covering EVERY flow.md step in order. Do not invent st
 
 ## Locators
 - Prefer higher `score`. Never use score <= 40 unless nothing else exists. Never use stability: low unless nothing else exists.
+- Every name match is exact (`exact: true`). A scoped locator (scopeBy/scopeValue[/scopeText]) is a chain: container[.filter({ hasText })].control; never .first()/.nth() instead.
 - YAML `by: testid` → `getByTestId` even when `attr` is data-test / data-cy / data-qa. Never `getByRole("generic")`.
 - Do not goto a URL to skip a control that is in the YAML (especially cart).
 

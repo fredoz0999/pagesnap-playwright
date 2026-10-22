@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/register.htm
 # Title: ParaBank | Register for Free Online Account Access
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:36:05Z
+# Captured: 2026-10-22T03:17:44Z
 # Trigger: manual
 # Step: 1
 # Note: action: open Register | data: new unique username
@@ -9,31 +9,33 @@
 
 - link:
   locators:
-    - {by: css, value: "#topPanel > a:nth-child(1)", stability: low, score: 60}
+    - {by: css, value: "a[href*=\"admin.htm\"]", scopeBy: id, scopeValue: "topPanel", stability: medium, score: 60}
   - img
 - link:
   locators:
-    - {by: css, value: "#topPanel > a:nth-child(2)", stability: low, score: 60}
-  - img "ParaBank"
+    - {by: css, value: "a[href*=\"index.htm\"]", scopeBy: id, scopeValue: "topPanel", stability: medium, score: 60}
+  - img "ParaBank":
+    locators:
+      - {by: alt, value: "ParaBank", stability: medium, score: 89}
 - text "Experience the difference"
 - list
   - listitem
   - listitem
     - link "About Us" [dup 1/2]:
       locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "About Us", scopeBy: role, scopeValue: "list", scopeText: "Admin Page", stability: medium, score: 95}
   - listitem
     - link "Services" [dup 1/2]:
       locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Services", scopeBy: role, scopeValue: "list", scopeText: "Admin Page", stability: medium, score: 95}
   - listitem
     - link "Products" [dup 1/2]:
       locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Products", scopeBy: role, scopeValue: "list", scopeText: "Admin Page", stability: medium, score: 95}
   - listitem
     - link "Locations" [dup 1/2]:
       locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Locations", scopeBy: role, scopeValue: "list", scopeText: "Admin Page", stability: medium, score: 95}
   - listitem
     - link "Admin Page":
       locators:
@@ -54,17 +56,17 @@
 - heading "Customer Login" [level=2]
 - form:
   locators:
-    - {by: name, value: "login", stability: high, score: 88}
+    - {by: name, value: "login", stability: high, score: 78}
   - text "Username"
   - textbox "username":
     value: ""
     locators:
-      - {by: name, value: "username", stability: high, score: 88}
+      - {by: name, value: "username", stability: high, score: 78}
   - text "Password"
   - textbox "password":
     value: "***"
     locators:
-      - {by: name, value: "password", stability: high, score: 88}
+      - {by: name, value: "password", stability: high, score: 78}
   - button "Log In":
     value: "Log In"
     locators:
@@ -79,7 +81,7 @@
 - text "If you have an account with us you can sign-up for free instant online access. You will have to provide some personal information."
 - form:
   locators:
-    - {by: id, value: "customerForm", stability: high, score: 90}
+    - {by: id, value: "customerForm", stability: high, score: 80}
   - table
     - row
       - cell "First Name:"
@@ -87,7 +89,7 @@
         - textbox "customer.firstName":
           value: ""
           locators:
-            - {by: id, value: "customer.firstName", stability: high, score: 90}
+            - {by: id, value: "customer.firstName", stability: high, score: 80}
       - cell
     - row
       - cell "Last Name:"
@@ -95,7 +97,7 @@
         - textbox "customer.lastName":
           value: ""
           locators:
-            - {by: id, value: "customer.lastName", stability: high, score: 90}
+            - {by: id, value: "customer.lastName", stability: high, score: 80}
       - cell
     - row
       - cell "Address:"
@@ -103,7 +105,7 @@
         - textbox "customer.address.street":
           value: ""
           locators:
-            - {by: id, value: "customer.address.street", stability: high, score: 90}
+            - {by: id, value: "customer.address.street", stability: high, score: 80}
       - cell
     - row
       - cell "City:"
@@ -111,7 +113,7 @@
         - textbox "customer.address.city":
           value: ""
           locators:
-            - {by: id, value: "customer.address.city", stability: high, score: 90}
+            - {by: id, value: "customer.address.city", stability: high, score: 80}
       - cell
     - row
       - cell "State:"
@@ -119,7 +121,7 @@
         - textbox "customer.address.state":
           value: ""
           locators:
-            - {by: id, value: "customer.address.state", stability: high, score: 90}
+            - {by: id, value: "customer.address.state", stability: high, score: 80}
       - cell
     - row
       - cell "Zip Code:"
@@ -127,7 +129,7 @@
         - textbox "customer.address.zipCode":
           value: ""
           locators:
-            - {by: id, value: "customer.address.zipCode", stability: high, score: 90}
+            - {by: id, value: "customer.address.zipCode", stability: high, score: 80}
       - cell
     - row
       - cell "Phone #:"
@@ -135,7 +137,7 @@
         - textbox "customer.phoneNumber":
           value: ""
           locators:
-            - {by: id, value: "customer.phoneNumber", stability: high, score: 90}
+            - {by: id, value: "customer.phoneNumber", stability: high, score: 80}
       - cell
     - row
       - cell "SSN:"
@@ -143,7 +145,7 @@
         - textbox "customer.ssn":
           value: ""
           locators:
-            - {by: id, value: "customer.ssn", stability: high, score: 90}
+            - {by: id, value: "customer.ssn", stability: high, score: 80}
       - cell
     - row
       - cell
@@ -153,7 +155,7 @@
         - textbox "customer.username":
           value: ""
           locators:
-            - {by: id, value: "customer.username", stability: high, score: 90}
+            - {by: id, value: "customer.username", stability: high, score: 80}
       - cell
     - row
       - cell "Password:"
@@ -161,7 +163,7 @@
         - textbox "customer.password":
           value: "***"
           locators:
-            - {by: id, value: "customer.password", stability: high, score: 90}
+            - {by: id, value: "customer.password", stability: high, score: 80}
       - cell
     - row
       - cell "Confirm:"
@@ -169,7 +171,7 @@
         - textbox "repeatedPassword":
           value: "***"
           locators:
-            - {by: id, value: "repeatedPassword", stability: high, score: 90}
+            - {by: id, value: "repeatedPassword", stability: high, score: 80}
       - cell
     - row
       - cell
@@ -186,19 +188,19 @@
   - listitem
     - link "About Us" [dup 2/2]:
       locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "About Us", scopeBy: role, scopeValue: "list", scopeText: "Site Map", stability: medium, score: 95}
   - listitem
     - link "Services" [dup 2/2]:
       locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Services", scopeBy: role, scopeValue: "list", scopeText: "Site Map", stability: medium, score: 95}
   - listitem
     - link "Products" [dup 2/2]:
       locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Products", scopeBy: role, scopeValue: "list", scopeText: "Site Map", stability: medium, score: 95}
   - listitem
     - link "Locations" [dup 2/2]:
       locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Locations", scopeBy: role, scopeValue: "list", scopeText: "Site Map", stability: medium, score: 95}
   - listitem
     - link "Site Map":
       locators:

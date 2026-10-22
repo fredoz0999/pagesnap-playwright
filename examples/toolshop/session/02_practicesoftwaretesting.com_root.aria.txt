@@ -116,37 +116,37 @@
 - 'heading "Searched for: hammer" [level=3]'
 - paragraph: 6 products found for 'hammer'
 - 'link "Claw Hammer with Shock Reduction Grip Compare Claw Hammer with Shock Reduction Grip CO₂: A B C D E $13.41"':
-  - /url: /product/01M5GND76DX63X0V1S632TWZFC
+  - /url: /product/01M5GRV27324JGRQE7C1JSPR0X
   - img "Claw Hammer with Shock Reduction Grip"
   - button "Compare"
   - heading "Claw Hammer with Shock Reduction Grip" [level=5]
   - text: "CO₂: A B C D E $13.41"
 - 'link "Hammer Compare Hammer CO₂: A B C D E $12.58"':
-  - /url: /product/01M5GND76N9P1WQ5T8HJVJ5N3F
+  - /url: /product/01M5GRV27732J62Z8CGJ3E67SD
   - img "Hammer"
   - button "Compare"
   - heading "Hammer" [level=5]
   - text: "CO₂: A B C D E $12.58"
 - 'link "Claw Hammer Compare Claw Hammer CO₂: A B C D E $11.48"':
-  - /url: /product/01M5GND76XN01H7QVXZRB78RDZ
+  - /url: /product/01M5GRV27BBGJKW219TYFHXV5Y
   - img "Claw Hammer"
   - button "Compare"
   - heading "Claw Hammer" [level=5]
   - text: "CO₂: A B C D E $11.48"
 - 'link "Thor Hammer Compare Thor Hammer CO₂: A B C D E $11.14"':
-  - /url: /product/01M5GND773BS12QCXFZNCMJA07
+  - /url: /product/01M5GRV27F7FKGJCQHW5YDTY7W
   - img "Thor Hammer"
   - button "Compare"
   - heading "Thor Hammer" [level=5]
   - text: "CO₂: A B C D E $11.14"
 - 'link "Claw Hammer with Fiberglass Handle Compare Claw Hammer with Fiberglass Handle CO₂: A B C D E $20.14"':
-  - /url: /product/01M5GND77A1MZV5GJHM225X0Q5
+  - /url: /product/01M5GRV27V8V5FM02QDJ5CJ4E7
   - img "Claw Hammer with Fiberglass Handle"
   - button "Compare"
   - heading "Claw Hammer with Fiberglass Handle" [level=5]
   - text: "CO₂: A B C D E $20.14"
 - 'link "Court Hammer Compare Court Hammer CO₂: A B C D E $18.63"':
-  - /url: /product/01M5GND77C8TVM5Q0SM5PNNXTM
+  - /url: /product/01M5GRV27YDM25GNQSJ2RR01ET
   - img "Court Hammer"
   - button "Compare"
   - heading "Court Hammer" [level=5]

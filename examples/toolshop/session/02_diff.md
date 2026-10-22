@@ -26,10 +26,12 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - heading "Claw Hammer with Fiberglass Handle" [level=5]:
 + - heading "Court Hammer" [level=5]:
 + - heading "Searched for: hammer" [level=3]:
-+ - img "Claw Hammer with Fiberglass Handle"
-+ - img "Court Hammer"
++ - img "Claw Hammer with Fiberglass Handle":
++ - img "Court Hammer":
 + - link "Claw Hammer with Fiberglass Handle ABCDE$20.14":
 + - link "Court Hammer ABCDE$18.63":
++ - {by: alt, value: "Claw Hammer with Fiberglass Handle", stability: medium, score: 89}
++ - {by: alt, value: "Court Hammer", stability: medium, score: 89}
 + - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(1) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
 + - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(2) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
 + - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(3) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
@@ -54,8 +56,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(6) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
 + - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(6) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
 + - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(6) > div:nth-child(2) > h5:nth-child(1)", stability: low, score: 60}
-+ - {by: testid, value: "product-01M5GND77A1MZV5GJHM225X0Q5", attr: data-test, stability: high, score: 98}
-+ - {by: testid, value: "product-01M5GND77C8TVM5Q0SM5PNNXTM", attr: data-test, stability: high, score: 98}
++ - {by: testid, value: "product-01M5GRV27V8V5FM02QDJ5CJ4E7", attr: data-test, stability: high, score: 98}
++ - {by: testid, value: "product-01M5GRV27YDM25GNQSJ2RR01ET", attr: data-test, stability: high, score: 98}
 + - {by: testid, value: "search-caption", attr: data-test, stability: high, score: 98}
 + - {by: testid, value: "search-result-count", stability: high, score: 98}
 + - {by: testid, value: "search-term", attr: data-test, stability: high, score: 98}
@@ -99,11 +101,11 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - heading "Long Nose Pliers" [level=5]:
 - - heading "Pliers" [level=5]:
 - - heading "Slip Joint Pliers" [level=5]:
-- - img "Bolt Cutters"
-- - img "Combination Pliers"
-- - img "Long Nose Pliers"
-- - img "Pliers"
-- - img "Slip Joint Pliers"
+- - img "Bolt Cutters":
+- - img "Combination Pliers":
+- - img "Long Nose Pliers":
+- - img "Pliers":
+- - img "Slip Joint Pliers":
 - - link "Bolt Cutters ABCDE$48.41":
 - - link "Combination Pliers ABCDE$14.15":
 - - link "Long Nose Pliers ABCDEOut of stock$14.24":
@@ -117,6 +119,11 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - listitem
 - - listitem
 - - listitem
+- - {by: alt, value: "Bolt Cutters", stability: medium, score: 89}
+- - {by: alt, value: "Combination Pliers", stability: medium, score: 89}
+- - {by: alt, value: "Long Nose Pliers", stability: medium, score: 89}
+- - {by: alt, value: "Pliers", stability: medium, score: 89}
+- - {by: alt, value: "Slip Joint Pliers", stability: medium, score: 89}
 - - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(1) > a:nth-child(1) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
 - - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(1) > a:nth-child(2) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
 - - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(1) > a:nth-child(3) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
@@ -138,8 +145,3 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(1) > a:nth-child(4) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
 - - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(1) > a:nth-child(4) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
 - - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(1) > a:nth-child(4) > div:nth-child(2) > h5:nth-child(1)", stability: low, score: 60}
-- - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(1) > a:nth-child(5) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
-- - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(1) > a:nth-child(5) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
-- - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(1) > a:nth-child(5) > div:nth-child(2) > h5:nth-child(1)", stability: low, score: 60}
-- - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(1) > a:nth-child(6) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
-- - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(1) > a:nth-child(6) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}

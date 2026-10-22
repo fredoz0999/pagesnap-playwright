@@ -1,21 +1,21 @@
 # URL: https://parabank.parasoft.com/parabank/billpay.htm
 # Title: ParaBank | Bill Pay
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:36:10Z
+# Captured: 2026-10-22T03:17:48Z
 # Trigger: manual
 # Step: 8
 # Note: action: open Bill Pay | data: payee Electric Co, account 12345, amount 12.34
 # Session goal: Parabank: register, open savings account, transfer, pay bill, find transaction
 
 - img
-- img "ParaBank"
+- img "ParaBank":
+  locators:
+    - {by: alt, value: "ParaBank", stability: medium, score: 89}
 - text "Experience the difference"
 - list
   - listitem
   - listitem
     - link "About Us":
-      locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
   - listitem
     - link "Services":
   - listitem
@@ -87,7 +87,7 @@
         - textbox "payee.name":
           value: ""
           locators:
-            - {by: name, value: "payee.name", stability: high, score: 88}
+            - {by: name, value: "payee.name", stability: high, score: 78}
       - cell
     - row
       - cell "Address:"
@@ -95,7 +95,7 @@
         - textbox "payee.address.street":
           value: ""
           locators:
-            - {by: name, value: "payee.address.street", stability: high, score: 88}
+            - {by: name, value: "payee.address.street", stability: high, score: 78}
       - cell
     - row
       - cell "City:"
@@ -103,7 +103,7 @@
         - textbox "payee.address.city":
           value: ""
           locators:
-            - {by: name, value: "payee.address.city", stability: high, score: 88}
+            - {by: name, value: "payee.address.city", stability: high, score: 78}
       - cell
     - row
       - cell "State:"
@@ -111,7 +111,7 @@
         - textbox "payee.address.state":
           value: ""
           locators:
-            - {by: name, value: "payee.address.state", stability: high, score: 88}
+            - {by: name, value: "payee.address.state", stability: high, score: 78}
       - cell
     - row
       - cell "Zip Code:"
@@ -119,7 +119,7 @@
         - textbox "payee.address.zipCode":
           value: ""
           locators:
-            - {by: name, value: "payee.address.zipCode", stability: high, score: 88}
+            - {by: name, value: "payee.address.zipCode", stability: high, score: 78}
       - cell
     - row
       - cell "Phone #:"
@@ -127,7 +127,7 @@
         - textbox "payee.phoneNumber":
           value: ""
           locators:
-            - {by: name, value: "payee.phoneNumber", stability: high, score: 88}
+            - {by: name, value: "payee.phoneNumber", stability: high, score: 78}
       - cell
     - row
       - cell
@@ -137,7 +137,7 @@
         - textbox "payee.accountNumber":
           value: ""
           locators:
-            - {by: name, value: "payee.accountNumber", stability: high, score: 88}
+            - {by: name, value: "payee.accountNumber", stability: high, score: 78}
       - cell
     - row
       - cell "Verify Account #:"
@@ -145,7 +145,7 @@
         - textbox "verifyAccount":
           value: ""
           locators:
-            - {by: name, value: "verifyAccount", stability: high, score: 88}
+            - {by: name, value: "verifyAccount", stability: high, score: 78}
       - cell
     - row
       - cell
@@ -155,20 +155,20 @@
         - textbox "amount":
           value: ""
           locators:
-            - {by: name, value: "amount", stability: high, score: 88}
+            - {by: name, value: "amount", stability: high, score: 78}
       - cell
     - row
       - cell
     - row
       - cell "From account #:"
-      - cell "21558 21669"
+      - cell "15009 15120"
         - combobox "fromAccountId":
-          value: "21558"
+          value: "15009"
           locators:
-            - {by: name, value: "fromAccountId", stability: high, score: 88}
+            - {by: name, value: "fromAccountId", stability: high, score: 78}
           options:  # native <select> - available without opening UI
-            - option "21558" [selected]
-            - option "21669"
+            - option "15009" [selected]
+            - option "15120"
     - row
       - cell
       - cell
@@ -179,8 +179,8 @@
 
 # --- All <select> options ---
 # <select> "fromAccountId":
-#   - 21558 (selected)
-#   - 21669
+#   - 15009 (selected)
+#   - 15120
 
 # --- Tables (headers + first rows) ---
 # table "table-0":

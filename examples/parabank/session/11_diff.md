@@ -7,14 +7,14 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 ## Dropdown / options changes
 
 - - combobox "accountId":
-- - option "21558"
-- - option "21669" [selected]
+- - option "15009"
+- - option "15120" [selected]
 - options:  # native <select> - available without opening UI
 
 ## Added
 
-+ #   - 21558 (selected)
-+ #   - 21669
++ #   - 15009 (selected)
++ #   - 15120
 + #   headers: Date | Transaction | Debit (-) | Credit (+)
 + #   row 1: 10-21-2026 | Bill Payment to Electric Co | $12.34 |
 + # table "transactionTable":
@@ -35,8 +35,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 
 ## Removed
 
-- #   - 21558
-- #   - 21669 (selected)
+- #   - 15009
+- #   - 15120 (selected)
 - - button "Find Transactions" [dup 1/4]:
 - - button "Find Transactions" [dup 2/4]:
 - - button "Find Transactions" [dup 3/4]:
@@ -55,17 +55,17 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - textbox "toDate":
 - - textbox "transactionDate":
 - - textbox "transactionId":
-- - {by: id, value: "accountId", stability: high, score: 90}
-- - {by: id, value: "amount", stability: high, score: 90}
-- - {by: id, value: "findByAmount", stability: high, score: 90}
-- - {by: id, value: "findByDate", stability: high, score: 90}
-- - {by: id, value: "findByDateRange", stability: high, score: 90}
-- - {by: id, value: "findById", stability: high, score: 90}
-- - {by: id, value: "fromDate", stability: high, score: 90}
-- - {by: id, value: "toDate", stability: high, score: 90}
-- - {by: id, value: "transactionDate", stability: high, score: 90}
-- - {by: id, value: "transactionForm", stability: high, score: 90}
-- - {by: id, value: "transactionId", stability: high, score: 90}
+- - {by: id, value: "accountId", stability: high, score: 80}
+- - {by: id, value: "amount", stability: high, score: 80}
+- - {by: id, value: "findByAmount", stability: high, score: 80}
+- - {by: id, value: "findByDate", stability: high, score: 80}
+- - {by: id, value: "findByDateRange", stability: high, score: 80}
+- - {by: id, value: "findById", stability: high, score: 80}
+- - {by: id, value: "fromDate", stability: high, score: 80}
+- - {by: id, value: "toDate", stability: high, score: 80}
+- - {by: id, value: "transactionDate", stability: high, score: 80}
+- - {by: id, value: "transactionForm", stability: high, score: 80}
+- - {by: id, value: "transactionId", stability: high, score: 80}
 - locators:
 - locators:
 - locators:
@@ -81,4 +81,4 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - value: ""
 - value: ""
 - value: ""
-- value: "21669"
+- value: "15120"

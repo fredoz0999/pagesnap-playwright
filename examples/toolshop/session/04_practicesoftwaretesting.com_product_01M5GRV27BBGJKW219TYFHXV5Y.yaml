@@ -1,10 +1,10 @@
-# URL: https://practicesoftwaretesting.com/product/01M5GND76XN01H7QVXZRB78RDZ
+# URL: https://practicesoftwaretesting.com/product/01M5GRV27BBGJKW219TYFHXV5Y
 # Title: Claw Hammer - Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:38:11Z
+# Captured: 2026-10-22T03:19:53Z
 # Trigger: manual
 # Step: 4
-# Note: action: open Claw Hammer | assert: name, unit price, quantity 1, Add to cart
+# Note: action: open the first in-stock hammer (Claw Hammer) | assert: name, unit price, quantity 1, Add to cart
 # Session goal: Toolshop: search, sort, add to cart, sign in, check out, get invoice
 
 - generic "View the for this application.":
@@ -51,7 +51,9 @@
   dropdown: closed
   locators:
     - {by: testid, value: "language-select", attr: data-test, stability: high, score: 98}
-- img "Claw Hammer"
+- img "Claw Hammer":
+  locators:
+    - {by: alt, value: "Claw Hammer", stability: medium, score: 89}
 - text "Photo by on ."
 - link "Andrew George":
   locators:
@@ -103,130 +105,142 @@
       - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1)", stability: low, score: 60}
     - cell "Handle Material":
       locators:
-        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)", stability: low, score: 60}
+        - {by: testid, value: "spec-name", attr: data-test, scopeBy: testid, scopeValue: "spec-row", scopeAttr: data-test, scopeText: "Rubber", stability: high, score: 98}
     - cell "Rubber":
       locators:
-        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2)", stability: low, score: 60}
+        - {by: testid, value: "spec-value", attr: data-test, scopeBy: testid, scopeValue: "spec-row", scopeAttr: data-test, scopeText: "Rubber", stability: high, score: 98}
       - generic "Rubber":
         locators:
-          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
+          - {by: testid, value: "spec-value-text", attr: data-test, scopeBy: testid, scopeValue: "spec-value", scopeAttr: data-test, scopeText: "Rubber", stability: high, score: 98}
   - row:
     locators:
       - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2)", stability: low, score: 60}
     - cell "Head Weight":
       locators:
-        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1)", stability: low, score: 60}
+        - {by: testid, value: "spec-name", attr: data-test, scopeBy: testid, scopeValue: "spec-row", scopeAttr: data-test, scopeText: "Head Weight", stability: high, score: 98}
     - cell "400g":
       locators:
-        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)", stability: low, score: 60}
+        - {by: testid, value: "spec-value", attr: data-test, scopeBy: testid, scopeValue: "spec-row", scopeAttr: data-test, scopeText: "Head Weight", stability: high, score: 98}
       - generic "400":
         locators:
-          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
+          - {by: testid, value: "spec-value-text", attr: data-test, scopeBy: testid, scopeValue: "spec-value", scopeAttr: data-test, scopeText: "400", stability: high, score: 98}
       - generic "g" [dup 1/2]:
         locators:
-          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > span:nth-child(2)", stability: low, score: 60}
+          - {by: testid, value: "spec-unit", attr: data-test, scopeBy: testid, scopeValue: "spec-value", scopeAttr: data-test, scopeText: "400", stability: high, score: 98}
   - row:
     locators:
       - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3)", stability: low, score: 60}
     - cell "Length":
       locators:
-        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(1)", stability: low, score: 60}
+        - {by: testid, value: "spec-name", attr: data-test, scopeBy: testid, scopeValue: "spec-row", scopeAttr: data-test, scopeText: "Length", stability: high, score: 98}
     - cell "320mm":
       locators:
-        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2)", stability: low, score: 60}
+        - {by: testid, value: "spec-value", attr: data-test, scopeBy: testid, scopeValue: "spec-row", scopeAttr: data-test, scopeText: "Length", stability: high, score: 98}
       - generic "320":
         locators:
-          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
+          - {by: testid, value: "spec-value-text", attr: data-test, scopeBy: testid, scopeValue: "spec-value", scopeAttr: data-test, scopeText: "320", stability: high, score: 98}
       - generic "mm":
         locators:
-          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > span:nth-child(2)", stability: low, score: 60}
+          - {by: testid, value: "spec-unit", attr: data-test, scopeBy: testid, scopeValue: "spec-value", scopeAttr: data-test, scopeText: "320", stability: high, score: 98}
   - row:
     locators:
       - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(4)", stability: low, score: 60}
     - cell "Material":
       locators:
-        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(1)", stability: low, score: 60}
+        - {by: testid, value: "spec-name", attr: data-test, scopeBy: testid, scopeValue: "spec-row", scopeAttr: data-test, scopeText: "Carbon Steel", stability: high, score: 98}
     - cell "Carbon Steel":
       locators:
-        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2)", stability: low, score: 60}
+        - {by: testid, value: "spec-value", attr: data-test, scopeBy: testid, scopeValue: "spec-row", scopeAttr: data-test, scopeText: "Carbon Steel", stability: high, score: 98}
       - generic "Carbon Steel":
         locators:
-          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
+          - {by: testid, value: "spec-value-text", attr: data-test, scopeBy: testid, scopeValue: "spec-value", scopeAttr: data-test, scopeText: "Carbon Steel", stability: high, score: 98}
   - row:
     locators:
       - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5)", stability: low, score: 60}
     - cell "Warranty":
       locators:
-        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1)", stability: low, score: 60}
+        - {by: testid, value: "spec-name", attr: data-test, scopeBy: testid, scopeValue: "spec-row", scopeAttr: data-test, scopeText: "years", stability: high, score: 98}
     - cell "3years":
       locators:
-        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2)", stability: low, score: 60}
+        - {by: testid, value: "spec-value", attr: data-test, scopeBy: testid, scopeValue: "spec-row", scopeAttr: data-test, scopeText: "years", stability: high, score: 98}
       - generic "3":
         locators:
-          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
+          - {by: testid, value: "spec-value-text", attr: data-test, scopeBy: testid, scopeValue: "spec-value", scopeAttr: data-test, scopeText: "years", stability: high, score: 98}
       - generic "years":
         locators:
-          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > span:nth-child(2)", stability: low, score: 60}
+          - {by: testid, value: "spec-unit", attr: data-test, scopeBy: testid, scopeValue: "spec-value", scopeAttr: data-test, scopeText: "years", stability: high, score: 98}
   - row:
     locators:
       - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6)", stability: low, score: 60}
     - cell "Weight":
       locators:
-        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(1)", stability: low, score: 60}
+        - {by: testid, value: "spec-name", attr: data-test, scopeBy: testid, scopeValue: "spec-row", scopeAttr: data-test, scopeText: "500g", stability: high, score: 98}
     - cell "500g":
       locators:
-        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2)", stability: low, score: 60}
+        - {by: testid, value: "spec-value", attr: data-test, scopeBy: testid, scopeValue: "spec-row", scopeAttr: data-test, scopeText: "500g", stability: high, score: 98}
       - generic "500":
         locators:
-          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
+          - {by: testid, value: "spec-value-text", attr: data-test, scopeBy: testid, scopeValue: "spec-value", scopeAttr: data-test, scopeText: "500", stability: high, score: 98}
       - generic "g" [dup 2/2]:
         locators:
-          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > span:nth-child(2)", stability: low, score: 60}
+          - {by: testid, value: "spec-unit", attr: data-test, scopeBy: testid, scopeValue: "spec-value", scopeAttr: data-test, scopeText: "500", stability: high, score: 98}
 - heading "Related products" [level=2]
 - link "Claw Hammer with Shock Reduction Grip More information":
   locators:
-    - {by: css, value: "a[href*=\"/product/01M5GND76DX63X0V1S632TWZFC\"]", stability: medium, score: 60}
-  - img "Claw Hammer with Shock Reduction Grip"
+    - {by: css, value: "a[href*=\"/product/01M5GRV27324JGRQE7C1JSPR0X\"]", stability: medium, score: 60}
+  - img "Claw Hammer with Shock Reduction Grip":
+    locators:
+      - {by: alt, value: "Claw Hammer with Shock Reduction Grip", stability: medium, score: 89}
   - heading "Claw Hammer with Shock Reduction Grip" [level=5]
   - link "More information" [dup 1/6]:
     locators:
       - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(1) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
 - link "Hammer More information":
   locators:
-    - {by: css, value: "a[href*=\"/product/01M5GND76N9P1WQ5T8HJVJ5N3F\"]", stability: medium, score: 60}
-  - img "Hammer"
+    - {by: css, value: "a[href*=\"/product/01M5GRV27732J62Z8CGJ3E67SD\"]", stability: medium, score: 60}
+  - img "Hammer":
+    locators:
+      - {by: alt, value: "Hammer", stability: medium, score: 89}
   - heading "Hammer" [level=5]
   - link "More information" [dup 2/6]:
     locators:
       - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(2) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
 - link "Thor Hammer More information":
   locators:
-    - {by: css, value: "a[href*=\"/product/01M5GND773BS12QCXFZNCMJA07\"]", stability: medium, score: 60}
-  - img "Thor Hammer"
+    - {by: css, value: "a[href*=\"/product/01M5GRV27F7FKGJCQHW5YDTY7W\"]", stability: medium, score: 60}
+  - img "Thor Hammer":
+    locators:
+      - {by: alt, value: "Thor Hammer", stability: medium, score: 89}
   - heading "Thor Hammer" [level=5]
   - link "More information" [dup 3/6]:
     locators:
       - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(3) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
 - link "Sledgehammer More information":
   locators:
-    - {by: css, value: "a[href*=\"/product/01M5GND77768V5FAP7XFFEBM79\"]", stability: medium, score: 60}
-  - img "Sledgehammer"
+    - {by: css, value: "a[href*=\"/product/01M5GRV27N1VYEGTT63SWF2DZB\"]", stability: medium, score: 60}
+  - img "Sledgehammer":
+    locators:
+      - {by: alt, value: "Sledgehammer", stability: medium, score: 89}
   - heading "Sledgehammer" [level=5]
   - link "More information" [dup 4/6]:
     locators:
       - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(4) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
 - link "Claw Hammer with Fiberglass Handle More information":
   locators:
-    - {by: css, value: "a[href*=\"/product/01M5GND77A1MZV5GJHM225X0Q5\"]", stability: medium, score: 60}
-  - img "Claw Hammer with Fiberglass Handle"
+    - {by: css, value: "a[href*=\"/product/01M5GRV27V8V5FM02QDJ5CJ4E7\"]", stability: medium, score: 60}
+  - img "Claw Hammer with Fiberglass Handle":
+    locators:
+      - {by: alt, value: "Claw Hammer with Fiberglass Handle", stability: medium, score: 89}
   - heading "Claw Hammer with Fiberglass Handle" [level=5]
   - link "More information" [dup 5/6]:
     locators:
       - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(5) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
 - link "Court Hammer More information":
   locators:
-    - {by: css, value: "a[href*=\"/product/01M5GND77C8TVM5Q0SM5PNNXTM\"]", stability: medium, score: 60}
-  - img "Court Hammer"
+    - {by: css, value: "a[href*=\"/product/01M5GRV27YDM25GNQSJ2RR01ET\"]", stability: medium, score: 60}
+  - img "Court Hammer":
+    locators:
+      - {by: alt, value: "Court Hammer", stability: medium, score: 89}
   - heading "Court Hammer" [level=5]
   - link "More information" [dup 6/6]:
     locators:
@@ -253,7 +267,7 @@
     - {by: role, value: "link", name: "Barn Images", stability: medium, score: 95}
 - link "Unsplash" [dup 2/2]:
   locators:
-    - {by: css, value: "a[href*=\"https://unsplash.com/photos/t5YUoHW6zRo\"]", stability: medium, score: 60}
+    - {by: role, value: "link", name: "Unsplash", scopeBy: role, scopeValue: "contentinfo", stability: medium, score: 95}
 - text "v2.5 | Built 2026-10-11 | Angular 20.0.5"
 - button "Open chat":
   locators:

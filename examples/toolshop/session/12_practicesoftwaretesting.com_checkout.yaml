@@ -1,7 +1,7 @@
 # URL: https://practicesoftwaretesting.com/checkout
 # Title: Checkout - Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:38:21Z
+# Captured: 2026-10-22T03:20:03Z
 # Trigger: manual
 # Step: 12
 # Note: action: Cash on Delivery, Confirm | assert: 'Payment was successful'

@@ -42,11 +42,9 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - textbox "username":
 + - {by: css, value: "#rightPanel > p:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
 + - {by: css, value: "#rightPanel > p:nth-child(7) > a:nth-child(1)", stability: low, score: 60}
-+ - {by: css, value: "#rightPanel > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
-+ - {by: css, value: "#rightPanel > ul:nth-child(3) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
-+ - {by: name, value: "login", stability: high, score: 88}
-+ - {by: name, value: "password", stability: high, score: 88}
-+ - {by: name, value: "username", stability: high, score: 88}
++ - {by: name, value: "login", stability: high, score: 78}
++ - {by: name, value: "password", stability: high, score: 78}
++ - {by: name, value: "username", stability: high, score: 78}
 + - {by: role, value: "button", name: "Log In", stability: medium, score: 95}
 + - {by: role, value: "link", name: "Account History", stability: medium, score: 95}
 + - {by: role, value: "link", name: "Check Balances", stability: medium, score: 95}
@@ -56,6 +54,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - {by: role, value: "link", name: "New! Online Bill Pay", stability: medium, score: 95}
 + - {by: role, value: "link", name: "ParaBank Is Now Re-Opened", stability: medium, score: 95}
 + - {by: role, value: "link", name: "Register", stability: medium, score: 95}
++ - {by: role, value: "link", name: "Transfer Funds", scopeBy: role, scopeValue: "list", scopeText: "Account History", stability: medium, score: 95}
++ - {by: role, value: "link", name: "Transfer Funds", scopeBy: role, scopeValue: "list", scopeText: "Make Deposits", stability: medium, score: 95}
 + - {by: role, value: "link", name: "Withdraw Funds", stability: medium, score: 95}
 + locators:
 + locators:
@@ -72,8 +72,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 
 ## Removed
 
-- #   - 21558 (selected)
-- #   - 21669
+- #   - 15009 (selected)
+- #   - 15120
 - #   headers: Date | Transaction | Debit (-) | Credit (+)
 - #   row 1: 10-21-2026 | Bill Payment to Electric Co | $12.34 |
 - # table "transactionTable":

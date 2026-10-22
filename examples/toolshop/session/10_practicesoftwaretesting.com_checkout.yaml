@@ -1,7 +1,7 @@
 # URL: https://practicesoftwaretesting.com/checkout
 # Title: Checkout - Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:38:20Z
+# Captured: 2026-10-22T03:20:01Z
 # Trigger: manual
 # Step: 10
 # Note: action: Proceed to billing address | assert: address prefilled from the account, house number empty

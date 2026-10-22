@@ -1,10 +1,10 @@
 # URL: https://practicesoftwaretesting.com/checkout
 # Title: Checkout - Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:38:15Z
+# Captured: 2026-10-22T03:19:56Z
 # Trigger: manual
 # Step: 6
-# Note: action: open cart | assert: Claw Hammer x2, line price = 2 x unit price, cart total
+# Note: action: open cart | assert: the product x2, line price = 2 x unit price, cart total
 # Session goal: Toolshop: search, sort, add to cart, sign in, check out, get invoice
 
 - generic "View the for this application.":

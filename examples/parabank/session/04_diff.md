@@ -12,7 +12,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + # <select> "type":
 + - combobox "fromAccountId":
 + - combobox "type":
-+ - option "21558" [selected]
++ - option "15009" [selected]
 + - option "CHECKING" [selected]
 + - option "SAVINGS"
 + options:  # native <select> - available without opening UI
@@ -20,7 +20,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 
 ## Added
 
-+ #   - 21558 (selected)
++ #   - 15009 (selected)
 + #   - CHECKING (selected)
 + #   - SAVINGS
 + - button "Open New Account":
@@ -29,20 +29,20 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - text "A minimum of $100.00 must be deposited into this account at time of opening. Please choose an existing account to transfer funds into the new account."
 + - text "What type of Account would you like to open?"
 + - {by: css, value: "#openAccountForm > form:nth-child(2)", stability: low, score: 60}
-+ - {by: id, value: "fromAccountId", stability: high, score: 90}
-+ - {by: id, value: "type", stability: high, score: 90}
++ - {by: id, value: "fromAccountId", stability: high, score: 80}
++ - {by: id, value: "type", stability: high, score: 80}
 + - {by: role, value: "button", name: "Open New Account", stability: medium, score: 95}
 + locators:
 + locators:
 + locators:
 + value: "0"
-+ value: "21558"
++ value: "15009"
 + value: "Open New Account"
 
 ## Removed
 
 - #   headers: Account | Balance* | Available Amount
-- #   row 1: 21558 | $515.50 | $515.50
+- #   row 1: 15009 | $515.50 | $515.50
 - #   row 2: Total | $515.50 |
 - # table "accountTable":
 - - cell
@@ -50,16 +50,16 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - cell "$515.50" [dup 2/3]
 - - cell "$515.50" [dup 3/3]
 - - cell "*Balance includes deposits that may be subject to holds"
-- - cell "21558"
+- - cell "15009"
 - - cell "Total"
 - - columnheader "Account"
 - - columnheader "Available Amount"
 - - columnheader "Balance*"
 - - heading "Accounts Overview" [level=1]
-- - link "21558":
+- - link "15009":
 - - row
 - - row
 - - row
 - - row
 - - table
-- - {by: role, value: "link", name: "21558", stability: medium, score: 95}
+- - {by: role, value: "link", name: "15009", stability: medium, score: 95}

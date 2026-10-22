@@ -1,6 +1,6 @@
 # Diff step 4 → 5
 
-Both steps were captured on the same URL: https://practicesoftwaretesting.com/product/01M5GND76XN01H7QVXZRB78RDZ
+Both steps were captured on the same URL: https://practicesoftwaretesting.com/product/01M5GRV27BBGJKW219TYFHXV5Y
 
 _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with notes)._
 

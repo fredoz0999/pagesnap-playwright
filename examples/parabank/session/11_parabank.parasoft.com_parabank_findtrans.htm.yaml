@@ -1,33 +1,35 @@
 # URL: https://parabank.parasoft.com/parabank/findtrans.htm
 # Title: ParaBank | Find Transactions
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:36:11Z
+# Captured: 2026-10-22T03:17:49Z
 # Trigger: manual
 # Step: 11
 # Note: action: click Find Transactions by amount | assert: results table lists the Bill Payment to Electric Co
 # Session goal: Parabank: register, open savings account, transfer, pay bill, find transaction
 
 - img
-- img "ParaBank"
+- img "ParaBank":
+  locators:
+    - {by: alt, value: "ParaBank", stability: medium, score: 89}
 - text "Experience the difference"
 - list
   - listitem
   - listitem
     - link "About Us" [dup 1/2]:
       locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "About Us", scopeBy: role, scopeValue: "list", scopeText: "Admin Page", stability: medium, score: 95}
   - listitem
     - link "Services" [dup 1/2]:
       locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Services", scopeBy: role, scopeValue: "list", scopeText: "Admin Page", stability: medium, score: 95}
   - listitem
     - link "Products" [dup 1/2]:
       locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Products", scopeBy: role, scopeValue: "list", scopeText: "Admin Page", stability: medium, score: 95}
   - listitem
     - link "Locations" [dup 1/2]:
       locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Locations", scopeBy: role, scopeValue: "list", scopeText: "Admin Page", stability: medium, score: 95}
   - listitem
     - link "Admin Page":
       locators:
@@ -104,19 +106,19 @@
   - listitem
     - link "About Us" [dup 2/2]:
       locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "About Us", scopeBy: role, scopeValue: "list", scopeText: "Site Map", stability: medium, score: 95}
   - listitem
     - link "Services" [dup 2/2]:
       locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Services", scopeBy: role, scopeValue: "list", scopeText: "Site Map", stability: medium, score: 95}
   - listitem
     - link "Products" [dup 2/2]:
       locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Products", scopeBy: role, scopeValue: "list", scopeText: "Site Map", stability: medium, score: 95}
   - listitem
     - link "Locations" [dup 2/2]:
       locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+        - {by: role, value: "link", name: "Locations", scopeBy: role, scopeValue: "list", scopeText: "Site Map", stability: medium, score: 95}
   - listitem
     - link "Site Map":
       locators:
@@ -135,8 +137,8 @@
 
 # --- All <select> options ---
 # <select> "accountId":
-#   - 21669
-#   - 21558 (selected)
+#   - 15120
+#   - 15009 (selected)
 
 # --- Tables (headers + first rows) ---
 # table "transactionTable":
