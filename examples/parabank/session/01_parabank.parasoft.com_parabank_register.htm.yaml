@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/register.htm
 # Title: ParaBank | Register for Free Online Account Access
 # Viewport: 1280x900
-# Captured: 2026-10-22T00:01:25Z
+# Captured: 2026-10-22T02:06:44Z
 # Trigger: manual
 # Step: 1
 # Note: action: open Register | data: new unique username
@@ -15,6 +15,7 @@
   locators:
     - {by: css, value: "#topPanel > a:nth-child(2)", stability: low, score: 60}
   - img "ParaBank"
+- text "Experience the difference"
 - list
   - listitem
   - listitem
@@ -54,10 +55,12 @@
 - form:
   locators:
     - {by: name, value: "login", stability: high, score: 88}
+  - text "Username"
   - textbox "username":
     value: ""
     locators:
       - {by: name, value: "username", stability: high, score: 88}
+  - text "Password"
   - textbox "password":
     value: "***"
     locators:
@@ -73,12 +76,13 @@
   locators:
     - {by: role, value: "link", name: "Register", stability: medium, score: 95}
 - heading "Signing up is easy!" [level=1]
+- text "If you have an account with us you can sign-up for free instant online access. You will have to provide some personal information."
 - form:
   locators:
     - {by: id, value: "customerForm", stability: high, score: 90}
   - table
     - row
-      - cell
+      - cell "First Name:"
       - cell
         - textbox "customer.firstName":
           value: ""
@@ -86,7 +90,7 @@
             - {by: id, value: "customer.firstName", stability: high, score: 90}
       - cell
     - row
-      - cell
+      - cell "Last Name:"
       - cell
         - textbox "customer.lastName":
           value: ""
@@ -94,7 +98,7 @@
             - {by: id, value: "customer.lastName", stability: high, score: 90}
       - cell
     - row
-      - cell
+      - cell "Address:"
       - cell
         - textbox "customer.address.street":
           value: ""
@@ -102,7 +106,7 @@
             - {by: id, value: "customer.address.street", stability: high, score: 90}
       - cell
     - row
-      - cell
+      - cell "City:"
       - cell
         - textbox "customer.address.city":
           value: ""
@@ -110,7 +114,7 @@
             - {by: id, value: "customer.address.city", stability: high, score: 90}
       - cell
     - row
-      - cell
+      - cell "State:"
       - cell
         - textbox "customer.address.state":
           value: ""
@@ -118,7 +122,7 @@
             - {by: id, value: "customer.address.state", stability: high, score: 90}
       - cell
     - row
-      - cell
+      - cell "Zip Code:"
       - cell
         - textbox "customer.address.zipCode":
           value: ""
@@ -126,7 +130,7 @@
             - {by: id, value: "customer.address.zipCode", stability: high, score: 90}
       - cell
     - row
-      - cell
+      - cell "Phone #:"
       - cell
         - textbox "customer.phoneNumber":
           value: ""
@@ -134,7 +138,7 @@
             - {by: id, value: "customer.phoneNumber", stability: high, score: 90}
       - cell
     - row
-      - cell
+      - cell "SSN:"
       - cell
         - textbox "customer.ssn":
           value: ""
@@ -144,7 +148,7 @@
     - row
       - cell
     - row
-      - cell
+      - cell "Username:"
       - cell
         - textbox "customer.username":
           value: ""
@@ -152,7 +156,7 @@
             - {by: id, value: "customer.username", stability: high, score: 90}
       - cell
     - row
-      - cell
+      - cell "Password:"
       - cell
         - textbox "customer.password":
           value: "***"
@@ -160,7 +164,7 @@
             - {by: id, value: "customer.password", stability: high, score: 90}
       - cell
     - row
-      - cell
+      - cell "Confirm:"
       - cell
         - textbox "repeatedPassword":
           value: "***"
@@ -203,6 +207,7 @@
     - link "Contact Us":
       locators:
         - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- text "© Parasoft. All rights reserved."
 - list
   - listitem
   - listitem

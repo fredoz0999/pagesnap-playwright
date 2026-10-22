@@ -19,6 +19,7 @@ import type { HintRec } from "./hints.js";
 import { buildIndex, type SessionIndex } from "./pack/index.js";
 import { refreshFlow, writePromptPack, type StepRecord } from "./session-pack.js";
 import { persistSnapshot, type AltLocator } from "./snapshot-write.js";
+import { checkRoleLocators } from "./role-check.js";
 
 export interface ScriptedOptions {
   /** session folder to write into (created; existing NN_* files are kept) */
@@ -78,11 +79,12 @@ export class ScriptedSession {
     let title = "";
     try { title = await page.title(); } catch { /* ignore */ }
     const vp = page.viewportSize();
+    const checked = await checkRoleLocators(page, result?.tree ? String(result.tree) : "", Array.isArray(result?.locators) ? result.locators : []);
     this.step++;
     const saved = persistSnapshot(cap, this.steps, {
       url,
       note,
-      tree: result?.tree ? String(result.tree) : "",
+      tree: checked.tree,
       hints: Array.isArray(result?.hints) ? result.hints : [],
       hintsTruncated: Number(result?.hintsTruncated ?? 0),
       lastTreeBody: this.lastTreeBody,
@@ -90,7 +92,7 @@ export class ScriptedSession {
       step: this.step,
       title,
       viewport: vp ? { w: vp.width, h: vp.height } : undefined,
-      altLocators: Array.isArray(result?.locators) ? result.locators : [],
+      altLocators: checked.locators,
     });
     this.lastTreeBody = saved.lastTreeBody;
     this.lastCaptureUrl = saved.lastCaptureUrl;

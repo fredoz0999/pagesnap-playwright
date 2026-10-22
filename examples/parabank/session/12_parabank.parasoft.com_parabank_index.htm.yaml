@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/index.htm
 # Title: ParaBank | Welcome | Online Banking
 # Viewport: 1280x900
-# Captured: 2026-10-22T00:01:30Z
+# Captured: 2026-10-22T02:06:51Z
 # Trigger: manual
 # Step: 12
 # Note: action: log out | assert: Customer Login form visible
@@ -9,6 +9,7 @@
 
 - img
 - img "ParaBank"
+- text "Experience the difference"
 - list
   - listitem
   - listitem
@@ -48,10 +49,12 @@
 - form:
   locators:
     - {by: name, value: "login", stability: high, score: 88}
+  - text "Username"
   - textbox "username":
     value: ""
     locators:
       - {by: name, value: "username", stability: high, score: 88}
+  - text "Password"
   - textbox "password":
     value: "***"
     locators:
@@ -148,6 +151,7 @@
     - link "Contact Us":
       locators:
         - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- text "© Parasoft. All rights reserved."
 - list
   - listitem
   - listitem

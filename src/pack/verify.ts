@@ -20,7 +20,7 @@ export interface VerifyItem {
   locator: Locator;
   count: number;
   /** state: the page as a whole no longer matches the capture (logged in/out, a POST result page) */
-  /** data: a link/button named by data (account number, order id) that is expected to change */
+  /** data: named by data (account number, price) or located by list position: expected to change */
   status: "ok" | "gone" | "ambiguous" | "error" | "state" | "data";
 }
 
@@ -73,6 +73,8 @@ export interface VerifyOptions {
   steps?: number[];
   headless?: boolean;
   timeoutMs?: number;
+  /** extra counting passes (750 ms apart) while the page is still rendering (default 6) */
+  settlePasses?: number;
 }
 
 export async function verifySession(sessionDir: string, opts: VerifyOptions = {}): Promise<VerifyReport> {
@@ -95,16 +97,29 @@ export async function verifySession(sessionDir: string, opts: VerifyOptions = {}
     // in a fresh context; the better of the two results is kept.
     let fresh: Page | null = null;
 
-    const measure = async (page: Page, url: string, locs: { label: string; l: Locator }[]) => {
-      await page.goto(url, { waitUntil: "domcontentloaded" });
-      await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => undefined);
+    // Single-page apps render after load (and chat/analytics sockets keep the network
+    // busy), so count repeatedly and keep the best pass until it stops improving.
+    const countAll = async (page: Page, locs: { label: string; l: Locator }[]) => {
       const counts: number[] = [];
       for (const { l } of locs) {
         let count = -1;
         try { count = await toPlaywright(page, l).count(); } catch { /* invalid selector */ }
         counts.push(count);
       }
-      return { landed: page.url(), counts, ok: counts.filter((c) => c === 1).length };
+      return counts;
+    };
+    const measure = async (page: Page, url: string, locs: { label: string; l: Locator }[]) => {
+      await page.goto(url, { waitUntil: "domcontentloaded" });
+      await page.waitForLoadState("networkidle", { timeout: 3000 }).catch(() => undefined);
+      let best = await countAll(page, locs);
+      let bestOk = best.filter((c) => c === 1).length;
+      for (let pass = 0, still = 0; pass < (opts.settlePasses ?? 6) && bestOk < locs.length && still < 2; pass++) {
+        await page.waitForTimeout(750);
+        const next = await countAll(page, locs);
+        const ok = next.filter((c) => c === 1).length;
+        if (ok > bestOk) { best = next; bestOk = ok; still = 0; } else still++;
+      }
+      return { landed: page.url(), counts: best, ok: bestOk };
     };
 
     for (const f of files) {
@@ -153,17 +168,27 @@ export async function verifySession(sessionDir: string, opts: VerifyOptions = {}
   }
   // A page where most locators are gone was captured in another state (logged out,
   // POST result); that is not locator drift. Data-named controls are expected to change.
+  // Site chrome (nav, footer: on half the steps or more) is present in any state, so it
+  // says nothing about whether this page is in the captured state; judge by the rest.
+  const lkey = (i: VerifyItem) => i.locator.by + "|" + i.locator.value + "|" + (i.locator.name ?? "");
+  const freq = new Map<string, number>();
+  for (const i of items) freq.set(lkey(i), (freq.get(lkey(i)) || 0) + 1);
+  const chromeMin = Math.max(2, Math.ceil(pages.filter((p) => !p.skipped).length / 2));
   for (const p of pages) {
     const mine = items.filter((i) => i.step === p.step);
     if (!mine.length) continue;
-    const okShare = mine.filter((i) => i.status === "ok").length / mine.length;
+    const content = mine.filter((i) => (freq.get(lkey(i)) || 0) < chromeMin);
+    const basis = content.length ? content : mine;
+    const okShare = basis.filter((i) => i.status === "ok").length / basis.length;
     for (const i of mine) {
       if (i.status !== "gone") continue;
       const nameMatch = /"([^"]*)"/.exec(i.label);
-      if (nameMatch && !/[a-z]{2}/i.test(nameMatch[1])) i.status = "data";
+      const positional = i.locator.by === "css" && /nth-child/.test(i.locator.value);
+      if (nameMatch && (!/[a-z]{2}/i.test(nameMatch[1]) || /[$€£¥]\s?\d/.test(nameMatch[1]))) i.status = "data";
+      else if (positional) i.status = "data"; // nth-child path inside a result list: position changes with the data
       else if (okShare < 0.5) i.status = "state";
     }
-    if (okShare < 0.5) p.skipped = "page state differs from the capture (" + Math.round(okShare * 100) + "% of locators found) - not counted as drift";
+    if (okShare < 0.5) p.skipped = "page state differs from the capture (" + Math.round(okShare * 100) + "% of page-specific locators found; wizard step, search result or empty cart) - not counted as drift";
   }
   const counts = { ok: 0, gone: 0, ambiguous: 0, error: 0, state: 0, data: 0 };
   items.forEach((i) => counts[i.status]++);

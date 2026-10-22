@@ -1,0 +1,281 @@
+# URL: https://practicesoftwaretesting.com/product/01M5GND76XN01H7QVXZRB78RDZ
+# Title: Claw Hammer - Practice Software Testing - Toolshop - v5.0
+# Viewport: 1280x900
+# Captured: 2026-10-22T02:01:55Z
+# Trigger: manual
+# Step: 5
+# Note: action: quantity 2, Add to cart | assert: toast shown, cart badge shows 2
+# Session goal: Toolshop: search, sort, add to cart, sign in, check out, get invoice
+
+- generic "View the for this application.":
+  locators:
+    - {by: testid, value: "notification-bar", attr: data-test, stability: high, score: 98}
+  - link "Documentation":
+    locators:
+      - {by: role, value: "link", name: "Documentation", stability: medium, score: 95}
+- text "Practice Black Box Testing & Bug Hunting"
+- button "Testing Guide":
+  locators:
+    - {by: role, value: "button", name: "Testing Guide", stability: medium, score: 95}
+- button "🐛 Bug Hunting":
+  locators:
+    - {by: role, value: "button", name: "🐛 Bug Hunting", stability: medium, score: 95}
+- link "Practice Software Testing - Toolshop":
+  locators:
+    - {by: role, value: "link", name: "Practice Software Testing - Toolshop", stability: medium, score: 95}
+- menubar "Main menu"
+  - menuitem "Home":
+    locators:
+      - {by: role, value: "menuitem", name: "Home", stability: medium, score: 95}
+    - link "Home" [current]:
+      locators:
+        - {by: testid, value: "nav-home", attr: data-test, stability: high, score: 98}
+  - menuitem "Categories Hand ToolsPower ToolsOtherSpecial ToolsRentals":
+    locators:
+    - button "Categories" [collapsed]:
+      dropdown: closed
+      locators:
+        - {by: testid, value: "nav-categories", attr: data-test, stability: high, score: 98}
+  - menuitem "Contact":
+    locators:
+      - {by: role, value: "menuitem", name: "Contact", stability: medium, score: 95}
+    - link "Contact":
+      locators:
+        - {by: testid, value: "nav-contact", attr: data-test, stability: high, score: 98}
+  - menuitem "Sign in":
+    locators:
+      - {by: role, value: "menuitem", name: "Sign in", stability: medium, score: 95}
+    - link "Sign in":
+      locators:
+        - {by: testid, value: "nav-sign-in", attr: data-test, stability: high, score: 98}
+  - menuitem "2":
+    locators:
+    - link "cart":
+      locators:
+        - {by: testid, value: "nav-cart", attr: data-test, stability: high, score: 98}
+      - generic "2":
+        locators:
+          - {by: testid, value: "cart-quantity", attr: data-test, stability: high, score: 98}
+- button "Select language" [collapsed]:
+  dropdown: closed
+  locators:
+    - {by: testid, value: "language-select", attr: data-test, stability: high, score: 98}
+- img "Claw Hammer"
+- text "Photo by on ."
+- link "Andrew George":
+  locators:
+    - {by: role, value: "link", name: "Andrew George", stability: medium, score: 95}
+- link "Unsplash" [dup 1/2]:
+  locators:
+    - {by: css, value: "a[href*=\"https://unsplash.com/photos/YU2mCvXR0wA\"]", stability: medium, score: 60}
+- heading "Claw Hammer" [level=1]:
+  locators:
+    - {by: testid, value: "product-name", attr: data-test, stability: high, score: 98}
+- text "Hammer"
+- text "MightyCraft Hardware"
+- generic "unit-price":
+  locators:
+    - {by: testid, value: "unit-price", attr: data-test, stability: high, score: 98}
+- generic "A = most environmentally friendly, E = higher environmental impact":
+  locators:
+    - {by: testid, value: "co2-rating-badge", attr: data-test, stability: high, score: 98}
+- generic:
+  locators:
+    - {by: testid, value: "product-description", attr: data-test, stability: high, score: 98}
+- button "Decrease quantity":
+  locators:
+    - {by: testid, value: "decrease-quantity", attr: data-test, stability: high, score: 98}
+- spinbutton "Quantity":
+  value: "2"
+  locators:
+    - {by: testid, value: "quantity", attr: data-test, stability: high, score: 98}
+- button "Increase quantity":
+  locators:
+    - {by: testid, value: "increase-quantity", attr: data-test, stability: high, score: 98}
+- button "Add to cart":
+  locators:
+    - {by: testid, value: "add-to-cart", attr: data-test, stability: high, score: 98}
+- button "Add to favourites":
+  locators:
+    - {by: testid, value: "add-to-favorites", attr: data-test, stability: high, score: 98}
+- button "Compare":
+  locators:
+    - {by: testid, value: "add-to-compare", attr: data-test, stability: high, score: 98}
+- heading "Specifications" [level=3]:
+  locators:
+    - {by: testid, value: "specs-title", attr: data-test, stability: high, score: 98}
+- table:
+  locators:
+    - {by: testid, value: "product-specs", attr: data-test, stability: high, score: 98}
+  - row:
+    locators:
+      - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1)", stability: low, score: 60}
+    - cell "Handle Material":
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)", stability: low, score: 60}
+    - cell "Rubber":
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2)", stability: low, score: 60}
+      - generic "Rubber":
+        locators:
+          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
+  - row:
+    locators:
+      - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2)", stability: low, score: 60}
+    - cell "Head Weight":
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1)", stability: low, score: 60}
+    - cell "400g":
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)", stability: low, score: 60}
+      - generic "400":
+        locators:
+          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
+      - generic "g" [dup 1/2]:
+        locators:
+          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > span:nth-child(2)", stability: low, score: 60}
+  - row:
+    locators:
+      - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3)", stability: low, score: 60}
+    - cell "Length":
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(1)", stability: low, score: 60}
+    - cell "320mm":
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2)", stability: low, score: 60}
+      - generic "320":
+        locators:
+          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
+      - generic "mm":
+        locators:
+          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > span:nth-child(2)", stability: low, score: 60}
+  - row:
+    locators:
+      - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(4)", stability: low, score: 60}
+    - cell "Material":
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(1)", stability: low, score: 60}
+    - cell "Carbon Steel":
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2)", stability: low, score: 60}
+      - generic "Carbon Steel":
+        locators:
+          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
+  - row:
+    locators:
+      - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5)", stability: low, score: 60}
+    - cell "Warranty":
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1)", stability: low, score: 60}
+    - cell "3years":
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2)", stability: low, score: 60}
+      - generic "3":
+        locators:
+          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
+      - generic "years":
+        locators:
+          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > span:nth-child(2)", stability: low, score: 60}
+  - row:
+    locators:
+      - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6)", stability: low, score: 60}
+    - cell "Weight":
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(1)", stability: low, score: 60}
+    - cell "500g":
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2)", stability: low, score: 60}
+      - generic "500":
+        locators:
+          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
+      - generic "g" [dup 2/2]:
+        locators:
+          - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > span:nth-child(2)", stability: low, score: 60}
+- heading "Related products" [level=2]
+- link "Claw Hammer with Shock Reduction Grip More information":
+  locators:
+    - {by: linkText, value: "Claw Hammer with Shock Reduction Grip More information", stability: medium, score: 75}
+  - img "Claw Hammer with Shock Reduction Grip"
+  - heading "Claw Hammer with Shock Reduction Grip" [level=5]
+  - link "More information" [dup 1/6]:
+    locators:
+      - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(1) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
+- link "Hammer More information":
+  locators:
+    - {by: linkText, value: "Hammer More information", stability: medium, score: 75}
+  - img "Hammer"
+  - heading "Hammer" [level=5]
+  - link "More information" [dup 2/6]:
+    locators:
+      - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(2) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
+- link "Thor Hammer More information":
+  locators:
+    - {by: linkText, value: "Thor Hammer More information", stability: medium, score: 75}
+  - img "Thor Hammer"
+  - heading "Thor Hammer" [level=5]
+  - link "More information" [dup 3/6]:
+    locators:
+      - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(3) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
+- link "Sledgehammer More information":
+  locators:
+    - {by: linkText, value: "Sledgehammer More information", stability: medium, score: 75}
+  - img "Sledgehammer"
+  - heading "Sledgehammer" [level=5]
+  - link "More information" [dup 4/6]:
+    locators:
+      - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(4) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
+- link "Claw Hammer with Fiberglass Handle More information":
+  locators:
+    - {by: linkText, value: "Claw Hammer with Fiberglass Handle More information", stability: medium, score: 75}
+  - img "Claw Hammer with Fiberglass Handle"
+  - heading "Claw Hammer with Fiberglass Handle" [level=5]
+  - link "More information" [dup 5/6]:
+    locators:
+      - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(5) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
+- link "Court Hammer More information":
+  locators:
+    - {by: linkText, value: "Court Hammer More information", stability: medium, score: 75}
+  - img "Court Hammer"
+  - heading "Court Hammer" [level=5]
+  - link "More information" [dup 6/6]:
+    locators:
+      - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(6) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
+- generic:
+  locators:
+    - {by: testid, value: "footer-explore", attr: data-test, stability: high, score: 98}
+  - text "Learn & Explore"
+  - link "Learn Test AutomationHands-on courses for Playwright, Robot Framework, APIs and more":
+    locators:
+      - {by: testid, value: "footer-learn-courses", attr: data-test, stability: high, score: 98}
+  - link "API SpectorOpen-source API testing, mocking and contract testing":
+    locators:
+      - {by: testid, value: "footer-learn-spector", attr: data-test, stability: high, score: 98}
+  - link "GitHubSource code, issues and contributions":
+    locators:
+      - {by: testid, value: "footer-learn-github", attr: data-test, stability: high, score: 98}
+- text "This is a DEMO application, used for software testing training purpose. | | Banner photo by on ."
+- link "Privacy Policy":
+  locators:
+    - {by: role, value: "link", name: "Privacy Policy", stability: medium, score: 95}
+- link "Barn Images":
+  locators:
+    - {by: role, value: "link", name: "Barn Images", stability: medium, score: 95}
+- link "Unsplash" [dup 2/2]:
+  locators:
+    - {by: css, value: "a[href*=\"https://unsplash.com/photos/t5YUoHW6zRo\"]", stability: medium, score: 60}
+- text "v2.5 | Built 2026-10-11 | Angular 20.0.5"
+- button "Open chat":
+  locators:
+    - {by: testid, value: "chat-toggle", attr: data-test, stability: high, score: 98}
+- button "Show live shop activity":
+  locators:
+    - {by: testid, value: "live-activity-toggle", attr: data-test, stability: high, score: 98}
+- alert "Product added to shopping cart."
+- iframe "frame-0":
+
+# --- Tables (headers + first rows) ---
+# table "table-0":
+#   row 1: Handle Material | Rubber
+#   row 2: Head Weight | 400g
+#   row 3: Length | 320mm
+#   … 3 more rows (truncated)

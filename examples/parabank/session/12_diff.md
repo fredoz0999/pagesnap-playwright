@@ -36,6 +36,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - listitem
 + - listitem
 + - listitem
++ - text "Password"
++ - text "Username"
 + - textbox "password":
 + - textbox "username":
 + - {by: css, value: "#rightPanel > p:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
@@ -70,19 +72,19 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 
 ## Removed
 
-- #   - 13566 (selected)
-- #   - 13677
+- #   - 18561 (selected)
+- #   - 18672
 - #   headers: Date | Transaction | Debit (-) | Credit (+)
 - #   row 1: 10-21-2026 | Bill Payment to Electric Co | $12.34 |
 - # table "transactionTable":
 - - cell
-- - cell
-- - cell
-- - cell
-- - columnheader
-- - columnheader
-- - columnheader
-- - columnheader
+- - cell "$12.34"
+- - cell "10-21-2026"
+- - cell "Bill Payment to Electric Co"
+- - columnheader "Credit (+)"
+- - columnheader "Date"
+- - columnheader "Debit (-)"
+- - columnheader "Transaction"
 - - heading "Account Services" [level=2]
 - - heading "Transaction Results" [level=1]
 - - link "Accounts Overview":
@@ -96,6 +98,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - row
 - - row
 - - table
+- - text "Page Snap"
+- - text "Welcome"
 - - {by: role, value: "link", name: "Accounts Overview", stability: medium, score: 95}
 - - {by: role, value: "link", name: "Bill Payment to Electric Co", stability: medium, score: 95}
 - - {by: role, value: "link", name: "Find Transactions", stability: medium, score: 95}

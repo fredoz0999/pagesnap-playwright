@@ -4,7 +4,7 @@
 - Goal: Log in, add two items, verify cart
 - Framework: playwright
 - Style: pageobject
-- Generated: 2026-10-22T00:10:51Z
+- Generated: 2026-10-22T02:02:27Z
 
 Steps: see flow.md (updated as you capture)
 

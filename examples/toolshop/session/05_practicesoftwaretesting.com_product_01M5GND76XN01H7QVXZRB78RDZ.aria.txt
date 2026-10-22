@@ -1,0 +1,128 @@
+- text: View the
+- link "Documentation":
+  - /url: https://testsmith-io.github.io/practice-software-testing/#/
+- text: for this application. Practice Black Box Testing & Bug Hunting
+- button "Testing Guide"
+- button "🐛 Bug Hunting"
+- navigation:
+  - link "Practice Software Testing - Toolshop":
+    - /url: /
+    - img
+  - menubar "Main menu":
+    - menuitem "Home":
+      - link "Home":
+        - /url: /
+    - menuitem "Categories":
+      - button "Categories"
+    - menuitem "Contact":
+      - link "Contact":
+        - /url: /contact
+    - menuitem "Sign in":
+      - link "Sign in":
+        - /url: /auth/login
+    - menuitem "cart":
+      - link "cart":
+        - /url: /checkout
+        - text: "2"
+  - button "Select language": EN
+- figure "Photo by Andrew George on Unsplash.":
+  - img "Claw Hammer"
+  - text: Photo by
+  - link "Andrew George":
+    - /url: https://unsplash.com/@andrewjoegeorge
+  - text: "on"
+  - link "Unsplash":
+    - /url: https://unsplash.com/photos/YU2mCvXR0wA
+  - text: .
+- heading "Claw Hammer" [level=1]
+- paragraph: Hammer MightyCraft Hardware
+- text: "$11.48 CO₂: A B C D E"
+- paragraph: Traditional claw hammer with a polished carbon steel head engineered for driving and removing nails with precision and confidence. The rubber-wrapped handle provides a secure, comfortable grip even in wet, dusty, or cold conditions where bare metal or wood handles would slip. At 500g, it offers the ideal balance between striking power and maneuverability for general carpentry, framing, and construction tasks. The curved claw design allows for smooth nail extraction without gouging or marring wood surfaces, protecting your finished work. The head-to-handle connection uses an epoxy-bonded wedge system that prevents loosening over time. A reliable, no-nonsense tool that professional carpenters and weekend builders alike reach for every day.
+- button "Decrease quantity"
+- text: Quantity
+- spinbutton "Quantity": "2"
+- button "Increase quantity"
+- button "Add to cart"
+- button "Add to favourites"
+- button "Compare"
+- heading "Specifications" [level=3]
+- table:
+  - rowgroup:
+    - row "Handle Material Rubber":
+      - cell "Handle Material"
+      - cell "Rubber"
+    - row "Head Weight 400g":
+      - cell "Head Weight"
+      - cell "400g"
+    - row "Length 320mm":
+      - cell "Length"
+      - cell "320mm"
+    - row "Material Carbon Steel":
+      - cell "Material"
+      - cell "Carbon Steel"
+    - row "Warranty 3years":
+      - cell "Warranty"
+      - cell "3years"
+    - row "Weight 500g":
+      - cell "Weight"
+      - cell "500g"
+- separator
+- heading "Related products" [level=2]
+- link "Claw Hammer with Shock Reduction Grip Claw Hammer with Shock Reduction Grip More information":
+  - /url: /product/01M5GND76DX63X0V1S632TWZFC
+  - img "Claw Hammer with Shock Reduction Grip"
+  - heading "Claw Hammer with Shock Reduction Grip" [level=5]
+  - link "More information":
+    - /url: "#"
+- link "Hammer Hammer More information":
+  - /url: /product/01M5GND76N9P1WQ5T8HJVJ5N3F
+  - img "Hammer"
+  - heading "Hammer" [level=5]
+  - link "More information":
+    - /url: "#"
+- link "Thor Hammer Thor Hammer More information":
+  - /url: /product/01M5GND773BS12QCXFZNCMJA07
+  - img "Thor Hammer"
+  - heading "Thor Hammer" [level=5]
+  - link "More information":
+    - /url: "#"
+- link "Sledgehammer Sledgehammer More information":
+  - /url: /product/01M5GND77768V5FAP7XFFEBM79
+  - img "Sledgehammer"
+  - heading "Sledgehammer" [level=5]
+  - link "More information":
+    - /url: "#"
+- link "Claw Hammer with Fiberglass Handle Claw Hammer with Fiberglass Handle More information":
+  - /url: /product/01M5GND77A1MZV5GJHM225X0Q5
+  - img "Claw Hammer with Fiberglass Handle"
+  - heading "Claw Hammer with Fiberglass Handle" [level=5]
+  - link "More information":
+    - /url: "#"
+- link "Court Hammer Court Hammer More information":
+  - /url: /product/01M5GND77C8TVM5Q0SM5PNNXTM
+  - img "Court Hammer"
+  - heading "Court Hammer" [level=5]
+  - link "More information":
+    - /url: "#"
+- contentinfo:
+  - text: Learn & Explore
+  - link "Learn Test Automation Hands-on courses for Playwright, Robot Framework, APIs and more":
+    - /url: https://onlinecourses.testsmith.io
+  - link "API Spector Open-source API testing, mocking and contract testing":
+    - /url: https://api-spector.dev
+  - link "GitHub Source code, issues and contributions":
+    - /url: https://github.com/testsmith-io/practice-software-testing
+  - text: This is a DEMO application, used for software testing training purpose. |
+  - link "Privacy Policy":
+    - /url: /privacy
+  - text: "| Banner photo by"
+  - link "Barn Images":
+    - /url: https://unsplash.com/@barnimages
+  - text: "on"
+  - link "Unsplash":
+    - /url: https://unsplash.com/photos/t5YUoHW6zRo
+  - text: . v2.5 | Built 2026-10-11 | Angular 20.0.5
+- button "Open chat":
+  - img
+- button "Show live shop activity"
+- alert "Product added to shopping cart."

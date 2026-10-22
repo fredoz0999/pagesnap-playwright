@@ -8,7 +8,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 
 - - combobox "fromAccountId":
 - - combobox "type":
-- - option "13566" [selected]
+- - option "18561" [selected]
 - - option "CHECKING" [selected]
 - - option "SAVINGS"
 - options:  # native <select> - available without opening UI
@@ -19,8 +19,10 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + #   - CHECKING
 + #   - SAVINGS (selected)
 + - heading "Account Opened!" [level=1]
-+ - link "13677":
-+ - {by: role, value: "link", name: "13677", stability: medium, score: 95}
++ - link "18672":
++ - text "Congratulations, your account is now open."
++ - text "Your new account number:"
++ - {by: role, value: "link", name: "18672", stability: medium, score: 95}
 
 ## Removed
 
@@ -29,6 +31,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - button "Open New Account":
 - - form:
 - - heading "Open New Account" [level=1]
+- - text "A minimum of $100.00 must be deposited into this account at time of opening. Please choose an existing account to transfer funds into the new account."
+- - text "What type of Account would you like to open?"
 - - {by: css, value: "#openAccountForm > form:nth-child(2)", stability: low, score: 60}
 - - {by: id, value: "fromAccountId", stability: high, score: 90}
 - - {by: id, value: "type", stability: high, score: 90}
@@ -37,5 +41,5 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - locators:
 - locators:
 - value: "0"
-- value: "13566"
+- value: "18561"
 - value: "Open New Account"

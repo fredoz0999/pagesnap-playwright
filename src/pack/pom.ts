@@ -91,17 +91,26 @@ export function locatorCode(l: Locator): string {
   }
 }
 
+/** A path segment that is a record id (ULID, UUID, number, hash), not a route name. */
+export function isIdSegment(seg: string): boolean {
+  if (/^\d+$/.test(seg)) return true;
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(seg)) return true;
+  return seg.length >= 12 && /\d/.test(seg) && /^[A-Za-z0-9_-]+$/.test(seg) && !/^[a-z]+(-[a-z]+)*$/.test(seg);
+}
+
+/** URL path with record ids replaced by :id so /product/01M5... and /product/01M6... are one page. */
 function urlPathOf(url: string): string {
+  let p: string;
   try {
-    const u = new URL(url);
-    return u.pathname.replace(/;jsessionid=[^/]*/i, "") || "/";
+    p = new URL(url).pathname.replace(/;jsessionid=[^/]*/i, "") || "/";
   } catch {
-    return url;
+    p = url;
   }
+  return p.split("/").map((seg) => (seg && isIdSegment(seg) ? ":id" : seg)).join("/");
 }
 
 function classNameFor(urlPath: string, title: string): string {
-  const last = urlPath.split("/").filter(Boolean).pop() || "";
+  const last = urlPath.split("/").filter((x) => x && x !== ":id").pop() || "";
   const stem = last.replace(/\.(html?|htm|jsp|php|aspx?)$/i, "");
   const parts = words(stem);
   if (!parts.length || /^(index|home|default)$/i.test(stem)) return "HomePage";
@@ -139,14 +148,25 @@ function memberBase(n: SnapNode, l: Locator): string[] {
 
 /** Controls named by data (account numbers, result rows) change every run. */
 function isDataNamed(n: SnapNode, l: Locator): boolean {
+  // test ids that embed a record id (product-01M5GHZ87...) are per-record too
+  if ((l.by === "testid" || l.by === "id") && /[A-Za-z0-9]{16,}/.test(l.value) && /\d/.test(l.value)) return true;
   if (l.by === "testid" || l.by === "id" || l.by === "name") return false;
-  return !!n.name && !/[a-z]{2}/i.test(n.name);
+  if (!n.name) return false;
+  if (!/[a-z]{2}/i.test(n.name)) return true; // "13677", "2"
+  return /[$€£¥]\s?\d/.test(n.name); // product cards: "Claw Hammer ABCDE$11.48"
+}
+
+/** Repeated card buttons ("Compare" x18) with only a structural locator: not a page member. */
+function isRepeatedStructural(n: SnapNode, l: Locator): boolean {
+  return l.by === "css" && /nth-child/.test(l.value) && n.flags.some((f) => /^dup \d+\/\d+$/.test(f));
 }
 
 function wanted(n: SnapNode): boolean {
   if (KEEP_ROLES.has(n.role)) return true;
-  // testid'd text the test may assert on (title, badge, error, balance)
-  if ((n.role === "generic" || n.role === "heading" || n.role === "alert" || n.role === "table") && n.locators.some((l) => l.by === "testid" || l.by === "id")) {
+  // Anything the developers gave a test id (cart total cell, price, badge), plus
+  // id'd text the test may assert on (title, error, balance).
+  if (n.locators.some((l) => l.by === "testid")) return true;
+  if ((n.role === "generic" || n.role === "heading" || n.role === "alert" || n.role === "table" || n.role === "cell") && n.locators.some((l) => l.by === "id")) {
     return true;
   }
   return false;
@@ -167,7 +187,7 @@ export function buildPom(sessionDir: string): Omit<PomResult, "files"> {
     walk(snap.roots, (n) => {
       if (!wanted(n)) return;
       const l = bestLocator(n);
-      if (!l || isDataNamed(n, l)) return;
+      if (!l || isDataNamed(n, l) || isRepeatedStructural(n, l)) return;
       if (l.by === "testid" && l.attr && l.attr !== "data-testid") testIdAttribute = l.attr;
       const key = l.by + "|" + l.value + "|" + (l.name || "");
       if (!entry.raws.has(key)) entry.raws.set(key, { node: n, loc: l, key });
@@ -184,9 +204,20 @@ export function buildPom(sessionDir: string): Omit<PomResult, "files"> {
   const shared = new Set([...pagesPerKey.entries()].filter(([, s]) => s.size >= minPages).map(([k]) => k));
   const toMembers = (raws: Raw[], taken: Set<string>): PomMember[] => {
     const out: PomMember[] = [];
+    // Same visible name, different element (three "Proceed to checkout" steps):
+    // name them by their test id / id instead of name + counter.
+    const byName = new Map<string, number>();
+    for (const r of raws) {
+      const k = r.node.role + "|" + camel(memberBase(r.node, r.loc));
+      byName.set(k, (byName.get(k) || 0) + 1);
+    }
     for (const r of raws) {
       const suffix = SUFFIX[r.node.role] ?? "";
-      const baseWords = memberBase(r.node, r.loc);
+      let baseWords = memberBase(r.node, r.loc);
+      const clash = (byName.get(r.node.role + "|" + camel(baseWords)) || 0) > 1;
+      if (clash && (r.loc.by === "testid" || r.loc.by === "id" || r.loc.by === "name") && words(r.loc.value).length) {
+        baseWords = words(r.loc.value);
+      }
       let prop = camel(baseWords) + (suffix && !camel(baseWords).toLowerCase().endsWith(suffix.toLowerCase()) ? suffix : "");
       let i = 2;
       while (taken.has(prop)) prop = prop.replace(/\d+$/, "") + i++;
@@ -267,9 +298,17 @@ export function renderPom(p: Omit<PomResult, "files">, sessionDir: string): Map<
       "export class " + pg.className + " extends BasePage {",
       "  static readonly path = " + js(pg.urlPath) + ";",
       "",
-      "  async goto(): Promise<void> {",
-      "    await this.page.goto(" + pg.className + ".path);",
-      "  }",
+      ...(pg.urlPath.includes(":id")
+        ? [
+            "  async goto(id: string): Promise<void> {",
+            "    await this.page.goto(" + pg.className + ".path.replace(':id', encodeURIComponent(id)));",
+            "  }",
+          ]
+        : [
+            "  async goto(): Promise<void> {",
+            "    await this.page.goto(" + pg.className + ".path);",
+            "  }",
+          ]),
       ...(pg.members.length ? [""] : []),
       ...memberLines(pg.members),
       "}",

@@ -5,26 +5,6 @@ import type { Locator, Page } from '@playwright/test';
 export class BasePage {
   constructor(readonly page: Page) {}
 
-  /** link "About Us" - FRAGILE structural locator, ask dev for a test id */
-  get aboutUsLink(): Locator {
-    return this.page.locator('#headerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)');
-  }
-
-  /** link "Services" - FRAGILE structural locator, ask dev for a test id */
-  get servicesLink(): Locator {
-    return this.page.locator('#headerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)');
-  }
-
-  /** link "Products" - FRAGILE structural locator, ask dev for a test id */
-  get productsLink(): Locator {
-    return this.page.locator('#headerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)');
-  }
-
-  /** link "Locations" - FRAGILE structural locator, ask dev for a test id */
-  get locationsLink(): Locator {
-    return this.page.locator('#headerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)');
-  }
-
   /** link "Admin Page" */
   get adminPageLink(): Locator {
     return this.page.getByRole('link', { name: 'Admin Page', exact: true });
@@ -48,26 +28,6 @@ export class BasePage {
   /** link "Home" */
   get homeLink2(): Locator {
     return this.page.getByRole('link', { name: 'Home', exact: true });
-  }
-
-  /** link "About Us" - FRAGILE structural locator, ask dev for a test id */
-  get aboutUsLink2(): Locator {
-    return this.page.locator('#footerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)');
-  }
-
-  /** link "Services" - FRAGILE structural locator, ask dev for a test id */
-  get servicesLink2(): Locator {
-    return this.page.locator('#footerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)');
-  }
-
-  /** link "Products" - FRAGILE structural locator, ask dev for a test id */
-  get productsLink2(): Locator {
-    return this.page.locator('#footerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)');
-  }
-
-  /** link "Locations" - FRAGILE structural locator, ask dev for a test id */
-  get locationsLink2(): Locator {
-    return this.page.locator('#footerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)');
   }
 
   /** link "Site Map" */

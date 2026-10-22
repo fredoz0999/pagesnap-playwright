@@ -1,7 +1,7 @@
 # URL: https://www.saucedemo.com/cart.html
 # Title: Swag Labs
 # Viewport: 1280x900
-# Captured: 2026-10-22T00:10:51Z
+# Captured: 2026-10-22T02:02:27Z
 # Trigger: manual
 # Step: 4
 # Note: action: open cart | assert: both items listed, Checkout enabled
@@ -13,6 +13,7 @@
   - button "Open Menu":
     locators:
       - {by: role, value: "button", name: "Open Menu", stability: medium, score: 95}
+  - text "Swag Labs"
   - link "2":
     locators:
       - {by: testid, value: "shopping-cart-link", attr: data-test, stability: high, score: 98}

@@ -92,6 +92,34 @@ describe.skipIf(!hasBrowser)("live: capture, verify, heal", () => {
     await p2.close();
   }, 60000);
 
+  it("role locators that Playwright cannot resolve are replaced by the next verified locator", async () => {
+    const { checkRoleLocators } = await import("../src/role-check.js");
+    const page = await browser.newPage();
+    await page.setContent('<button id="go">Go</button><div role="menuitem" data-test="mi">Shop <span hidden>x</span></div>');
+    const tree = [
+      '- button "Go":',
+      "  locators:",
+      '    - {by: role, value: "button", name: "Go", stability: medium, score: 95}',
+      '- menuitem "Shop x":',
+      "  locators:",
+      '    - {by: role, value: "menuitem", name: "Shop x", stability: medium, score: 95}',
+    ].join("\n");
+    const locs = [
+      { ctl: 1, by: "role", value: "button", locName: "Go", role: "button", name: "Go", score: 95 },
+      { ctl: 1, by: "id", value: "go", role: "button", name: "Go", score: 90 },
+      { ctl: 2, by: "role", value: "menuitem", locName: "Shop x", role: "menuitem", name: "Shop x", score: 95 },
+      { ctl: 2, by: "testid", value: "mi", attr: "data-test", role: "menuitem", name: "Shop x", score: 98 },
+    ];
+    const r = await checkRoleLocators(page, tree, locs);
+    await page.close();
+    expect(r.checked).toBe(2);
+    expect(r.replaced).toBe(1);
+    expect(r.tree).toContain('{by: role, value: "button", name: "Go"');
+    expect(r.tree).toContain('{by: testid, value: "mi", attr: data-test, stability: high, score: 98}');
+    expect(r.tree).not.toContain('name: "Shop x", stability');
+    expect(r.locators.some((l) => l.by === "role" && l.value === "menuitem")).toBe(false);
+  });
+
   it("verify passes against the unchanged app", async () => {
     const rep = await verifySession(session);
     expect(rep.counts.gone).toBe(0);

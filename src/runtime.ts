@@ -18,6 +18,7 @@ import { applySessionFolderName, sessionFolderTs } from "./session.js";
 import { refreshFlow, writePromptPack, type StepRecord } from "./session-pack.js";
 import { persistSnapshot, type AltLocator } from "./snapshot-write.js";
 import { buildIndex } from "./pack/index.js";
+import { checkRoleLocators } from "./role-check.js";
 import { isDuplicateCapture, normalizeNote } from "./util-parse.js";
 
 interface TabState {
@@ -155,6 +156,13 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
         hintsTruncated = Number(result.hintsTruncated ?? 0);
         if (Array.isArray(result.locators)) altLocators = result.locators;
       } else if (result != null) tree = String(result);
+      try {
+        // Playwright's own engine is the judge of role locators (see role-check.ts).
+        // Runs while the toolbar is hidden so its buttons cannot add matches.
+        const checked = await checkRoleLocators(page, tree, altLocators);
+        tree = checked.tree;
+        altLocators = checked.locators;
+      } catch { /* keep the in-page result */ }
     } finally {
       try {
         await page.evaluate("if (window.__snapshotSetChromeHidden) window.__snapshotSetChromeHidden(false);");

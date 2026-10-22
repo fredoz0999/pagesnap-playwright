@@ -1,0 +1,353 @@
+# URL: https://practicesoftwaretesting.com/
+# Title: Practice Software Testing - Toolshop - v5.0
+# Viewport: 1280x900
+# Captured: 2026-10-22T02:01:49Z
+# Trigger: manual
+# Step: 2
+# Note: action: search 'hammer' | assert: caption 'Searched for: hammer', only hammer products listed
+# Session goal: Toolshop: search, sort, add to cart, sign in, check out, get invoice
+
+- generic "View the for this application.":
+  locators:
+    - {by: testid, value: "notification-bar", attr: data-test, stability: high, score: 98}
+  - link "Documentation":
+    locators:
+      - {by: role, value: "link", name: "Documentation", stability: medium, score: 95}
+- text "Practice Black Box Testing & Bug Hunting"
+- button "Testing Guide":
+  locators:
+    - {by: role, value: "button", name: "Testing Guide", stability: medium, score: 95}
+- button "🐛 Bug Hunting":
+  locators:
+    - {by: role, value: "button", name: "🐛 Bug Hunting", stability: medium, score: 95}
+- link "Practice Software Testing - Toolshop":
+  locators:
+    - {by: role, value: "link", name: "Practice Software Testing - Toolshop", stability: medium, score: 95}
+- menubar "Main menu"
+  - menuitem "Home":
+    locators:
+      - {by: role, value: "menuitem", name: "Home", stability: medium, score: 95}
+    - link "Home" [current]:
+      locators:
+        - {by: testid, value: "nav-home", attr: data-test, stability: high, score: 98}
+  - menuitem "Categories Hand ToolsPower ToolsOtherSpecial ToolsRentals":
+    locators:
+    - button "Categories" [collapsed]:
+      dropdown: closed
+      locators:
+        - {by: testid, value: "nav-categories", attr: data-test, stability: high, score: 98}
+  - menuitem "Contact":
+    locators:
+      - {by: role, value: "menuitem", name: "Contact", stability: medium, score: 95}
+    - link "Contact":
+      locators:
+        - {by: testid, value: "nav-contact", attr: data-test, stability: high, score: 98}
+  - menuitem "Sign in":
+    locators:
+      - {by: role, value: "menuitem", name: "Sign in", stability: medium, score: 95}
+    - link "Sign in":
+      locators:
+        - {by: testid, value: "nav-sign-in", attr: data-test, stability: high, score: 98}
+- button "Select language" [collapsed]:
+  dropdown: closed
+  locators:
+    - {by: testid, value: "language-select", attr: data-test, stability: high, score: 98}
+- heading "Practice Software Testing - Toolshop" [level=1]
+- img "Banner"
+- generic:
+  locators:
+    - {by: testid, value: "course-promo", attr: data-test, stability: high, score: 98}
+  - text "Enjoyed testing this app? Level up with hands-on software testing courses."
+  - link "Explore courses":
+    locators:
+      - {by: testid, value: "course-promo-link", attr: data-test, stability: high, score: 98}
+- generic:
+  locators:
+    - {by: id, value: "filters", stability: high, score: 90}
+  - heading "Sort" [level=4]
+  - form:
+    locators:
+      - {by: css, value: "#filters > form:nth-child(3)", stability: low, score: 60}
+    - combobox "sort":
+      value: ""
+      locators:
+        - {by: testid, value: "sort", attr: data-test, stability: high, score: 98}
+      options:  # native <select> - available without opening UI
+        - option "" [selected]
+        - option "Name (A - Z)"
+        - option "Name (Z - A)"
+        - option "Price (High - Low)"
+        - option "Price (Low - High)"
+        - option "CO₂ Rating (A - E)"
+        - option "CO₂ Rating (E - A)"
+  - heading "Price Range" [level=4]
+  - slider "ngx-slider":
+    locators:
+      - {by: role, value: "slider", name: "ngx-slider", stability: medium, score: 95}
+  - slider "ngx-slider-max":
+    locators:
+      - {by: role, value: "slider", name: "ngx-slider-max", stability: medium, score: 95}
+  - heading "Search" [level=4]
+  - form:
+    locators:
+      - {by: css, value: "#filters > form:nth-child(9)", stability: low, score: 60}
+    - textbox "Search":
+      value: ""
+      locators:
+        - {by: testid, value: "search-query", attr: data-test, stability: high, score: 98}
+    - button "X":
+      locators:
+        - {by: testid, value: "search-reset", attr: data-test, stability: high, score: 98}
+    - button "Search":
+      locators:
+        - {by: testid, value: "search-submit", attr: data-test, stability: high, score: 98}
+  - heading "Filters" [level=4]
+  - heading "By category:" [level=4]
+  - text "Categories"
+  - checkbox "Hand Tools":
+    value: "01M5GND71MK3KFRVGTBV1QE4ZQ"
+    locators:
+      - {by: testid, value: "category-01M5GND71MK3KFRVGTBV1QE4ZQ", attr: data-test, stability: high, score: 98}
+  - list
+    - text "Categories"
+    - checkbox "Hammer":
+      value: "01M5GND72GRNKJ0VS990Z1N3CF"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CF", attr: data-test, stability: high, score: 98}
+    - checkbox "Hand Saw":
+      value: "01M5GND72GRNKJ0VS990Z1N3CG"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CG", attr: data-test, stability: high, score: 98}
+    - checkbox "Wrench":
+      value: "01M5GND72GRNKJ0VS990Z1N3CH"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CH", attr: data-test, stability: high, score: 98}
+    - checkbox "Screwdriver":
+      value: "01M5GND72GRNKJ0VS990Z1N3CJ"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CJ", attr: data-test, stability: high, score: 98}
+    - checkbox "Pliers":
+      value: "01M5GND72GRNKJ0VS990Z1N3CK"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CK", attr: data-test, stability: high, score: 98}
+    - checkbox "Chisels":
+      value: "01M5GND72GRNKJ0VS990Z1N3CM"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CM", attr: data-test, stability: high, score: 98}
+    - checkbox "Measures":
+      value: "01M5GND72GRNKJ0VS990Z1N3CN"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CN", attr: data-test, stability: high, score: 98}
+  - checkbox "Power Tools":
+    value: "01M5GND71MK3KFRVGTBV1QE4ZR"
+    locators:
+      - {by: testid, value: "category-01M5GND71MK3KFRVGTBV1QE4ZR", attr: data-test, stability: high, score: 98}
+  - list
+    - text "Categories"
+    - checkbox "Grinder":
+      value: "01M5GND72GRNKJ0VS990Z1N3CP"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CP", attr: data-test, stability: high, score: 98}
+    - checkbox "Sander":
+      value: "01M5GND72GRNKJ0VS990Z1N3CQ"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CQ", attr: data-test, stability: high, score: 98}
+    - checkbox "Saw":
+      value: "01M5GND72GRNKJ0VS990Z1N3CR"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CR", attr: data-test, stability: high, score: 98}
+    - checkbox "Drill":
+      value: "01M5GND72GRNKJ0VS990Z1N3CS"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CS", attr: data-test, stability: high, score: 98}
+  - checkbox "Other":
+    value: "01M5GND71MK3KFRVGTBV1QE4ZS"
+    locators:
+      - {by: testid, value: "category-01M5GND71MK3KFRVGTBV1QE4ZS", attr: data-test, stability: high, score: 98}
+  - list
+    - text "Categories"
+    - checkbox "Tool Belts":
+      value: "01M5GND72GRNKJ0VS990Z1N3CT"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CT", attr: data-test, stability: high, score: 98}
+    - checkbox "Storage Solutions":
+      value: "01M5GND72GRNKJ0VS990Z1N3CV"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CV", attr: data-test, stability: high, score: 98}
+    - checkbox "Workbench":
+      value: "01M5GND72GRNKJ0VS990Z1N3CW"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CW", attr: data-test, stability: high, score: 98}
+    - checkbox "Safety Gear":
+      value: "01M5GND72GRNKJ0VS990Z1N3CX"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CX", attr: data-test, stability: high, score: 98}
+    - checkbox "Fasteners":
+      value: "01M5GND72GRNKJ0VS990Z1N3CY"
+      locators:
+        - {by: testid, value: "category-01M5GND72GRNKJ0VS990Z1N3CY", attr: data-test, stability: high, score: 98}
+  - heading "By brand:" [level=4]
+  - text "Brands"
+  - checkbox "ForgeFlex Tools":
+    value: "01M5GND6PZKTEJF24A041V4AWN"
+    locators:
+      - {by: testid, value: "brand-01M5GND6PZKTEJF24A041V4AWN", attr: data-test, stability: high, score: 98}
+  - checkbox "MightyCraft Hardware":
+    value: "01M5GND6PZKTEJF24A041V4AWP"
+    locators:
+      - {by: testid, value: "brand-01M5GND6PZKTEJF24A041V4AWP", attr: data-test, stability: high, score: 98}
+  - heading "Sustainability:" [level=4]
+  - text "Eco-Friendly Products"
+  - checkbox "Show only eco-friendly products":
+    value: "on"
+    locators:
+      - {by: testid, value: "eco-friendly-filter", attr: data-test, stability: high, score: 98}
+- heading "Searched for: hammer" [level=3]:
+  locators:
+    - {by: testid, value: "search-caption", attr: data-test, stability: high, score: 98}
+  - generic "hammer":
+    locators:
+      - {by: testid, value: "search-term", attr: data-test, stability: high, score: 98}
+- generic "6 products found for 'hammer'":
+  locators:
+    - {by: testid, value: "search-result-count", stability: high, score: 98}
+- generic:
+  locators:
+    - {by: testid, value: "search_completed", attr: data-test, stability: high, score: 98}
+  - link "Claw Hammer with Shock Reduction Grip ABCDE$13.41":
+    locators:
+      - {by: testid, value: "product-01M5GND76DX63X0V1S632TWZFC", attr: data-test, stability: high, score: 98}
+    - img "Claw Hammer with Shock Reduction Grip"
+    - button "Compare" [dup 1/6]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(1) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
+    - heading "Claw Hammer with Shock Reduction Grip" [level=5]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(1) > div:nth-child(2) > h5:nth-child(1)", stability: low, score: 60}
+    - generic "A = most environmentally friendly, E = higher environmental impact" [dup 1/6]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(1) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
+    - generic "$13.41":
+      locators:
+        - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(1) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
+  - link "Hammer ABCDE$12.58":
+    locators:
+      - {by: testid, value: "product-01M5GND76N9P1WQ5T8HJVJ5N3F", attr: data-test, stability: high, score: 98}
+    - img "Hammer"
+    - button "Compare" [dup 2/6]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(2) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
+    - heading "Hammer" [level=5]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(2) > div:nth-child(2) > h5:nth-child(1)", stability: low, score: 60}
+    - generic "A = most environmentally friendly, E = higher environmental impact" [dup 2/6]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(2) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
+    - generic "$12.58":
+      locators:
+        - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(2) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
+  - link "Claw Hammer ABCDE$11.48":
+    locators:
+      - {by: testid, value: "product-01M5GND76XN01H7QVXZRB78RDZ", attr: data-test, stability: high, score: 98}
+    - img "Claw Hammer"
+    - button "Compare" [dup 3/6]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(3) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
+    - heading "Claw Hammer" [level=5]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(3) > div:nth-child(2) > h5:nth-child(1)", stability: low, score: 60}
+    - generic "A = most environmentally friendly, E = higher environmental impact" [dup 3/6]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(3) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
+    - generic "$11.48":
+      locators:
+        - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(3) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
+  - link "Thor Hammer ABCDE$11.14":
+    locators:
+      - {by: testid, value: "product-01M5GND773BS12QCXFZNCMJA07", attr: data-test, stability: high, score: 98}
+    - img "Thor Hammer"
+    - button "Compare" [dup 4/6]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(4) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
+    - heading "Thor Hammer" [level=5]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(4) > div:nth-child(2) > h5:nth-child(1)", stability: low, score: 60}
+    - generic "A = most environmentally friendly, E = higher environmental impact" [dup 4/6]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(4) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
+    - generic "$11.14":
+      locators:
+        - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(4) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
+  - link "Claw Hammer with Fiberglass Handle ABCDE$20.14":
+    locators:
+      - {by: testid, value: "product-01M5GND77A1MZV5GJHM225X0Q5", attr: data-test, stability: high, score: 98}
+    - img "Claw Hammer with Fiberglass Handle"
+    - button "Compare" [dup 5/6]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(5) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
+    - heading "Claw Hammer with Fiberglass Handle" [level=5]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(5) > div:nth-child(2) > h5:nth-child(1)", stability: low, score: 60}
+    - generic "A = most environmentally friendly, E = higher environmental impact" [dup 5/6]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(5) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
+    - generic "$20.14":
+      locators:
+        - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(5) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
+  - link "Court Hammer ABCDE$18.63":
+    locators:
+      - {by: testid, value: "product-01M5GND77C8TVM5Q0SM5PNNXTM", attr: data-test, stability: high, score: 98}
+    - img "Court Hammer"
+    - button "Compare" [dup 6/6]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(6) > div:nth-child(1) > button:nth-child(2)", stability: low, score: 60}
+    - heading "Court Hammer" [level=5]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(6) > div:nth-child(2) > h5:nth-child(1)", stability: low, score: 60}
+    - generic "A = most environmentally friendly, E = higher environmental impact" [dup 6/6]:
+      locators:
+        - {by: css, value: "div:nth-child(3) > app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(6) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
+    - generic "$18.63":
+      locators:
+        - {by: css, value: "app-overview:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div:nth-child(3) > a:nth-child(6) > div:nth-child(3) > span:nth-child(1) > span:nth-child(1)", stability: low, score: 60}
+- generic:
+  locators:
+    - {by: testid, value: "footer-explore", attr: data-test, stability: high, score: 98}
+  - text "Learn & Explore"
+  - link "Learn Test AutomationHands-on courses for Playwright, Robot Framework, APIs and more":
+    locators:
+      - {by: testid, value: "footer-learn-courses", attr: data-test, stability: high, score: 98}
+  - link "API SpectorOpen-source API testing, mocking and contract testing":
+    locators:
+      - {by: testid, value: "footer-learn-spector", attr: data-test, stability: high, score: 98}
+  - link "GitHubSource code, issues and contributions":
+    locators:
+      - {by: testid, value: "footer-learn-github", attr: data-test, stability: high, score: 98}
+- text "This is a DEMO application, used for software testing training purpose. | | Banner photo by on ."
+- link "Privacy Policy":
+  locators:
+    - {by: role, value: "link", name: "Privacy Policy", stability: medium, score: 95}
+- link "Barn Images":
+  locators:
+    - {by: role, value: "link", name: "Barn Images", stability: medium, score: 95}
+- link "Unsplash":
+  locators:
+    - {by: role, value: "link", name: "Unsplash", stability: medium, score: 95}
+- text "v2.5 | Built 2026-10-11 | Angular 20.0.5"
+- button "Open chat":
+  locators:
+    - {by: testid, value: "chat-toggle", attr: data-test, stability: high, score: 98}
+- button "Show live shop activity":
+  locators:
+    - {by: testid, value: "live-activity-toggle", attr: data-test, stability: high, score: 98}
+- iframe "frame-0":
+
+# --- All <select> options ---
+# <select> "sort":
+#   -  (selected)
+#   - Name (A - Z)
+#   - Name (Z - A)
+#   - Price (High - Low)
+#   - Price (Low - High)
+#   - CO₂ Rating (A - E)
+#   - CO₂ Rating (E - A)

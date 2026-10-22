@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/register.htm
 # Title: ParaBank | Customer Created
 # Viewport: 1280x900
-# Captured: 2026-10-22T00:01:26Z
+# Captured: 2026-10-22T02:06:46Z
 # Trigger: manual
 # Step: 2
 # Note: action: submit registration | assert: welcome title with username, account created message
@@ -9,6 +9,7 @@
 
 - img
 - img "ParaBank"
+- text "Experience the difference"
 - list
   - listitem
   - listitem
@@ -44,6 +45,8 @@
     - link "contact":
       locators:
         - {by: role, value: "link", name: "contact", stability: medium, score: 95}
+- text "Page Snap"
+- text "Welcome"
 - heading "Account Services" [level=2]
 - list
   - listitem
@@ -78,7 +81,8 @@
     - link "Log Out":
       locators:
         - {by: role, value: "link", name: "Log Out", stability: medium, score: 95}
-- heading "Welcome psmvis00cs" [level=1]
+- heading "Welcome psmviwh6bb" [level=1]
+- text "Your account was created successfully. You are now logged in."
 - list
   - listitem
     - link "Home":
@@ -108,6 +112,7 @@
     - link "Contact Us":
       locators:
         - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- text "© Parasoft. All rights reserved."
 - list
   - listitem
   - listitem

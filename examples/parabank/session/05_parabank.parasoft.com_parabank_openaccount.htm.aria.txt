@@ -63,8 +63,8 @@
 - paragraph: Congratulations, your account is now open.
 - paragraph:
   - text: "Your new account number:"
-  - link "13677":
-    - /url: activity.htm?id=13677
+  - link "18672":
+    - /url: activity.htm?id=18672
 - list:
   - listitem:
     - link "Home":

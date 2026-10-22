@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/billpay.htm
 # Title: ParaBank | Bill Pay
 # Viewport: 1280x900
-# Captured: 2026-10-22T00:01:29Z
+# Captured: 2026-10-22T02:06:49Z
 # Trigger: manual
 # Step: 8
 # Note: action: open Bill Pay | data: payee Electric Co, account 12345, amount 12.34
@@ -9,6 +9,7 @@
 
 - img
 - img "ParaBank"
+- text "Experience the difference"
 - list
   - listitem
   - listitem
@@ -44,6 +45,8 @@
     - link "contact":
       locators:
         - {by: role, value: "link", name: "contact", stability: medium, score: 95}
+- text "Page Snap"
+- text "Welcome"
 - heading "Account Services" [level=2]
 - list
   - listitem
@@ -79,12 +82,13 @@
       locators:
         - {by: role, value: "link", name: "Log Out", stability: medium, score: 95}
 - heading "Bill Payment Service" [level=1]
+- text "Enter payee information"
 - form:
   locators:
     - {by: css, value: "#billpayForm > form:nth-child(3)", stability: low, score: 60}
   - table
     - row
-      - cell
+      - cell "Payee Name:"
       - cell
         - textbox "payee.name":
           value: ""
@@ -92,7 +96,7 @@
             - {by: name, value: "payee.name", stability: high, score: 88}
       - cell
     - row
-      - cell
+      - cell "Address:"
       - cell
         - textbox "payee.address.street":
           value: ""
@@ -100,7 +104,7 @@
             - {by: name, value: "payee.address.street", stability: high, score: 88}
       - cell
     - row
-      - cell
+      - cell "City:"
       - cell
         - textbox "payee.address.city":
           value: ""
@@ -108,7 +112,7 @@
             - {by: name, value: "payee.address.city", stability: high, score: 88}
       - cell
     - row
-      - cell
+      - cell "State:"
       - cell
         - textbox "payee.address.state":
           value: ""
@@ -116,7 +120,7 @@
             - {by: name, value: "payee.address.state", stability: high, score: 88}
       - cell
     - row
-      - cell
+      - cell "Zip Code:"
       - cell
         - textbox "payee.address.zipCode":
           value: ""
@@ -124,7 +128,7 @@
             - {by: name, value: "payee.address.zipCode", stability: high, score: 88}
       - cell
     - row
-      - cell
+      - cell "Phone #:"
       - cell
         - textbox "payee.phoneNumber":
           value: ""
@@ -134,7 +138,7 @@
     - row
       - cell
     - row
-      - cell
+      - cell "Account #:"
       - cell
         - textbox "payee.accountNumber":
           value: ""
@@ -142,7 +146,7 @@
             - {by: name, value: "payee.accountNumber", stability: high, score: 88}
       - cell
     - row
-      - cell
+      - cell "Verify Account #:"
       - cell
         - textbox "verifyAccount":
           value: ""
@@ -152,7 +156,7 @@
     - row
       - cell
     - row
-      - cell
+      - cell "Amount: $"
       - cell
         - textbox "amount":
           value: ""
@@ -162,15 +166,15 @@
     - row
       - cell
     - row
-      - cell
-      - cell
+      - cell "From account #:"
+      - cell "18561 18672"
         - combobox "fromAccountId":
-          value: "13566"
+          value: "18561"
           locators:
             - {by: name, value: "fromAccountId", stability: high, score: 88}
           options:  # native <select> - available without opening UI
-            - option "13566" [selected]
-            - option "13677"
+            - option "18561" [selected]
+            - option "18672"
     - row
       - cell
       - cell
@@ -207,6 +211,7 @@
     - link "Contact Us":
       locators:
         - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- text "© Parasoft. All rights reserved."
 - list
   - listitem
   - listitem
@@ -216,8 +221,8 @@
 
 # --- All <select> options ---
 # <select> "fromAccountId":
-#   - 13566 (selected)
-#   - 13677
+#   - 18561 (selected)
+#   - 18672
 
 # --- Tables (headers + first rows) ---
 # table "table-0":

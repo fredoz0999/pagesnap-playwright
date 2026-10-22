@@ -8,8 +8,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 ## Dropdown / options changes
 
 + - combobox "fromAccountId":
-+ - option "13566" [selected]
-+ - option "13677"
++ - option "18561" [selected]
++ - option "18672"
 + options:  # native <select> - available without opening UI
 - # <select> "toAccountId":
 
@@ -43,17 +43,17 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - cell
 + - cell
 + - cell
-+ - cell
-+ - cell
-+ - cell
-+ - cell
-+ - cell
-+ - cell
-+ - cell
-+ - cell
-+ - cell
-+ - cell
-+ - cell
++ - cell "18561 18672"
++ - cell "Account #:"
++ - cell "Address:"
++ - cell "Amount: $"
++ - cell "City:"
++ - cell "From account #:"
++ - cell "Payee Name:"
++ - cell "Phone #:"
++ - cell "State:"
++ - cell "Verify Account #:"
++ - cell "Zip Code:"
 + - form:
 + - heading "Bill Payment Service" [level=1]
 + - row
@@ -71,6 +71,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - row
 + - row
 + - table
++ - text "Enter payee information"
 + - textbox "amount":
 + - textbox "payee.accountNumber":
 + - textbox "payee.address.city":
@@ -94,10 +95,11 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - {by: role, value: "button", name: "Send Payment", stability: medium, score: 95}
 + locators:
 + locators:
-+ locators:
 
 ## Removed
 
-- #   - 13566
-- #   - 13677 (selected)
+- #   - 18561
+- #   - 18672 (selected)
 - - heading "Transfer Complete!" [level=1]
+- - text "See Account Activity for more details."
+- - text "has been transferred from account # to account # ."

@@ -1,7 +1,7 @@
 # URL: https://www.saucedemo.com/inventory.html
 # Title: Swag Labs
 # Viewport: 1280x900
-# Captured: 2026-10-22T00:10:51Z
+# Captured: 2026-10-22T02:02:27Z
 # Trigger: manual
 # Step: 3
 # Note: action: add Backpack and Bike Light to cart | assert: cart badge shows 2
@@ -13,6 +13,7 @@
   - button "Open Menu":
     locators:
       - {by: role, value: "button", name: "Open Menu", stability: medium, score: 95}
+  - text "Swag Labs"
   - link "2":
     locators:
       - {by: testid, value: "shopping-cart-link", attr: data-test, stability: high, score: 98}
@@ -49,7 +50,9 @@
       - link:
         locators:
           - {by: testid, value: "item-4-img-link", attr: data-test, stability: high, score: 98}
-        - img "Sauce Labs Backpack"
+        - img "Sauce Labs Backpack":
+          locators:
+            - {by: testid, value: "inventory-item-sauce-labs-backpack-img", attr: data-test, stability: high, score: 98}
       - generic:
         locators:
           - {by: css, value: "#contents_wrapper > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)", stability: low, score: 60}
@@ -74,7 +77,9 @@
       - link:
         locators:
           - {by: testid, value: "item-0-img-link", attr: data-test, stability: high, score: 98}
-        - img "Sauce Labs Bike Light"
+        - img "Sauce Labs Bike Light":
+          locators:
+            - {by: testid, value: "inventory-item-sauce-labs-bike-light-img", attr: data-test, stability: high, score: 98}
       - generic:
         locators:
           - {by: css, value: "#contents_wrapper > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
@@ -99,7 +104,9 @@
       - link:
         locators:
           - {by: testid, value: "item-1-img-link", attr: data-test, stability: high, score: 98}
-        - img "Sauce Labs Bolt T-Shirt"
+        - img "Sauce Labs Bolt T-Shirt":
+          locators:
+            - {by: testid, value: "inventory-item-sauce-labs-bolt-t-shirt-img", attr: data-test, stability: high, score: 98}
       - generic:
         locators:
           - {by: css, value: "#contents_wrapper > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2)", stability: low, score: 60}
@@ -124,7 +131,9 @@
       - link:
         locators:
           - {by: testid, value: "item-5-img-link", attr: data-test, stability: high, score: 98}
-        - img "Sauce Labs Fleece Jacket"
+        - img "Sauce Labs Fleece Jacket":
+          locators:
+            - {by: testid, value: "inventory-item-sauce-labs-fleece-jacket-img", attr: data-test, stability: high, score: 98}
       - generic:
         locators:
           - {by: css, value: "#contents_wrapper > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(2)", stability: low, score: 60}
@@ -149,7 +158,9 @@
       - link:
         locators:
           - {by: testid, value: "item-2-img-link", attr: data-test, stability: high, score: 98}
-        - img "Sauce Labs Onesie"
+        - img "Sauce Labs Onesie":
+          locators:
+            - {by: testid, value: "inventory-item-sauce-labs-onesie-img", attr: data-test, stability: high, score: 98}
       - generic:
         locators:
           - {by: css, value: "#contents_wrapper > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(2)", stability: low, score: 60}
@@ -174,7 +185,9 @@
       - link:
         locators:
           - {by: testid, value: "item-3-img-link", attr: data-test, stability: high, score: 98}
-        - img "Test.allTheThings() T-Shirt (Red)"
+        - img "Test.allTheThings() T-Shirt (Red)":
+          locators:
+            - {by: testid, value: "inventory-item-test-allthethings-t-shirt-red-img", attr: data-test, stability: high, score: 98}
       - generic:
         locators:
           - {by: css, value: "#contents_wrapper > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(2)", stability: low, score: 60}

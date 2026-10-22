@@ -7,7 +7,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 ## Added
 
 + - heading "Account Services" [level=2]
-+ - heading "Welcome psmvis00cs" [level=1]
++ - heading "Welcome psmviwh6bb" [level=1]
 + - link "Accounts Overview":
 + - link "Bill Pay":
 + - link "Find Transactions":
@@ -25,6 +25,9 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - listitem
 + - listitem
 + - listitem
++ - text "Page Snap"
++ - text "Welcome"
++ - text "Your account was created successfully. You are now logged in."
 + - {by: role, value: "link", name: "Accounts Overview", stability: medium, score: 95}
 + - {by: role, value: "link", name: "Bill Pay", stability: medium, score: 95}
 + - {by: role, value: "link", name: "Find Transactions", stability: medium, score: 95}
@@ -67,17 +70,17 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - cell
 - - cell
 - - cell
-- - cell
-- - cell
-- - cell
-- - cell
-- - cell
-- - cell
-- - cell
-- - cell
-- - cell
-- - cell
-- - cell
+- - cell "Address:"
+- - cell "City:"
+- - cell "Confirm:"
+- - cell "First Name:"
+- - cell "Last Name:"
+- - cell "Password:"
+- - cell "Phone #:"
+- - cell "SSN:"
+- - cell "State:"
+- - cell "Username:"
+- - cell "Zip Code:"
 - - form:
 - - form:
 - - heading "Customer Login" [level=2]
@@ -100,6 +103,9 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - row
 - - row
 - - table
+- - text "If you have an account with us you can sign-up for free instant online access. You will have to provide some personal information."
+- - text "Password"
+- - text "Username"
 - - textbox "customer.address.city":
 - - textbox "customer.address.state":
 - - textbox "customer.address.street":
@@ -113,6 +119,3 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - textbox "password":
 - - textbox "repeatedPassword":
 - - textbox "username":
-- - {by: css, value: "#topPanel > a:nth-child(1)", stability: low, score: 60}
-- - {by: css, value: "#topPanel > a:nth-child(2)", stability: low, score: 60}
-- - {by: id, value: "customer.address.city", stability: high, score: 90}

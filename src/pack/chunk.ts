@@ -58,7 +58,9 @@ export function chromeKey(n: CNode): string {
 /** Top-level blocks that repeat on at least half of the pages (min 2). */
 export function findChrome(trees: CNode[][]): Set<string> {
   const counts = new Map<string, number>();
-  for (const t of trees) for (const k of new Set(t.map(chromeKey))) counts.set(k, (counts.get(k) || 0) + 1);
+  // Toasts and dialogs are state, never chrome, even when they linger across steps.
+  const STATE = new Set(["alert", "alertdialog", "dialog", "status"]);
+  for (const t of trees) for (const k of new Set(t.filter((n) => !STATE.has(n.role)).map(chromeKey))) counts.set(k, (counts.get(k) || 0) + 1);
   const min = Math.max(2, Math.ceil(trees.length / 2));
   return new Set([...counts].filter(([, c]) => c >= min).map(([k]) => k));
 }
@@ -155,7 +157,7 @@ export function chunkSnapshot(snap: Snapshot, opts: ChunkOptions = {}): { chunks
   if (tail.length) add("tables", ["tables"], tail);
 
   const chromeLine = chromeNodes.length
-    ? ["~ site chrome on most pages (lean/CHROME.txt, BasePage): " + chromeNodes.map(chromeLabel).join("; ")]
+    ? ["~ site chrome: " + chromeNodes.length + " shared blocks (nav, header, footer) omitted - lean/CHROME.txt, BasePage"]
     : [];
   const compactLines = [snapshotHeaderLine(snap), ...chromeLine, ...renderNodes(tree), ...tail];
   const compact = compactLines.join("\n") + "\n";

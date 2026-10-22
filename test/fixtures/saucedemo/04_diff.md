@@ -74,12 +74,12 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - generic:
 - - generic:
 - - generic:
-- - img "Sauce Labs Backpack"
-- - img "Sauce Labs Bike Light"
-- - img "Sauce Labs Bolt T-Shirt"
-- - img "Sauce Labs Fleece Jacket"
-- - img "Sauce Labs Onesie"
-- - img "Test.allTheThings() T-Shirt (Red)"
+- - img "Sauce Labs Backpack":
+- - img "Sauce Labs Bike Light":
+- - img "Sauce Labs Bolt T-Shirt":
+- - img "Sauce Labs Fleece Jacket":
+- - img "Sauce Labs Onesie":
+- - img "Test.allTheThings() T-Shirt (Red)":
 - - link "Sauce Labs Bolt T-Shirt":
 - - link "Sauce Labs Fleece Jacket":
 - - link "Sauce Labs Onesie":

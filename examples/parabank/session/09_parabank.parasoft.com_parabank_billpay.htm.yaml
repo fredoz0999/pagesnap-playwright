@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/billpay.htm
 # Title: ParaBank | Bill Payment Complete
 # Viewport: 1280x900
-# Captured: 2026-10-22T00:01:29Z
+# Captured: 2026-10-22T02:06:50Z
 # Trigger: manual
 # Step: 9
 # Note: action: click Send Payment | assert: 'Bill Payment Complete' naming Electric Co and $12.34
@@ -9,6 +9,7 @@
 
 - img
 - img "ParaBank"
+- text "Experience the difference"
 - list
   - listitem
   - listitem
@@ -44,6 +45,8 @@
     - link "contact":
       locators:
         - {by: role, value: "link", name: "contact", stability: medium, score: 95}
+- text "Page Snap"
+- text "Welcome"
 - heading "Account Services" [level=2]
 - list
   - listitem
@@ -79,6 +82,9 @@
       locators:
         - {by: role, value: "link", name: "Log Out", stability: medium, score: 95}
 - heading "Bill Payment Complete" [level=1]
+- text "Bill Payment to in the amount of from account was successful."
+- text "Electric Co"
+- text "See Account Activity for more details."
 - list
   - listitem
     - link "Home":
@@ -108,6 +114,7 @@
     - link "Contact Us":
       locators:
         - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- text "© Parasoft. All rights reserved."
 - list
   - listitem
   - listitem
@@ -117,5 +124,5 @@
 
 # --- All <select> options ---
 # <select> "fromAccountId":
-#   - 13566 (selected)
-#   - 13677
+#   - 18561 (selected)
+#   - 18672

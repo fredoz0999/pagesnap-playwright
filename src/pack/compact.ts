@@ -161,9 +161,9 @@ export function compactNodes(nodes: SnapNode[], opts: CompactOptions = {}): CNod
       // A generic child that only repeats its parent's name (link > div text) adds nothing.
       const children = n.children.filter((c) => !(c.role === "generic" && c.name && c.name === n.name && !c.children.length && !usefulLocators(c).length));
       const kids = conv(children);
-      // Empty table scaffolding (row / cell with no name): the table text is in the
-      // "tables:" block; keep only the controls inside (links, inputs).
-      if (TABLE_PARTS.has(n.role) && !n.name && !n.flags.length && !usefulLocators(n).length && !n.details.length) {
+      // Table scaffolding (rows, cells, headers) without its own locator: the table
+      // text is in the "tables:" block; keep only what is inside (links, inputs, test ids).
+      if (TABLE_PARTS.has(n.role) && !usefulLocators(n).length && !n.details.length) {
         out.push(...kids);
         continue;
       }

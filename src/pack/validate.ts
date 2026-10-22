@@ -22,7 +22,7 @@ export interface Inventory {
   testids: Map<string, number>;
   ids: Map<string, number>;
   names: Map<string, number>;
-  roleNames: { role: string; name: string }[];
+  roleNames: { role: string; name: string; level?: number }[];
   labels: string[];
   placeholders: Map<string, number>;
   css: Set<string>;
@@ -79,7 +79,8 @@ export function inventoryOf(snap: Snapshot, sidecar?: SidecarLocator[] | null): 
     fieldNames: [], lean: true,
   };
   walk(snap.roots, (n) => {
-    inv.roleNames.push({ role: n.role, name: n.name });
+    const lv = n.flags.map((f) => /^level=(\d)$/.exec(f)).find(Boolean);
+    inv.roleNames.push({ role: n.role, name: n.name, level: lv ? Number(lv[1]) : undefined });
     if (n.name) inv.text.push(n.name);
     for (const d of n.details) inv.text.push(d);
     if (LABELABLE.has(n.role) && n.name) inv.labels.push(n.name);
@@ -131,7 +132,7 @@ export function extractCalls(src: string): Call[] {
       calls.push({
         line: lineAt(m.index), call: m[0].replace(/\s+/g, " "), kind, arg, opts: m[3] || "",
         dynamic: m[1] === "`" && arg.includes("${"),
-        narrowed: /^\s*\.(first|last|nth|filter)\(/.test(src.slice(m.index + m[0].length, m.index + m[0].length + 40)),
+        narrowed: /^\s*\.(first|last|nth|filter|all|allInnerTexts|allTextContents|count)\(/.test(src.slice(m.index + m[0].length, m.index + m[0].length + 40)),
       });
     }
   }
@@ -177,11 +178,14 @@ function check(call: Call, invs: Inventory[]): Finding {
       return steps((i) => i.testids.get(call.arg) || 0) || f("missing", "no testid '" + call.arg + "' in any snapshot");
     case "role": {
       const want = roleName(call.opts);
+      const lvl = /level\s*:\s*(\d)/.exec(call.opts);
+      const levelOk = (r: { level?: number }) => !lvl || r.level === Number(lvl[1]);
       if (!want.name && !want.regex) {
-        return steps((i) => i.roleNames.filter((r) => r.role === call.arg).length) || f("missing", "no " + call.arg + " role in any snapshot");
+        return steps((i) => i.roleNames.filter((r) => r.role === call.arg && levelOk(r)).length)
+          || f("missing", "no " + call.arg + (lvl ? " level " + lvl[1] : "") + " in any snapshot");
       }
       return (
-        steps((i) => i.roleNames.filter((r) => r.role === call.arg && r.name && nameMatches(r.name, want)).length)
+        steps((i) => i.roleNames.filter((r) => r.role === call.arg && levelOk(r) && r.name && nameMatches(r.name, want)).length)
         || f("missing", "no " + call.arg + " named " + (want.name ?? String(want.regex)) + " in any snapshot")
       );
     }

@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/findtrans.htm
 # Title: ParaBank | Find Transactions
 # Viewport: 1280x900
-# Captured: 2026-10-22T00:01:30Z
+# Captured: 2026-10-22T02:06:50Z
 # Trigger: manual
 # Step: 11
 # Note: action: click Find Transactions by amount | assert: results table lists the Bill Payment to Electric Co
@@ -9,6 +9,7 @@
 
 - img
 - img "ParaBank"
+- text "Experience the difference"
 - list
   - listitem
   - listitem
@@ -44,6 +45,8 @@
     - link "contact":
       locators:
         - {by: role, value: "link", name: "contact", stability: medium, score: 95}
+- text "Page Snap"
+- text "Welcome"
 - heading "Account Services" [level=2]
 - list
   - listitem
@@ -81,17 +84,17 @@
 - heading "Transaction Results" [level=1]
 - table
   - row
-    - columnheader
-    - columnheader
-    - columnheader
-    - columnheader
+    - columnheader "Date"
+    - columnheader "Transaction"
+    - columnheader "Debit (-)"
+    - columnheader "Credit (+)"
   - row
-    - cell
-    - cell
+    - cell "10-21-2026"
+    - cell "Bill Payment to Electric Co"
       - link "Bill Payment to Electric Co":
         locators:
           - {by: role, value: "link", name: "Bill Payment to Electric Co", stability: medium, score: 95}
-    - cell
+    - cell "$12.34"
     - cell
 - list
   - listitem
@@ -122,6 +125,7 @@
     - link "Contact Us":
       locators:
         - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- text "© Parasoft. All rights reserved."
 - list
   - listitem
   - listitem
@@ -131,8 +135,8 @@
 
 # --- All <select> options ---
 # <select> "accountId":
-#   - 13677
-#   - 13566 (selected)
+#   - 18672
+#   - 18561 (selected)
 
 # --- Tables (headers + first rows) ---
 # table "transactionTable":

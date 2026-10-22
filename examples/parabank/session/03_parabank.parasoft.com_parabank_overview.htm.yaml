@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/overview.htm
 # Title: ParaBank | Accounts Overview
 # Viewport: 1280x900
-# Captured: 2026-10-22T00:01:27Z
+# Captured: 2026-10-22T02:06:46Z
 # Trigger: manual
 # Step: 3
 # Note: action: open Accounts Overview | assert: one account listed with balance $515.50
@@ -9,6 +9,7 @@
 
 - img
 - img "ParaBank"
+- text "Experience the difference"
 - list
   - listitem
   - listitem
@@ -44,6 +45,8 @@
     - link "contact":
       locators:
         - {by: role, value: "link", name: "contact", stability: medium, score: 95}
+- text "Page Snap"
+- text "Welcome"
 - heading "Account Services" [level=2]
 - list
   - listitem
@@ -81,22 +84,22 @@
 - heading "Accounts Overview" [level=1]
 - table
   - row
-    - columnheader
-    - columnheader
-    - columnheader
+    - columnheader "Account"
+    - columnheader "Balance*"
+    - columnheader "Available Amount"
   - row
-    - cell
-      - link "13566":
+    - cell "18561"
+      - link "18561":
         locators:
-          - {by: role, value: "link", name: "13566", stability: medium, score: 95}
-    - cell
+          - {by: role, value: "link", name: "18561", stability: medium, score: 95}
+    - cell "$515.50" [dup 1/3]
+    - cell "$515.50" [dup 2/3]
+  - row
+    - cell "Total"
+    - cell "$515.50" [dup 3/3]
     - cell
   - row
-    - cell
-    - cell
-    - cell
-  - row
-    - cell
+    - cell "*Balance includes deposits that may be subject to holds"
 - list
   - listitem
     - link "Home":
@@ -126,6 +129,7 @@
     - link "Contact Us":
       locators:
         - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- text "© Parasoft. All rights reserved."
 - list
   - listitem
   - listitem
@@ -136,5 +140,6 @@
 # --- Tables (headers + first rows) ---
 # table "accountTable":
 #   headers: Account | Balance* | Available Amount
-#   row 1: 13566 | $515.50 | $515.50
+#   row 1: 18561 | $515.50 | $515.50
 #   row 2: Total | $515.50 | 
+#   footer: *Balance includes deposits that may be subject to holds

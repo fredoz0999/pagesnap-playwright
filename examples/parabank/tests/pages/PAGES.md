@@ -3,19 +3,11 @@
 Use these members in specs instead of raw selectors. `import { LoginPage } from './pages';`
 
 ## BasePage (on half or more of the pages; every page class extends it)
-- aboutUsLink = link "About Us" (fragile)
-- servicesLink = link "Services" (fragile)
-- productsLink = link "Products" (fragile)
-- locationsLink = link "Locations" (fragile)
 - adminPageLink = link "Admin Page"
 - homeLink = link "home"
 - aboutLink = link "about"
 - contactLink = link "contact"
 - homeLink2 = link "Home"
-- aboutUsLink2 = link "About Us" (fragile)
-- servicesLink2 = link "Services" (fragile)
-- productsLink2 = link "Products" (fragile)
-- locationsLink2 = link "Locations" (fragile)
 - siteMapLink = link "Site Map"
 - contactUsLink = link "Contact Us"
 - wwwParasoftComLink = link "www.parasoft.com"
@@ -95,16 +87,12 @@ Use these members in specs instead of raw selectors. `import { LoginPage } from 
 - forgotLoginInfoLink = link "Forgot login info?"
 - registerLink = link "Register"
 - withdrawFundsLink = link "Withdraw Funds"
-- transferFundsLink2 = link "Transfer Funds" (fragile)
 - checkBalancesLink = link "Check Balances"
 - makeDepositsLink = link "Make Deposits"
 - accountHistoryLink = link "Account History"
-- transferFundsLink3 = link "Transfer Funds" (fragile)
-- readMoreLink = link "Read More" (fragile)
 - paraBankIsNowReOpenedLink = link "ParaBank Is Now Re-Opened"
 - newOnlineBillPayLink = link "New! Online Bill Pay"
 - newOnlineAccountTransfersLink = link "New! Online Account Transfers"
-- readMoreLink2 = link "Read More" (fragile)
 
 ## LoginPage /parabank/login.htm (steps 13)
 - usernameInput = textbox "username"

@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/findtrans.htm
 # Title: ParaBank | Find Transactions
 # Viewport: 1280x900
-# Captured: 2026-10-22T00:01:29Z
+# Captured: 2026-10-22T02:06:50Z
 # Trigger: manual
 # Step: 10
 # Note: action: open Find Transactions | data: account used for the bill payment, find by amount 12.34
@@ -9,6 +9,7 @@
 
 - img
 - img "ParaBank"
+- text "Experience the difference"
 - list
   - listitem
   - listitem
@@ -44,6 +45,8 @@
     - link "contact":
       locators:
         - {by: role, value: "link", name: "contact", stability: medium, score: 95}
+- text "Page Snap"
+- text "Welcome"
 - heading "Account Services" [level=2]
 - list
   - listitem
@@ -82,13 +85,15 @@
 - form:
   locators:
     - {by: id, value: "transactionForm", stability: high, score: 90}
+  - text "Select an account"
   - combobox "accountId":
-    value: "13677"
+    value: "18672"
     locators:
       - {by: id, value: "accountId", stability: high, score: 90}
     options:  # native <select> - available without opening UI
-      - option "13677" [selected]
-      - option "13566"
+      - option "18672" [selected]
+      - option "18561"
+  - text "Find by Transaction ID"
   - textbox "transactionId":
     value: ""
     locators:
@@ -96,6 +101,8 @@
   - button "Find Transactions" [dup 1/4]:
     locators:
       - {by: id, value: "findById", stability: high, score: 90}
+  - text ": ( MM-DD-YYYY )"
+  - text "Find by Date"
   - textbox "transactionDate":
     value: ""
     locators:
@@ -103,6 +110,8 @@
   - button "Find Transactions" [dup 2/4]:
     locators:
       - {by: id, value: "findByDate", stability: high, score: 90}
+  - text "Find by Date Range"
+  - text "Between and ( MM-DD-YYYY )"
   - textbox "fromDate":
     value: ""
     locators:
@@ -114,6 +123,7 @@
   - button "Find Transactions" [dup 3/4]:
     locators:
       - {by: id, value: "findByDateRange", stability: high, score: 90}
+  - text "Find by Amount"
   - textbox "amount":
     value: ""
     locators:
@@ -150,6 +160,7 @@
     - link "Contact Us":
       locators:
         - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- text "© Parasoft. All rights reserved."
 - list
   - listitem
   - listitem
@@ -159,5 +170,5 @@
 
 # --- All <select> options ---
 # <select> "accountId":
-#   - 13677 (selected)
-#   - 13566
+#   - 18672 (selected)
+#   - 18561

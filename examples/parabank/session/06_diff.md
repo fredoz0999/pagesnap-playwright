@@ -10,22 +10,24 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + # <select> "toAccountId":
 + - combobox "fromAccountId":
 + - combobox "toAccountId":
-+ - option "13566" [selected]
-+ - option "13566" [selected]
-+ - option "13677"
-+ - option "13677"
++ - option "18561" [selected]
++ - option "18561" [selected]
++ - option "18672"
++ - option "18672"
 + options:  # native <select> - available without opening UI
 + options:  # native <select> - available without opening UI
 - # <select> "type":
 
 ## Added
 
-+ #   - 13566 (selected)
-+ #   - 13677
-+ #   - 13677
++ #   - 18561 (selected)
++ #   - 18672
++ #   - 18672
 + - button "Transfer":
 + - form:
 + - heading "Transfer Funds" [level=1]
++ - text "Amount:"
++ - text "From account # to account #"
 + - textbox "input":
 + - {by: id, value: "amount", stability: high, score: 90}
 + - {by: id, value: "fromAccountId", stability: high, score: 90}
@@ -37,8 +39,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + locators:
 + locators:
 + value: ""
-+ value: "13566"
-+ value: "13566"
++ value: "18561"
++ value: "18561"
 + value: "Transfer"
 
 ## Removed
@@ -46,5 +48,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - #   - CHECKING
 - #   - SAVINGS (selected)
 - - heading "Account Opened!" [level=1]
-- - link "13677":
-- - {by: role, value: "link", name: "13677", stability: medium, score: 95}
+- - link "18672":
+- - text "Congratulations, your account is now open."
+- - text "Your new account number:"
+- - {by: role, value: "link", name: "18672", stability: medium, score: 95}

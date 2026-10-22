@@ -632,6 +632,16 @@ const readValue = (el) => {
 };
 
 const lines = [];
+// Free text (confirmation messages, inline notices) is only captured when no
+// named ancestor already carries it (a link/button/heading name covers its text).
+const wantText = opts.text !== false;
+const TEXT_SKIP_TAGS = new Set(['LABEL', 'OPTION', 'SELECT', 'TEXTAREA', 'BUTTON', 'A', 'SVG', 'IFRAME', 'BODY', 'HTML']);
+let textCovered = 0;
+const ownText = (el) => {
+  let t = '';
+  for (const n of el.childNodes) if (n.nodeType === 3) t += ' ' + (n.textContent || '');
+  return t.replace(/\s+/g, ' ').trim();
+};
 const hints = [];
 
 const BANNER_SELECTOR = '.error, .errors, .alert-error, .validation-error, .has-error';
@@ -683,12 +693,18 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
   }
   const interesting = role && INTERESTING.has(role) && isVisible(el);
   let skipWrapper = false;
+  let nodeNamed = false;
 
   if (interesting) {
     let name = accessibleName(el);
     // role=alert text is the alert; without this the text is invisible in-tree
     if (role === 'alert' && !name) {
       name = capAlertText(redactText(collapsedText(el)));
+    }
+    // Table cells are named by their text in Playwright (getByRole('cell', { name })).
+    if ((role === 'cell' || role === 'gridcell' || role === 'columnheader' || role === 'rowheader') && !name) {
+      const ct = collapsedText(el);
+      if (ct && ct.length < 60) name = redactText(ct);
     }
     if (role === 'generic' && !name) {
       let own = '';
@@ -699,6 +715,7 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
       if (own && own.length < 60) name = redactText(own);
     }
 
+    nodeNamed = !!name || role === 'alert';
     skipWrapper = lean && !name && !ACTIONABLE.has(role) && (role === 'main' || role === 'region' || role === 'article' || role === 'navigation' || role === 'banner' || role === 'contentinfo' || role === 'complementary' || role === 'form');
     if (skipWrapper) {
       // omit empty structural wrappers; children still walked
@@ -754,7 +771,11 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
     if (extras.length) line += ' [' + extras.join(', ') + ']';
 
     const roleForLoc = role;
-    const locators = ACTIONABLE.has(roleForLoc) ? buildLocators(el, roleForLoc, name) : [];
+    // A test id is an explicit "find me" from the developers: give those elements
+    // locators whatever their role (cart total <td>, price <span>, order <h3>).
+    const hasTestId = !!(el.getAttribute('data-testid') || el.getAttribute('data-test')
+      || el.getAttribute('data-test-id') || el.getAttribute('data-cy') || el.getAttribute('data-qa'));
+    const locators = (ACTIONABLE.has(roleForLoc) || hasTestId) ? buildLocators(el, roleForLoc, name) : [];
     const value = readValue(el);
     // Native <select> options exist in DOM even when the list is closed
     const isNativeSelect = el.tagName === 'SELECT';
@@ -832,6 +853,13 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
     }
   }
 
+  if (!interesting && wantText && !countOnly && !textCovered && !inAlert && !TEXT_SKIP_TAGS.has(el.tagName)) {
+    const t = ownText(el);
+    if (t.length >= 3 && /[A-Za-z]/.test(t) && isVisible(el)) {
+      lines.push('  '.repeat(depth) + '- text "' + esc(redactText(t.length > 160 ? t.slice(0, 160) + '…' : t)) + '"');
+    }
+  }
+
   // children: light DOM + open shadow root
   const kids = [];
   if (el.shadowRoot) {
@@ -844,9 +872,11 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
       lines.push('  '.repeat(31) + '- … (subtree truncated at depth 30)');
     }
   } else {
+    if (interesting && nodeNamed) textCovered++;
     for (const child of kids) {
       emitNode(child, nextDepth, prefix, inAlert || role === 'alert', countOnly);
     }
+    if (interesting && nodeNamed) textCovered--;
   }
 };
 
@@ -944,6 +974,12 @@ if (tables.length) {
     if (rows.length > maxTableRows) {
       lines.push('#   … ' + (rows.length - maxTableRows) + ' more rows (truncated)');
     }
+    // Footer rows carry totals, which are what checkout tests assert on.
+    Array.from(table.querySelectorAll('tfoot tr')).slice(0, 3).forEach((tr) => {
+      const cells = Array.from(tr.querySelectorAll('td, th')).map(c =>
+        redactText((c.innerText || '').replace(/\s+/g, ' ').trim())).filter(Boolean);
+      if (cells.length) lines.push('#   footer: ' + cells.join(' | '));
+    });
   });
 }
 

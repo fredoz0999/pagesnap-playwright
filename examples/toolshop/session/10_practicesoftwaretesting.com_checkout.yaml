@@ -1,0 +1,646 @@
+# URL: https://practicesoftwaretesting.com/checkout
+# Title: Checkout - Practice Software Testing - Toolshop - v5.0
+# Viewport: 1280x900
+# Captured: 2026-10-22T02:02:01Z
+# Trigger: manual
+# Step: 10
+# Note: action: Proceed to billing address | assert: address prefilled from the account, house number empty
+# Session goal: Toolshop: search, sort, add to cart, sign in, check out, get invoice
+
+- generic "View the for this application.":
+  locators:
+    - {by: testid, value: "notification-bar", attr: data-test, stability: high, score: 98}
+  - link "Documentation":
+    locators:
+      - {by: role, value: "link", name: "Documentation", stability: medium, score: 95}
+- text "Practice Black Box Testing & Bug Hunting"
+- button "Testing Guide":
+  locators:
+    - {by: role, value: "button", name: "Testing Guide", stability: medium, score: 95}
+- button "🐛 Bug Hunting":
+  locators:
+    - {by: role, value: "button", name: "🐛 Bug Hunting", stability: medium, score: 95}
+- link "Practice Software Testing - Toolshop":
+  locators:
+    - {by: role, value: "link", name: "Practice Software Testing - Toolshop", stability: medium, score: 95}
+- menubar "Main menu"
+  - menuitem "Home":
+    locators:
+      - {by: role, value: "menuitem", name: "Home", stability: medium, score: 95}
+    - link "Home" [current]:
+      locators:
+        - {by: testid, value: "nav-home", attr: data-test, stability: high, score: 98}
+  - menuitem "Categories Hand ToolsPower ToolsOtherSpecial ToolsRentals":
+    locators:
+    - button "Categories" [collapsed]:
+      dropdown: closed
+      locators:
+        - {by: testid, value: "nav-categories", attr: data-test, stability: high, score: 98}
+  - menuitem "Contact":
+    locators:
+      - {by: role, value: "menuitem", name: "Contact", stability: medium, score: 95}
+    - link "Contact":
+      locators:
+        - {by: testid, value: "nav-contact", attr: data-test, stability: high, score: 98}
+  - menuitem "Page Snap My accountMy favoritesMy profileMy invoicesMy messagesSign out":
+    locators:
+      - {by: css, value: "#navbarSupportedContent > ul:nth-child(1) > li:nth-child(4)", stability: low, score: 60}
+    - button "Page Snap" [collapsed]:
+      dropdown: closed
+      locators:
+        - {by: testid, value: "nav-menu", attr: data-test, stability: high, score: 98}
+  - menuitem "2":
+    locators:
+    - link "cart":
+      locators:
+        - {by: testid, value: "nav-cart", attr: data-test, stability: high, score: 98}
+      - generic "2":
+        locators:
+          - {by: testid, value: "cart-quantity", attr: data-test, stability: high, score: 98}
+- button "Select language" [collapsed]:
+  dropdown: closed
+  locators:
+    - {by: testid, value: "language-select", attr: data-test, stability: high, score: 98}
+- list
+  - listitem
+    - text "Cart"
+  - listitem
+    - text "Sign in"
+  - listitem
+    - text "Billing Address"
+  - listitem
+    - text "Payment"
+- heading "Billing Address" [level=3]
+- form:
+  locators:
+    - {by: css, value: "aw-wizard:nth-child(1) > div:nth-child(2) > aw-wizard-step:nth-child(3) > app-address:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > form:nth-child(2)", stability: low, score: 60}
+  - combobox "Country":
+    value: "US"
+    locators:
+      - {by: testid, value: "country", attr: data-test, stability: high, score: 98}
+    options:  # native <select> - available without opening UI
+      - option "Your country *" [disabled]
+      - option "Albania"
+      - option "Åland Islands"
+      - option "Algeria"
+      - option "American Samoa"
+      - option "Andorra"
+      - option "Angola"
+      - option "Anguilla"
+      - option "Antarctica"
+      - option "Antigua and Barbuda"
+      - option "Argentina"
+      - option "Armenia"
+      - option "Aruba"
+      - option "Australia"
+      - option "Austria"
+      - option "Azerbaijan"
+      - option "Bahamas (the)"
+      - option "Bahrain"
+      - option "Bangladesh"
+      - option "Barbados"
+      - option "Belarus"
+      - option "Belgium"
+      - option "Belize"
+      - option "Benin"
+      - option "Bermuda"
+      - option "Bhutan"
+      - option "Bolivia (Plurinational State of)"
+      - option "Bonaire, Sint Eustatius and Saba"
+      - option "Bosnia and Herzegovina"
+      - option "Botswana"
+      - option "Bouvet Island"
+      - option "Brazil"
+      - option "British Indian Ocean Territory (the)"
+      - option "Brunei Darussalam"
+      - option "Bulgaria"
+      - option "Burkina Faso"
+      - option "Burundi"
+      - option "Cabo Verde"
+      - option "Cambodia"
+      - option "Cameroon"
+      - option "Canada"
+      - option "Cayman Islands (the)"
+      - option "Central African Republic (the)"
+      - option "Chad"
+      - option "Chile"
+      - option "China"
+      - option "Christmas Island"
+      - option "Cocos (Keeling) Islands (the)"
+      - option "Colombia"
+      - option "Comoros (the)"
+      - option "Congo (the Democratic Republic of the)"
+      - option "Congo (the)"
+      - option "Cook Islands (the)"
+      - option "Costa Rica"
+      - option "Croatia"
+      - option "Cuba"
+      - option "Curaçao"
+      - option "Cyprus"
+      - option "Czechia"
+      - option "Côte d'Ivoire"
+      - option "Denmark"
+      - option "Djibouti"
+      - option "Dominica"
+      - option "Dominican Republic (the)"
+      - option "Ecuador"
+      - option "Egypt"
+      - option "El Salvador"
+      - option "Equatorial Guinea"
+      - option "Eritrea"
+      - option "Estonia"
+      - option "Eswatini"
+      - option "Ethiopia"
+      - option "Falkland Islands (the) [Malvinas]"
+      - option "Faroe Islands (the)"
+      - option "Fiji"
+      - option "Finland"
+      - option "France"
+      - option "French Guiana"
+      - option "French Polynesia"
+      - option "French Southern Territories (the)"
+      - option "Gabon"
+      - option "Gambia (the)"
+      - option "Georgia"
+      - option "Germany"
+      - option "Ghana"
+      - option "Gibraltar"
+      - option "Greece"
+      - option "Greenland"
+      - option "Grenada"
+      - option "Guadeloupe"
+      - option "Guam"
+      - option "Guatemala"
+      - option "Guernsey"
+      - option "Guinea"
+      - option "Guinea-Bissau"
+      - option "Guyana"
+      - option "Haiti"
+      - option "Heard Island and McDonald Islands"
+      - option "Holy See (the)"
+      - option "Honduras"
+      - option "Hong Kong"
+      - option "Hungary"
+      - option "Iceland"
+      - option "India"
+      - option "Indonesia"
+      - option "Iran (Islamic Republic of)"
+      - option "Iraq"
+      - option "Ireland"
+      - option "Isle of Man"
+      - option "Israel"
+      - option "Italy"
+      - option "Jamaica"
+      - option "Japan"
+      - option "Jersey"
+      - option "Jordan"
+      - option "Kazakhstan"
+      - option "Kenya"
+      - option "Kiribati"
+      - option "Korea (the Democratic People's Republic of)"
+      - option "Korea (the Republic of)"
+      - option "Kuwait"
+      - option "Kyrgyzstan"
+      - option "Lao People's Democratic Republic (the)"
+      - option "Latvia"
+      - option "Lebanon"
+      - option "Lesotho"
+      - option "Liberia"
+      - option "Libya"
+      - option "Liechtenstein"
+      - option "Lithuania"
+      - option "Luxembourg"
+      - option "Macao"
+      - option "Madagascar"
+      - option "Malawi"
+      - option "Malaysia"
+      - option "Maldives"
+      - option "Mali"
+      - option "Malta"
+      - option "Marshall Islands (the)"
+      - option "Martinique"
+      - option "Mauritania"
+      - option "Mauritius"
+      - option "Mayotte"
+      - option "Mexico"
+      - option "Micronesia (Federated States of)"
+      - option "Moldova (the Republic of)"
+      - option "Monaco"
+      - option "Mongolia"
+      - option "Montenegro"
+      - option "Montserrat"
+      - option "Morocco"
+      - option "Mozambique"
+      - option "Myanmar"
+      - option "Namibia"
+      - option "Nauru"
+      - option "Nepal"
+      - option "Netherlands (the)"
+      - option "New Caledonia"
+      - option "New Zealand"
+      - option "Nicaragua"
+      - option "Niger (the)"
+      - option "Nigeria"
+      - option "Niue"
+      - option "Norfolk Island"
+      - option "Northern Mariana Islands (the)"
+      - option "Norway"
+      - option "Oman"
+      - option "Pakistan"
+      - option "Palau"
+      - option "Palestine, State of"
+      - option "Panama"
+      - option "Papua New Guinea"
+      - option "Paraguay"
+      - option "Peru"
+      - option "Philippines (the)"
+      - option "Pitcairn"
+      - option "Poland"
+      - option "Portugal"
+      - option "Puerto Rico"
+      - option "Qatar"
+      - option "Republic of North Macedonia"
+      - option "Romania"
+      - option "Russian Federation (the)"
+      - option "Rwanda"
+      - option "Réunion"
+      - option "Saint Barthélemy"
+      - option "Saint Helena, Ascension and Tristan da Cunha"
+      - option "Saint Kitts and Nevis"
+      - option "Saint Lucia"
+      - option "Saint Martin (French part)"
+      - option "Saint Pierre and Miquelon"
+      - option "Saint Vincent and the Grenadines"
+      - option "Samoa"
+      - option "San Marino"
+      - option "Sao Tome and Principe"
+      - option "Saudi Arabia"
+      - option "Senegal"
+      - option "Serbia"
+      - option "Seychelles"
+      - option "Sierra Leone"
+      - option "Singapore"
+      - option "Sint Maarten (Dutch part)"
+      - option "Slovakia"
+      - option "Slovenia"
+      - option "Solomon Islands"
+      - option "Somalia"
+      - option "South Africa"
+      - option "South Georgia and the South Sandwich Islands"
+      - option "South Sudan"
+      - option "Spain"
+      - option "Sri Lanka"
+      - option "Sudan (the)"
+      - option "Suriname"
+      - option "Svalbard and Jan Mayen"
+      - option "Sweden"
+      - option "Switzerland"
+      - option "Syrian Arab Republic"
+      - option "Taiwan (Province of China)"
+      - option "Tajikistan"
+      - option "Tanzania, United Republic of"
+      - option "Thailand"
+      - option "Timor-Leste"
+      - option "Togo"
+      - option "Tokelau"
+      - option "Tonga"
+      - option "Trinidad and Tobago"
+      - option "Tunisia"
+      - option "Turkey"
+      - option "Turkmenistan"
+      - option "Turks and Caicos Islands (the)"
+      - option "Tuvalu"
+      - option "Uganda"
+      - option "Ukraine"
+      - option "United Arab Emirates (the)"
+      - option "United Kingdom of Great Britain and Northern Ireland (the)"
+      - option "United States Minor Outlying Islands (the)"
+      - option "United States of America (the)" [selected]
+      - option "Uruguay"
+      - option "Uzbekistan"
+      - option "Vanuatu"
+      - option "Venezuela (Bolivarian Republic of)"
+      - option "Viet Nam"
+      - option "Virgin Islands (British)"
+      - option "Virgin Islands (U.S.)"
+      - option "Wallis and Futuna"
+      - option "Western Sahara"
+      - option "Yemen"
+      - option "Zambia"
+      - option "Zimbabwe"
+  - generic:
+    locators:
+      - {by: testid, value: "postcode-lookup-hint", attr: data-test, stability: high, score: 98}
+  - textbox "Postal code":
+    value: "20151"
+    locators:
+      - {by: testid, value: "postal_code", attr: data-test, stability: high, score: 98}
+  - textbox "House number":
+    value: ""
+    locators:
+      - {by: testid, value: "house_number", attr: data-test, stability: high, score: 98}
+  - textbox "Street":
+    value: "1 Test Way"
+    locators:
+      - {by: testid, value: "street", attr: data-test, stability: high, score: 98}
+  - textbox "City":
+    value: "Chantilly"
+    locators:
+      - {by: testid, value: "city", attr: data-test, stability: high, score: 98}
+  - textbox "State":
+    value: "VA"
+    locators:
+      - {by: testid, value: "state", attr: data-test, stability: high, score: 98}
+- button "Proceed to checkout" [disabled]:
+  locators:
+    - {by: testid, value: "proceed-3", attr: data-test, stability: high, score: 98}
+- generic:
+  locators:
+    - {by: testid, value: "footer-explore", attr: data-test, stability: high, score: 98}
+  - text "Learn & Explore"
+  - link "Learn Test AutomationHands-on courses for Playwright, Robot Framework, APIs and more":
+    locators:
+      - {by: testid, value: "footer-learn-courses", attr: data-test, stability: high, score: 98}
+  - link "API SpectorOpen-source API testing, mocking and contract testing":
+    locators:
+      - {by: testid, value: "footer-learn-spector", attr: data-test, stability: high, score: 98}
+  - link "GitHubSource code, issues and contributions":
+    locators:
+      - {by: testid, value: "footer-learn-github", attr: data-test, stability: high, score: 98}
+- text "This is a DEMO application, used for software testing training purpose. | | Banner photo by on ."
+- link "Privacy Policy":
+  locators:
+    - {by: role, value: "link", name: "Privacy Policy", stability: medium, score: 95}
+- link "Barn Images":
+  locators:
+    - {by: role, value: "link", name: "Barn Images", stability: medium, score: 95}
+- link "Unsplash":
+  locators:
+    - {by: role, value: "link", name: "Unsplash", stability: medium, score: 95}
+- text "v2.5 | Built 2026-10-11 | Angular 20.0.5"
+- button "Open chat":
+  locators:
+    - {by: testid, value: "chat-toggle", attr: data-test, stability: high, score: 98}
+- button "Show live shop activity":
+  locators:
+    - {by: testid, value: "live-activity-toggle", attr: data-test, stability: high, score: 98}
+- iframe "frame-0":
+
+# --- All <select> options ---
+# <select> "country":
+#   - Your country * (disabled)
+#   - Albania
+#   - Åland Islands
+#   - Algeria
+#   - American Samoa
+#   - Andorra
+#   - Angola
+#   - Anguilla
+#   - Antarctica
+#   - Antigua and Barbuda
+#   - Argentina
+#   - Armenia
+#   - Aruba
+#   - Australia
+#   - Austria
+#   - Azerbaijan
+#   - Bahamas (the)
+#   - Bahrain
+#   - Bangladesh
+#   - Barbados
+#   - Belarus
+#   - Belgium
+#   - Belize
+#   - Benin
+#   - Bermuda
+#   - Bhutan
+#   - Bolivia (Plurinational State of)
+#   - Bonaire, Sint Eustatius and Saba
+#   - Bosnia and Herzegovina
+#   - Botswana
+#   - Bouvet Island
+#   - Brazil
+#   - British Indian Ocean Territory (the)
+#   - Brunei Darussalam
+#   - Bulgaria
+#   - Burkina Faso
+#   - Burundi
+#   - Cabo Verde
+#   - Cambodia
+#   - Cameroon
+#   - Canada
+#   - Cayman Islands (the)
+#   - Central African Republic (the)
+#   - Chad
+#   - Chile
+#   - China
+#   - Christmas Island
+#   - Cocos (Keeling) Islands (the)
+#   - Colombia
+#   - Comoros (the)
+#   - Congo (the Democratic Republic of the)
+#   - Congo (the)
+#   - Cook Islands (the)
+#   - Costa Rica
+#   - Croatia
+#   - Cuba
+#   - Curaçao
+#   - Cyprus
+#   - Czechia
+#   - Côte d'Ivoire
+#   - Denmark
+#   - Djibouti
+#   - Dominica
+#   - Dominican Republic (the)
+#   - Ecuador
+#   - Egypt
+#   - El Salvador
+#   - Equatorial Guinea
+#   - Eritrea
+#   - Estonia
+#   - Eswatini
+#   - Ethiopia
+#   - Falkland Islands (the) [Malvinas]
+#   - Faroe Islands (the)
+#   - Fiji
+#   - Finland
+#   - France
+#   - French Guiana
+#   - French Polynesia
+#   - French Southern Territories (the)
+#   - Gabon
+#   - Gambia (the)
+#   - Georgia
+#   - Germany
+#   - Ghana
+#   - Gibraltar
+#   - Greece
+#   - Greenland
+#   - Grenada
+#   - Guadeloupe
+#   - Guam
+#   - Guatemala
+#   - Guernsey
+#   - Guinea
+#   - Guinea-Bissau
+#   - Guyana
+#   - Haiti
+#   - Heard Island and McDonald Islands
+#   - Holy See (the)
+#   - Honduras
+#   - Hong Kong
+#   - Hungary
+#   - Iceland
+#   - India
+#   - Indonesia
+#   - Iran (Islamic Republic of)
+#   - Iraq
+#   - Ireland
+#   - Isle of Man
+#   - Israel
+#   - Italy
+#   - Jamaica
+#   - Japan
+#   - Jersey
+#   - Jordan
+#   - Kazakhstan
+#   - Kenya
+#   - Kiribati
+#   - Korea (the Democratic People's Republic of)
+#   - Korea (the Republic of)
+#   - Kuwait
+#   - Kyrgyzstan
+#   - Lao People's Democratic Republic (the)
+#   - Latvia
+#   - Lebanon
+#   - Lesotho
+#   - Liberia
+#   - Libya
+#   - Liechtenstein
+#   - Lithuania
+#   - Luxembourg
+#   - Macao
+#   - Madagascar
+#   - Malawi
+#   - Malaysia
+#   - Maldives
+#   - Mali
+#   - Malta
+#   - Marshall Islands (the)
+#   - Martinique
+#   - Mauritania
+#   - Mauritius
+#   - Mayotte
+#   - Mexico
+#   - Micronesia (Federated States of)
+#   - Moldova (the Republic of)
+#   - Monaco
+#   - Mongolia
+#   - Montenegro
+#   - Montserrat
+#   - Morocco
+#   - Mozambique
+#   - Myanmar
+#   - Namibia
+#   - Nauru
+#   - Nepal
+#   - Netherlands (the)
+#   - New Caledonia
+#   - New Zealand
+#   - Nicaragua
+#   - Niger (the)
+#   - Nigeria
+#   - Niue
+#   - Norfolk Island
+#   - Northern Mariana Islands (the)
+#   - Norway
+#   - Oman
+#   - Pakistan
+#   - Palau
+#   - Palestine, State of
+#   - Panama
+#   - Papua New Guinea
+#   - Paraguay
+#   - Peru
+#   - Philippines (the)
+#   - Pitcairn
+#   - Poland
+#   - Portugal
+#   - Puerto Rico
+#   - Qatar
+#   - Republic of North Macedonia
+#   - Romania
+#   - Russian Federation (the)
+#   - Rwanda
+#   - Réunion
+#   - Saint Barthélemy
+#   - Saint Helena, Ascension and Tristan da Cunha
+#   - Saint Kitts and Nevis
+#   - Saint Lucia
+#   - Saint Martin (French part)
+#   - Saint Pierre and Miquelon
+#   - Saint Vincent and the Grenadines
+#   - Samoa
+#   - San Marino
+#   - Sao Tome and Principe
+#   - Saudi Arabia
+#   - Senegal
+#   - Serbia
+#   - Seychelles
+#   - Sierra Leone
+#   - Singapore
+#   - Sint Maarten (Dutch part)
+#   - Slovakia
+#   - Slovenia
+#   - Solomon Islands
+#   - Somalia
+#   - South Africa
+#   - South Georgia and the South Sandwich Islands
+#   - South Sudan
+#   - Spain
+#   - Sri Lanka
+#   - Sudan (the)
+#   - Suriname
+#   - Svalbard and Jan Mayen
+#   - Sweden
+#   - Switzerland
+#   - Syrian Arab Republic
+#   - Taiwan (Province of China)
+#   - Tajikistan
+#   - Tanzania, United Republic of
+#   - Thailand
+#   - Timor-Leste
+#   - Togo
+#   - Tokelau
+#   - Tonga
+#   - Trinidad and Tobago
+#   - Tunisia
+#   - Turkey
+#   - Turkmenistan
+#   - Turks and Caicos Islands (the)
+#   - Tuvalu
+#   - Uganda
+#   - Ukraine
+#   - United Arab Emirates (the)
+#   - United Kingdom of Great Britain and Northern Ireland (the)
+#   - United States Minor Outlying Islands (the)
+#   - United States of America (the) (selected)
+#   - Uruguay
+#   - Uzbekistan
+#   - Vanuatu
+#   - Venezuela (Bolivarian Republic of)
+#   - Viet Nam
+#   - Virgin Islands (British)
+#   - Virgin Islands (U.S.)
+#   - Wallis and Futuna
+#   - Western Sahara
+#   - Yemen
+#   - Zambia
+#   - Zimbabwe
+# <select> "payment-method":
+#   - Choose your payment method (disabled, selected)
+#   - Bank Transfer
+#   - Cash on Delivery
+#   - Credit Card
+#   - Buy Now Pay Later
+#   - Gift Card

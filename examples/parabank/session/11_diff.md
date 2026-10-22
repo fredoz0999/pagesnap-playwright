@@ -7,25 +7,25 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 ## Dropdown / options changes
 
 - - combobox "accountId":
-- - option "13566"
-- - option "13677" [selected]
+- - option "18561"
+- - option "18672" [selected]
 - options:  # native <select> - available without opening UI
 
 ## Added
 
-+ #   - 13566 (selected)
-+ #   - 13677
++ #   - 18561 (selected)
++ #   - 18672
 + #   headers: Date | Transaction | Debit (-) | Credit (+)
 + #   row 1: 10-21-2026 | Bill Payment to Electric Co | $12.34 |
 + # table "transactionTable":
 + - cell
-+ - cell
-+ - cell
-+ - cell
-+ - columnheader
-+ - columnheader
-+ - columnheader
-+ - columnheader
++ - cell "$12.34"
++ - cell "10-21-2026"
++ - cell "Bill Payment to Electric Co"
++ - columnheader "Credit (+)"
++ - columnheader "Date"
++ - columnheader "Debit (-)"
++ - columnheader "Transaction"
 + - heading "Transaction Results" [level=1]
 + - link "Bill Payment to Electric Co":
 + - row
@@ -35,14 +35,21 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 
 ## Removed
 
-- #   - 13566
-- #   - 13677 (selected)
+- #   - 18561
+- #   - 18672 (selected)
 - - button "Find Transactions" [dup 1/4]:
 - - button "Find Transactions" [dup 2/4]:
 - - button "Find Transactions" [dup 3/4]:
 - - button "Find Transactions" [dup 4/4]:
 - - form:
 - - heading "Find Transactions" [level=1]
+- - text ": ( MM-DD-YYYY )"
+- - text "Between and ( MM-DD-YYYY )"
+- - text "Find by Amount"
+- - text "Find by Date Range"
+- - text "Find by Date"
+- - text "Find by Transaction ID"
+- - text "Select an account"
 - - textbox "amount":
 - - textbox "fromDate":
 - - textbox "toDate":
@@ -74,4 +81,4 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - value: ""
 - value: ""
 - value: ""
-- value: "13677"
+- value: "18672"

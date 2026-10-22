@@ -1,18 +1,18 @@
 - link:
-  - /url: admin.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+  - /url: admin.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
   - img
 - link "ParaBank":
-  - /url: index.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+  - /url: index.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
   - img "ParaBank"
 - paragraph: Experience the difference
 - list:
   - listitem: Solutions
   - listitem:
     - link "About Us":
-      - /url: about.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+      - /url: about.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
   - listitem:
     - link "Services":
-      - /url: services.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+      - /url: services.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
   - listitem:
     - link "Products":
       - /url: http://www.parasoft.com/jsp/products.jsp
@@ -21,17 +21,17 @@
       - /url: http://www.parasoft.com/jsp/pr/contacts.jsp
   - listitem:
     - link "Admin Page":
-      - /url: admin.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+      - /url: admin.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
 - list:
   - listitem:
     - link "home":
-      - /url: index.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+      - /url: index.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
   - listitem:
     - link "about":
-      - /url: about.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+      - /url: about.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
   - listitem:
     - link "contact":
-      - /url: contact.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+      - /url: contact.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
 - heading "Customer Login" [level=2]
 - paragraph: Username
 - textbox
@@ -40,10 +40,10 @@
 - button "Log In"
 - paragraph:
   - link "Forgot login info?":
-    - /url: lookup.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+    - /url: lookup.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
 - paragraph:
   - link "Register":
-    - /url: register.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+    - /url: register.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
 - heading "Signing up is easy!" [level=1]
 - paragraph: If you have an account with us you can sign-up for free instant online access. You will have to provide some personal information.
 - table:
@@ -112,15 +112,15 @@
 - list:
   - listitem:
     - link "Home":
-      - /url: index.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+      - /url: index.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
     - text: "|"
   - listitem:
     - link "About Us":
-      - /url: about.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+      - /url: about.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
     - text: "|"
   - listitem:
     - link "Services":
-      - /url: services.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+      - /url: services.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
     - text: "|"
   - listitem:
     - link "Products":
@@ -132,11 +132,11 @@
     - text: "|"
   - listitem:
     - link "Site Map":
-      - /url: sitemap.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+      - /url: sitemap.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
     - text: "|"
   - listitem:
     - link "Contact Us":
-      - /url: contact.htm;jsessionid=935719BD9B09D26644D6465E2077D0D9
+      - /url: contact.htm;jsessionid=13854ABC2A81B23CFAD1BF2625DE3B36
 - paragraph: © Parasoft. All rights reserved.
 - list:
   - listitem: "Visit us at:"

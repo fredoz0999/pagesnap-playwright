@@ -233,7 +233,10 @@ function renderResult(idx: SessionIndex, query: string, hits: Hit[], low: boolea
   const shownStep = (h: Hit) => (step != null && h.chunk.steps.includes(step) ? step : h.chunk.steps[0]);
   const steps = [...new Set(hits.map(shownStep))].sort((a, b) => a - b);
   if (low) {
-    const best = hits[0] ? idx.pages.find((p) => p.step === hits[0].chunk.steps[0]) : idx.pages[idx.pages.length - 1];
+    // With --step the fallback is that step's page; otherwise the best hit's page.
+    const best = step != null
+      ? idx.pages.find((p) => p.step === step)
+      : hits[0] ? idx.pages.find((p) => p.step === hits[0].chunk.steps[0]) : idx.pages[idx.pages.length - 1];
     out.push("");
     out.push("_Low-confidence match: returning the whole compact page instead of guessing._");
     if (best) {

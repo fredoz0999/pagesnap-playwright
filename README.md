@@ -115,27 +115,33 @@ What it does:
   result page) are reported but not counted as drift.
 - **Site chrome**: top-level blocks repeated on at least half the pages (nav, header, footer) are written once to
   `lean/CHROME.txt`, chunked separately and ranked lower, so per-step answers carry the page content, not the menu.
+- **Capture fidelity** (found on live apps): role locators are re-checked with Playwright's own `getByRole` right
+  after capture and replaced by the next verified locator when they do not resolve to exactly one element; any
+  element with a test id gets locators whatever its role (a cart-total `<td>`); visible free text that no named
+  element carries (an order confirmation) is captured as `text "..."`; table footers (totals) are kept.
 - **Scripted capture**: `ScriptedSession` (`src/scripted.ts`) captures from your own Playwright code, same output as
   Ctrl+M, for CI smoke runs or regenerating fixtures.
 
 ### Measured: `npm run pack -- bench <session>` (~4 chars/token, whole flow)
 
-| Approach | Sauce Demo fixture (4 steps) | Parabank live capture (13 steps) |
-|---|---|---|
-| raw YAML | 7,453 | 16,758 |
-| compact lean | 895 (-88%) | 2,779 (-83%) |
-| query per step | 1,282 (-83%) | 3,140 (-81%) |
-| query --diff per step | 1,126 (-85%) | 3,186 (-81%) |
-| PAGES.md once + query --diff | 1,654 (-78%) | 4,376 (-74%) |
-| Playwright ariaSnapshot, one per step (MCP-style floor) | 1,600 (-79%) | 8,532 (-49%) |
+| Approach | Sauce Demo fixture (4 steps) | Parabank, live (13 steps) | Toolshop Angular SPA, live (13 steps) |
+|---|---|---|---|
+| raw YAML | 7,910 | 17,543 | 46,318 |
+| compact lean | 916 (-88%) | 2,580 (-85%) | 8,292 (-82%) |
+| query per step | 1,341 (-83%) | 3,570 (-80%) | 5,201 (-89%) |
+| query --diff per step | 1,150 (-85%) | 3,696 (-79%) | 5,954 (-87%) |
+| PAGES.md once + query --diff | 1,783 (-77%) | 4,749 (-73%) | 7,141 (-85%) |
+| Playwright ariaSnapshot, one per step (MCP-style floor) | 1,600 (-80%) | 8,532 (-51%) | 12,815 (-72%) |
 
-On the larger app the lean pack is about a third of the ariaSnapshot floor, and it carries verified ids/test ids that
-ariaSnapshot does not. A live MCP browser re-sends a snapshot after most actions, so its real total is higher than
-that floor. `--diff` helps on same-page steps (Sauce Demo) and is neutral on Parabank, where every step changes the
-main content. Run `bench` on your own app before quoting numbers.
+On the two live apps the per-step queries are 40-60% of the ariaSnapshot floor and carry verified ids/test ids that
+ariaSnapshot does not. A live MCP browser re-sends a snapshot after most actions, so its real total is above that
+floor. `--diff` helps when steps stay on one page (Sauce Demo) and is neutral or slightly worse when every step
+changes the main content. These are estimates, not billed tokens; run `bench` on your own app before quoting numbers.
 
-See [examples/parabank](examples/parabank) for the full loop on a live app: scripted capture, page objects, UI + API
-E2E spec, validate, verify and heal.
+Live examples, each with scripted capture, generated page objects, a UI + REST API E2E spec, validate, verify, heal:
+
+- [examples/parabank](examples/parabank) - server-rendered bank: register, accounts, transfer, bill pay (6 tests)
+- [examples/toolshop](examples/toolshop) - Angular SPA store: search, sort, cart, checkout, invoice (5 tests)
 
 Embedders: `hash` (default) is offline, dependency-free feature hashing. `--embedder=minilm` uses all-MiniLM-L6-v2
 through the optional `@huggingface/transformers` package (`npm i -D @huggingface/transformers`, ~23 MB model download on

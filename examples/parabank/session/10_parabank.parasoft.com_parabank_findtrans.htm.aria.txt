@@ -62,8 +62,8 @@
 - heading "Find Transactions" [level=1]
 - text: "Select an account:"
 - combobox:
-  - option "13677" [selected]
-  - option "13566"
+  - option "18672" [selected]
+  - option "18561"
 - separator
 - text: "Find by Transaction ID:"
 - textbox

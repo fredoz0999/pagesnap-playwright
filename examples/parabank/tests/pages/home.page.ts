@@ -40,11 +40,6 @@ export class HomePage extends BasePage {
     return this.page.getByRole('link', { name: 'Withdraw Funds', exact: true });
   }
 
-  /** link "Transfer Funds" - FRAGILE structural locator, ask dev for a test id */
-  get transferFundsLink2(): Locator {
-    return this.page.locator('#rightPanel > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1)');
-  }
-
   /** link "Check Balances" */
   get checkBalancesLink(): Locator {
     return this.page.getByRole('link', { name: 'Check Balances', exact: true });
@@ -60,16 +55,6 @@ export class HomePage extends BasePage {
     return this.page.getByRole('link', { name: 'Account History', exact: true });
   }
 
-  /** link "Transfer Funds" - FRAGILE structural locator, ask dev for a test id */
-  get transferFundsLink3(): Locator {
-    return this.page.locator('#rightPanel > ul:nth-child(3) > li:nth-child(4) > a:nth-child(1)');
-  }
-
-  /** link "Read More" - FRAGILE structural locator, ask dev for a test id */
-  get readMoreLink(): Locator {
-    return this.page.locator('#rightPanel > p:nth-child(4) > a:nth-child(1)');
-  }
-
   /** link "ParaBank Is Now Re-Opened" */
   get paraBankIsNowReOpenedLink(): Locator {
     return this.page.getByRole('link', { name: 'ParaBank Is Now Re-Opened', exact: true });
@@ -83,10 +68,5 @@ export class HomePage extends BasePage {
   /** link "New! Online Account Transfers" */
   get newOnlineAccountTransfersLink(): Locator {
     return this.page.getByRole('link', { name: 'New! Online Account Transfers', exact: true });
-  }
-
-  /** link "Read More" - FRAGILE structural locator, ask dev for a test id */
-  get readMoreLink2(): Locator {
-    return this.page.locator('#rightPanel > p:nth-child(7) > a:nth-child(1)');
   }
 }
