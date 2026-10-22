@@ -7,14 +7,14 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 ## Dropdown / options changes
 
 - - combobox "accountId":
-- - option "20115"
-- - option "20226" [selected]
+- - option "21558"
+- - option "21669" [selected]
 - options:  # native <select> - available without opening UI
 
 ## Added
 
-+ #   - 20115 (selected)
-+ #   - 20226
++ #   - 21558 (selected)
++ #   - 21669
 + #   headers: Date | Transaction | Debit (-) | Credit (+)
 + #   row 1: 10-21-2026 | Bill Payment to Electric Co | $12.34 |
 + # table "transactionTable":
@@ -35,8 +35,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 
 ## Removed
 
-- #   - 20115
-- #   - 20226 (selected)
+- #   - 21558
+- #   - 21669 (selected)
 - - button "Find Transactions" [dup 1/4]:
 - - button "Find Transactions" [dup 2/4]:
 - - button "Find Transactions" [dup 3/4]:
@@ -81,4 +81,4 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - value: ""
 - value: ""
 - value: ""
-- value: "20226"
+- value: "21669"

@@ -72,8 +72,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 
 ## Removed
 
-- #   - 20115 (selected)
-- #   - 20226
+- #   - 21558 (selected)
+- #   - 21669
 - #   headers: Date | Transaction | Debit (-) | Credit (+)
 - #   row 1: 10-21-2026 | Bill Payment to Electric Co | $12.34 |
 - # table "transactionTable":

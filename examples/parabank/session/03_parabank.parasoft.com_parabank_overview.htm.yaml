@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/overview.htm
 # Title: ParaBank | Accounts Overview
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:28:02Z
+# Captured: 2026-10-22T02:36:07Z
 # Trigger: manual
 # Step: 3
 # Note: action: open Accounts Overview | assert: one account listed with balance $515.50
@@ -88,10 +88,10 @@
     - columnheader "Balance*"
     - columnheader "Available Amount"
   - row
-    - cell "20115"
-      - link "20115":
+    - cell "21558"
+      - link "21558":
         locators:
-          - {by: role, value: "link", name: "20115", stability: medium, score: 95}
+          - {by: role, value: "link", name: "21558", stability: medium, score: 95}
     - cell "$515.50" [dup 1/3]
     - cell "$515.50" [dup 2/3]
   - row
@@ -140,6 +140,6 @@
 # --- Tables (headers + first rows) ---
 # table "accountTable":
 #   headers: Account | Balance* | Available Amount
-#   row 1: 20115 | $515.50 | $515.50
+#   row 1: 21558 | $515.50 | $515.50
 #   row 2: Total | $515.50 | 
 #   footer: *Balance includes deposits that may be subject to holds

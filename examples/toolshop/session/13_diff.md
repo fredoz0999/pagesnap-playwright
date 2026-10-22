@@ -21,7 +21,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - generic:
 + - link "Explore courses":
 + - text "Enjoyed testing this app? Level up with hands-on software testing courses."
-+ - text "INV-2026000012"
++ - text "INV-2026000020"
 + - text "Thanks for your order! Your invoice number is ."
 + - {by: testid, value: "course-promo", attr: data-test, stability: high, score: 98}
 + - {by: testid, value: "course-promo-link", attr: data-test, stability: high, score: 98}

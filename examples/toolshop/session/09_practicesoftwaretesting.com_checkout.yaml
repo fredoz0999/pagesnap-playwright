@@ -1,7 +1,7 @@
 # URL: https://practicesoftwaretesting.com/checkout
 # Title: Checkout - Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:29:05Z
+# Captured: 2026-10-22T02:38:18Z
 # Trigger: manual
 # Step: 9
 # Note: action: log in with the new customer | assert: 'already logged in' and Proceed to checkout

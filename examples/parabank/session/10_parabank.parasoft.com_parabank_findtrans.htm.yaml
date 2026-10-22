@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/findtrans.htm
 # Title: ParaBank | Find Transactions
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:28:05Z
+# Captured: 2026-10-22T02:36:11Z
 # Trigger: manual
 # Step: 10
 # Note: action: open Find Transactions | data: account used for the bill payment, find by amount 12.34
@@ -87,12 +87,12 @@
     - {by: id, value: "transactionForm", stability: high, score: 90}
   - text "Select an account"
   - combobox "accountId":
-    value: "20226"
+    value: "21669"
     locators:
       - {by: id, value: "accountId", stability: high, score: 90}
     options:  # native <select> - available without opening UI
-      - option "20226" [selected]
-      - option "20115"
+      - option "21669" [selected]
+      - option "21558"
   - text "Find by Transaction ID"
   - textbox "transactionId":
     value: ""
@@ -170,5 +170,5 @@
 
 # --- All <select> options ---
 # <select> "accountId":
-#   - 20226 (selected)
-#   - 20115
+#   - 21669 (selected)
+#   - 21558

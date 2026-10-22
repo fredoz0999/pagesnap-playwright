@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/login.htm
 # Title: ParaBank | Error
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:28:06Z
+# Captured: 2026-10-22T02:36:12Z
 # Trigger: manual
 # Step: 13
 # Note: action: log in with wrong password | assert: error 'The username and password could not be verified.'

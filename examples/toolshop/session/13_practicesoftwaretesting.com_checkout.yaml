@@ -1,7 +1,7 @@
 # URL: https://practicesoftwaretesting.com/checkout
 # Title: Checkout - Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:29:10Z
+# Captured: 2026-10-22T02:38:22Z
 # Trigger: manual
 # Step: 13
 # Note: action: Confirm | assert: 'Thanks for your order! Your invoice number is INV-...'
@@ -69,7 +69,7 @@
   - listitem
     - text "Payment"
 - text "Thanks for your order! Your invoice number is ."
-- text "INV-2026000012"
+- text "INV-2026000020"
 - generic:
   locators:
     - {by: testid, value: "course-promo", attr: data-test, stability: high, score: 98}

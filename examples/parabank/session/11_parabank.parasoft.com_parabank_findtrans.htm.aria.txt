@@ -72,7 +72,7 @@
       - cell "10-21-2026"
       - cell "Bill Payment to Electric Co":
         - link "Bill Payment to Electric Co":
-          - /url: /parabank/transaction.htm?id=24799
+          - /url: /parabank/transaction.htm?id=28351
       - cell "$12.34"
       - cell
 - list:

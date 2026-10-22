@@ -59,11 +59,11 @@
       "type": "fill",
       "target": {
         "tag": "input",
-        "id": "72a19fb4-4468-4a9f-af3f-208cd25b3dd1",
+        "id": "e184199f-b39b-4398-b433-eb0103d86d2e",
         "name": "payee.phoneNumber",
         "role": "textbox",
         "type": "text",
-        "css": "form:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > input:nth-child(1)"
+        "css": "#e184199f-b39b-4398-b433-eb0103d86d2e"
       },
       "value": "5550111"
     },

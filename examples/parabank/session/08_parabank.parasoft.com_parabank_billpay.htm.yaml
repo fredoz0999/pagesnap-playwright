@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/billpay.htm
 # Title: ParaBank | Bill Pay
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:28:04Z
+# Captured: 2026-10-22T02:36:10Z
 # Trigger: manual
 # Step: 8
 # Note: action: open Bill Pay | data: payee Electric Co, account 12345, amount 12.34
@@ -161,14 +161,14 @@
       - cell
     - row
       - cell "From account #:"
-      - cell "20115 20226"
+      - cell "21558 21669"
         - combobox "fromAccountId":
-          value: "20115"
+          value: "21558"
           locators:
             - {by: name, value: "fromAccountId", stability: high, score: 88}
           options:  # native <select> - available without opening UI
-            - option "20115" [selected]
-            - option "20226"
+            - option "21558" [selected]
+            - option "21669"
     - row
       - cell
       - cell
@@ -179,8 +179,8 @@
 
 # --- All <select> options ---
 # <select> "fromAccountId":
-#   - 20115 (selected)
-#   - 20226
+#   - 21558 (selected)
+#   - 21669
 
 # --- Tables (headers + first rows) ---
 # table "table-0":

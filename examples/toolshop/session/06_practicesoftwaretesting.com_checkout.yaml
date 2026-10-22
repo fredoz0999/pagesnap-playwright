@@ -1,7 +1,7 @@
 # URL: https://practicesoftwaretesting.com/checkout
 # Title: Checkout - Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:29:02Z
+# Captured: 2026-10-22T02:38:15Z
 # Trigger: manual
 # Step: 6
 # Note: action: open cart | assert: Claw Hammer x2, line price = 2 x unit price, cart total

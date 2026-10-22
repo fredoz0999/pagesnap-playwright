@@ -7,8 +7,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 ## Dropdown / options changes
 
 - - combobox "fromAccountId":
-- - option "20115" [selected]
-- - option "20226"
+- - option "21558" [selected]
+- - option "21669"
 - options:  # native <select> - available without opening UI
 
 ## Added
@@ -83,7 +83,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - cell
 - - cell
 - - cell
-- - cell "20115 20226"
+- - cell "21558 21669"
 - - cell "Account #:"
 - - cell "Address:"
 - - cell "Amount: $"

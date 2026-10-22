@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/openaccount.htm
 # Title: ParaBank | Open Account
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:28:02Z
+# Captured: 2026-10-22T02:36:08Z
 # Trigger: manual
 # Step: 4
 # Note: action: open Open New Account | data: type SAVINGS, from first account
@@ -95,11 +95,11 @@
       - option "SAVINGS"
   - text "A minimum of $100.00 must be deposited into this account at time of opening. Please choose an existing account to transfer funds into the new account."
   - combobox "fromAccountId":
-    value: "20115"
+    value: "21558"
     locators:
       - {by: id, value: "fromAccountId", stability: high, score: 90}
     options:  # native <select> - available without opening UI
-      - option "20115" [selected]
+      - option "21558" [selected]
   - button "Open New Account":
     value: "Open New Account"
     locators:
@@ -146,4 +146,4 @@
 #   - CHECKING (selected)
 #   - SAVINGS
 # <select> "fromAccountId":
-#   - 20115 (selected)
+#   - 21558 (selected)

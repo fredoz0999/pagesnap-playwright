@@ -60,7 +60,7 @@
     - link "Log Out":
       - /url: logout.htm
 - heading "Transfer Complete!" [level=1]
-- paragraph: "$25.00 has been transferred from account #20115 to account #20226."
+- paragraph: "$25.00 has been transferred from account #21558 to account #21669."
 - paragraph: See Account Activity for more details.
 - list:
   - listitem:

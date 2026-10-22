@@ -80,11 +80,6 @@ export class ProductPage extends BasePage {
     return this.page.getByTestId('product-specs');
   }
 
-  /** link "Unsplash" */
-  get unsplashLink3(): Locator {
-    return this.page.locator('a[href*="https://unsplash.com/photos/t5YUoHW6zRo"]');
-  }
-
   /** link "Claw Hammer with Shock Reduction Grip More information" */
   get link(): Locator {
     return this.page.locator('a[href*="/product/01M5GND76DX63X0V1S632TWZFC"]');
@@ -113,5 +108,10 @@ export class ProductPage extends BasePage {
   /** link "Court Hammer More information" */
   get courtHammerMoreInformationLink(): Locator {
     return this.page.locator('a[href*="/product/01M5GND77C8TVM5Q0SM5PNNXTM"]');
+  }
+
+  /** link "Unsplash" */
+  get unsplashLink3(): Locator {
+    return this.page.locator('a[href*="https://unsplash.com/photos/t5YUoHW6zRo"]');
   }
 }

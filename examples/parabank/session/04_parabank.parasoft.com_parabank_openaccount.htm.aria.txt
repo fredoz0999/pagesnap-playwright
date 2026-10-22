@@ -66,7 +66,7 @@
   - option "SAVINGS"
 - paragraph: A minimum of $100.00 must be deposited into this account at time of opening. Please choose an existing account to transfer funds into the new account.
 - combobox:
-  - option "20115" [selected]
+  - option "21558" [selected]
 - button "Open New Account"
 - list:
   - listitem:

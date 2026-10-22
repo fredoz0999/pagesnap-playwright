@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/openaccount.htm
 # Title: ParaBank | Open Account
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:28:03Z
+# Captured: 2026-10-22T02:36:08Z
 # Trigger: manual
 # Step: 5
 # Note: action: click Open New Account | assert: 'Account Opened!' and new account number shown
@@ -84,9 +84,9 @@
 - heading "Account Opened!" [level=1]
 - text "Congratulations, your account is now open."
 - text "Your new account number:"
-- link "20226":
+- link "21669":
   locators:
-    - {by: role, value: "link", name: "20226", stability: medium, score: 95}
+    - {by: role, value: "link", name: "21669", stability: medium, score: 95}
 - list
   - listitem
     - link "Home":
@@ -129,4 +129,4 @@
 #   - CHECKING
 #   - SAVINGS (selected)
 # <select> "fromAccountId":
-#   - 20115 (selected)
+#   - 21558 (selected)
