@@ -275,10 +275,24 @@ const scopeOf = (el) => {
 };
 
 // What a locator really finds, so nothing unverified is written down.
-const resolveLocator = (el, cand) => {
-  const scope = scopeOf(el);
+const resolveLocator = (el, cand, scopeRoot) => {
+  const scope = scopeRoot || scopeOf(el);
   const doc = el.ownerDocument;
   try {
+    if (cand.by === 'alt') {
+      return Array.from(scope.querySelectorAll(attrSel('alt', cand.value)));
+    }
+    if (cand.by === 'title') {
+      return Array.from(scope.querySelectorAll(attrSel('title', cand.value)));
+    }
+    if (cand.by === 'text') {
+      // Playwright getByText(exact): own + descendant text, whitespace-normalised, case-sensitive
+      const want = String(cand.value);
+      return Array.from(scope.querySelectorAll('*')).filter(n =>
+        n.nodeType === 1 && !/^(SCRIPT|STYLE|HTML|HEAD|BODY)$/.test(n.tagName)
+        && (n.innerText || n.textContent || '').replace(/\s+/g, ' ').trim() === want
+        && !Array.from(n.children).some(c => (c.innerText || c.textContent || '').replace(/\s+/g, ' ').trim() === want));
+    }
     if (cand.by === 'xpath') {
       const res = doc.evaluate(cand.value, doc, null, 7, null);
       const out = [];
@@ -378,13 +392,18 @@ const structuralPath = (el) => {
 
 // LocatorLabs-style reliability scores mapped to PageSnap `by` values.
 // Unique locators keep the table score; non-unique (`matches`) are capped at 40.
+// Order follows Playwright's own locator generator (testid, role+name, placeholder,
+// label, alt, text, title, then css #id, [name], structural css, xpath).
 const SCORE = {
   testid: 98,
   role: 95,
-  label: 90,
-  id: 90,
-  name: 88,
-  placeholder: 85,
+  placeholder: 92,
+  label: 91,
+  alt: 89,
+  text: 87,
+  title: 86,
+  id: 80,
+  name: 78,
   linkText: 75,
   css: 60,
   xpath: 40
@@ -419,6 +438,89 @@ const repairLocator = (el, cand) => {
   return null;
 };
 
+// Containers worth scoping to (a card, a row, a dialog, a form, a nav region).
+const SCOPE_ROLES = new Set(['region', 'form', 'dialog', 'alertdialog', 'navigation', 'article', 'listitem',
+  'row', 'main', 'banner', 'contentinfo', 'complementary', 'group', 'tabpanel', 'table', 'list', 'menu', 'toolbar']);
+
+// Unique own locator of a container (test id, id, named role), or null.
+const recordLike = (v) => /[0-9a-f]{8}-[0-9a-f]{4}/i.test(v) || /^:r[0-9a-z]+:$/i.test(v) || /[0-9a-f]{16,}/i.test(v)
+  || (/[A-Za-z0-9]{16,}/.test(v) && /\d/.test(v));
+const containerLocator = (node) => {
+  const tid = node.getAttribute('data-testid') || node.getAttribute('data-test') || node.getAttribute('data-test-id')
+    || node.getAttribute('data-cy') || node.getAttribute('data-qa');
+  // a test id or id that embeds a record id (product-01M5GH...) names one record, not a container
+  if (tid && !recordLike(tid)) {
+    const attr = node.hasAttribute('data-testid') ? 'data-testid' : node.hasAttribute('data-test') ? 'data-test'
+      : node.hasAttribute('data-test-id') ? 'data-test-id' : node.hasAttribute('data-cy') ? 'data-cy' : 'data-qa';
+    return { by: 'testid', value: tid, attr: attr };
+  }
+  const id = node.getAttribute('id');
+  if (id && !/^[0-9]/.test(id) && id.length < 80 && !recordLike(id)) {
+    return { by: 'id', value: id };
+  }
+  const role = node.getAttribute('role') || implicitRole(node);
+  if (role && SCOPE_ROLES.has(role)) {
+    const n = accessibleName(node, true);
+    if (n && n.length < 60) return { by: 'role', value: role, name: n };
+    // nameless list items and rows are exactly the repeated containers a hasText filter targets
+    if (role !== 'group') return { by: 'role', value: role };
+  }
+  return null;
+};
+
+// Short texts inside a container that could tell it from its twins. Headings, link
+// text, alt text and labels come first (stable identity); prices, counts and dates
+// change between runs and come last.
+const distinguishingTexts = (node) => {
+  const out = new Map(); // text -> rank
+  const add = (t, rank) => {
+    t = (t || '').replace(/\s+/g, ' ').trim();
+    if (t.length < 3 || t.length > 60 || !/[A-Za-z0-9]/.test(t)) return;
+    const dataLike = /^[\s$€£¥#:.,\-\/0-9%]+$/.test(t) || /^\d/.test(t) && /\d/.test(t.slice(-1)) && t.replace(/[^A-Za-z]/g, '').length < 3;
+    const r = rank + (dataLike ? 10 : 0) + (/[A-Za-z]{3}/.test(t) ? 0 : 5);
+    if (!out.has(t) || out.get(t) > r) out.set(t, r);
+  };
+  node.querySelectorAll('h1,h2,h3,h4,h5,h6,a,label,strong,b,[data-testid],[data-test],img[alt],td,th,span,p,div,dt,dd,li').forEach((n) => {
+    if (out.size > 60) return;
+    if (n.tagName === 'IMG') { add(n.getAttribute('alt'), 1); return; }
+    let own = '';
+    for (const c of n.childNodes) if (c.nodeType === 3) own += ' ' + c.textContent;
+    const headline = /^(H[1-6]|A|LABEL|STRONG|B|DT|TH)$/.test(n.tagName) || n.hasAttribute('data-testid') || n.hasAttribute('data-test');
+    add(own, headline ? 0 : 2);
+    if (headline) add(n.innerText || n.textContent, 0);
+  });
+  return Array.from(out.entries()).sort((a, b) => a[1] - b[1] || a[0].length - b[0].length).map((e) => e[0]);
+};
+
+const innerTextOf = (n) => (n.innerText || n.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+// For a candidate that matches several elements: find an ancestor container with a
+// unique locator (chain), or a repeated container that a hasText filter makes unique.
+const scopeLocator = (el, cand, found) => {
+  let node = el.parentElement;
+  for (let depth = 0; node && node !== el.ownerDocument.body && depth < 10; depth++, node = node.parentElement) {
+    const cl = containerLocator(node);
+    if (!cl) continue;
+    const containers = resolveLocator(node, cl);
+    if (!containers || containers.indexOf(node) < 0) continue;
+    const insideHere = found.filter((f) => node.contains(f));
+    if (insideHere.length !== 1) continue; // the candidate must be unique within this container
+    const scoped = Object.assign({}, cand, { stability: cand.stability, scopeBy: cl.by, scopeValue: cl.value });
+    if (cl.attr) scoped.scopeAttr = cl.attr;
+    if (cl.name) scoped.scopeName = cl.name;
+    if (containers.length === 1) return stampScore(scoped);
+    // repeated container (cards, rows): a text only this one contains
+    const twins = containers.filter((c) => c !== node).map(innerTextOf);
+    for (const t of distinguishingTexts(node)) {
+      const lt = t.toLowerCase();
+      if (twins.some((x) => x.includes(lt))) continue;
+      scoped.scopeText = t;
+      return stampScore(scoped);
+    }
+  }
+  return null;
+};
+
 // Roles that need locators for test generation. Structural
 // roles (heading, list, banner, …) stay in the tree without locator
 // blocks — that alone removes most multi-locator bloat on chrome-heavy pages.
@@ -438,7 +540,7 @@ const MAX_LOCATORS = lean ? 1 : 2;
 const allLocators = [];
 let controlSeq = 0;
 
-const buildLocators = (el, nodeRole, nodeName) => {
+const buildLocators = (el, nodeRole, nodeName, framePath) => {
   const locators = [];
   let hasId = false;
   let hasName = false;
@@ -505,6 +607,13 @@ const buildLocators = (el, nodeRole, nodeName) => {
     push('css', '[aria-label="' + aria.trim().replace(/"/g, '\\"') + '"]', 'medium');
   }
 
+  if (el.tagName === 'IMG' || el.tagName === 'AREA') {
+    const alt = el.getAttribute('alt');
+    if (alt && alt.trim() && alt.length < 80) push('alt', alt.trim(), 'medium');
+  }
+  const ttl = el.getAttribute('title');
+  if (ttl && ttl.trim() && ttl.length < 80) push('title', ttl.trim(), 'medium');
+
   const type = (el.getAttribute('type') || '').toLowerCase();
   if (el.tagName === 'INPUT' && type === 'submit' && el.value) {
     push('css', 'input[type="submit"][value="' + String(el.value).replace(/"/g, '\\"') + '"]', 'medium');
@@ -566,8 +675,11 @@ const buildLocators = (el, nodeRole, nodeName) => {
       continue;
     }
     if (found.length > 1 && found.indexOf(el) >= 0) {
-      const narrowed = repairLocator(el, cand);
-      if (narrowed && !verified.some(v => v.by === narrowed.by && v.value === narrowed.value)) {
+      // Playwright's way with repeats: scope to a container, then (if the container
+      // repeats too) filter it by text that only this card has.
+      const scoped = scopeLocator(el, cand, found);
+      const narrowed = scoped || repairLocator(el, cand);
+      if (narrowed && !verified.some(v => v.by === narrowed.by && v.value === narrowed.value && v.scopeValue === narrowed.scopeValue && v.scopeText === narrowed.scopeText)) {
         verified.push(narrowed);
       } else if (!lean && ambiguous.length < 1) {
         const amb = { by: cand.by, value: cand.value, stability: cand.stability, matches: found.length };
@@ -597,14 +709,23 @@ const buildLocators = (el, nodeRole, nodeName) => {
   });
 
   const rank = (st) => (st === 'high' ? 0 : st === 'medium' ? 1 : 2);
-  const byRank = (by) => ({ testid: 0, role: 1, label: 2, id: 3, name: 4, placeholder: 5, linkText: 6, css: 7, xpath: 8 }[by] ?? 9);
-  cleaned.sort((a, b) => (b.score - a.score) || rank(a.stability) - rank(b.stability) || byRank(a.by) - byRank(b.by));
+  const byRank = (by) => ({ testid: 0, role: 1, placeholder: 2, label: 3, alt: 4, text: 5, title: 6, id: 7, name: 8, linkText: 9, css: 10, xpath: 11 }[by] ?? 12);
+  // A plain unique locator beats a scoped one of the same kind; scoping is for repeats.
+  const scopePenalty = (l) => (l.scopeBy ? (l.scopeText ? 2 : 1) : 0);
+  cleaned.sort((a, b) => (b.score - scopePenalty(b)) - (a.score - scopePenalty(a)) || rank(a.stability) - rank(b.stability) || byRank(a.by) - byRank(b.by));
 
   const ctl = ++controlSeq;
   for (const l of cleaned) {
     const rec = { ctl: ctl, by: l.by, value: l.value, score: l.score, role: nodeRole || '', name: nodeName || '' };
+    if (framePath) rec.frame = framePath;
     if (l.name) rec.locName = l.name;
     if (l.attr) rec.attr = l.attr;
+    if (l.scopeBy) {
+      rec.scopeBy = l.scopeBy; rec.scopeValue = l.scopeValue;
+      if (l.scopeName) rec.scopeName = l.scopeName;
+      if (l.scopeAttr) rec.scopeAttr = l.scopeAttr;
+      if (l.scopeText) rec.scopeText = l.scopeText;
+    }
     allLocators.push(rec);
   }
 
@@ -612,9 +733,9 @@ const buildLocators = (el, nodeRole, nodeName) => {
   const bySeen = new Set();
   for (const l of cleaned) {
     if (picked.length >= MAX_LOCATORS) break;
-    if (bySeen.has(l.by) && picked.length > 0) continue;
+    if (bySeen.has(l.by + (l.scopeBy ? '+scope' : '')) && picked.length > 0) continue;
     picked.push(l);
-    bySeen.add(l.by);
+    bySeen.add(l.by + (l.scopeBy ? '+scope' : ''));
   }
 
   if (!picked.length && ambiguous.length) {
@@ -779,7 +900,9 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
     // locators whatever their role (cart total <td>, price <span>, order <h3>).
     const hasTestId = !!(el.getAttribute('data-testid') || el.getAttribute('data-test')
       || el.getAttribute('data-test-id') || el.getAttribute('data-cy') || el.getAttribute('data-qa'));
-    const locators = (ACTIONABLE.has(roleForLoc) || hasTestId) ? buildLocators(el, roleForLoc, name) : [];
+    const altImg = roleForLoc === 'img' && !!(el.getAttribute('alt') || '').trim();
+    const framePath = prefix && prefix.indexOf('in-iframe=') === 0 ? prefix.slice('in-iframe='.length) : '';
+    const locators = (ACTIONABLE.has(roleForLoc) || hasTestId || altImg) ? buildLocators(el, roleForLoc, name, framePath) : [];
     const value = readValue(el);
     // Native <select> options exist in DOM even when the list is closed
     const isNativeSelect = el.tagName === 'SELECT';
@@ -827,6 +950,10 @@ const emitNode = (el, depth, prefix, inAlert, countOnly) => {
           lines.push(ind + '  - {by: ' + l.by + ', value: "' + esc(l.value) + '"'
             + (l.name ? ', name: "' + esc(l.name) + '"' : '')
             + (l.by === 'testid' && l.attr && l.attr !== 'data-testid' ? ', attr: ' + l.attr : '')
+            + (l.scopeBy ? ', scopeBy: ' + l.scopeBy + ', scopeValue: "' + esc(l.scopeValue) + '"'
+              + (l.scopeName ? ', scopeName: "' + esc(l.scopeName) + '"' : '')
+              + (l.scopeAttr && l.scopeAttr !== 'data-testid' ? ', scopeAttr: ' + l.scopeAttr : '')
+              + (l.scopeText ? ', scopeText: "' + esc(l.scopeText) + '"' : '') : '')
             + ', stability: ' + l.stability
             + ', score: ' + (l.score != null ? l.score : locatorScore(l.by, l.matches))
             + (l.matches != null ? ', matches: ' + l.matches : '') + '}');

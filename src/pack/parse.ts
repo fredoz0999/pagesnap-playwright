@@ -20,6 +20,15 @@ export interface Locator {
   stability?: string;
   score?: number;
   matches?: number;
+  /** scoped locator: find within the container located by scopeBy/scopeValue (+scopeName/scopeAttr) */
+  scopeBy?: string;
+  scopeValue?: string;
+  scopeName?: string;
+  scopeAttr?: string;
+  /** when the container repeats: the one whose text contains this */
+  scopeText?: string;
+  /** iframe path (name/id per level, "/"-joined) the element lives in */
+  frame?: string;
 }
 
 export interface SnapNode {
@@ -47,7 +56,7 @@ export interface Snapshot {
   raw: string;
 }
 
-const NODE_RE = /^(\s*)- ([a-zA-Z][\w-]*)(?: "((?:[^"\\]|\\.)*)")?(?: \[([^\]]*)\])?(:)?\s*$/;
+const NODE_RE = /^(\s*)- ([a-zA-Z][\w-]*)(?: "((?:[^"\\]|\\.)*)")?(?: \[((?:"(?:[^"\\]|\\.)*"|[^\]"])*)\])?(:)?\s*$/;
 
 export function unesc(s: string): string {
   return s.replace(/\\(.)/g, "$1");
@@ -71,6 +80,13 @@ export function parseLocator(text: string): Locator | null {
   if (out.stability) loc.stability = out.stability;
   if (out.score) loc.score = Number(out.score);
   if (out.matches) loc.matches = Number(out.matches);
+  if (out.scopeBy && out.scopeValue != null) {
+    loc.scopeBy = out.scopeBy;
+    loc.scopeValue = out.scopeValue;
+    if (out.scopeName) loc.scopeName = out.scopeName;
+    if (out.scopeAttr) loc.scopeAttr = out.scopeAttr;
+    if (out.scopeText) loc.scopeText = out.scopeText;
+  }
   return loc;
 }
 
@@ -120,7 +136,11 @@ export function parseSnapshot(raw: string, file = ""): Snapshot {
     }
     if (mode === "locators" && trimmed.startsWith("- {")) {
       const loc = parseLocator(trimmed);
-      if (loc && cur) cur.locators.push(loc);
+      if (loc && cur) {
+        const fr = cur.flags.map((f) => /^in-iframe=(.+)$/.exec(f)).find(Boolean);
+        if (fr) loc.frame = fr[1];
+        cur.locators.push(loc);
+      }
       continue;
     }
     const m = NODE_RE.exec(line);

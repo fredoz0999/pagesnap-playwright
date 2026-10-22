@@ -61,6 +61,11 @@ export class ScriptedSession {
     cap.sessionStartUrl = "";
     this.cap = cap;
     fs.mkdirSync(cap.sessionDir, { recursive: true });
+    // continue numbering after snapshots already in the folder
+    for (const f of fs.readdirSync(cap.sessionDir)) {
+      const m = /^(\d+)_.+\.ya?ml$/i.exec(f);
+      if (m) this.step = Math.max(this.step, Number(m[1]));
+    }
   }
 
   get dir(): string {
@@ -74,6 +79,7 @@ export class ScriptedSession {
   async record(page: Page): Promise<void> {
     if (this.opts.record === false || this.recording) return;
     this.recording = true;
+    this.recorder.redactEmails = this.cap.redactEmails;
     await this.recorder.attach(page);
   }
 

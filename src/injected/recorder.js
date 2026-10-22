@@ -90,6 +90,19 @@
   };
 
   const secretKey = (el) => el.getAttribute('name') || el.id || 'password';
+  // A field is secret if it is (or ever was: show-password toggles) a password field, or
+  // holds a card number / CVV / one-time code / SSN by autocomplete or name.
+  const everPassword = new WeakSet();
+  const SECRET_AC = /^(current-password|new-password|one-time-code|cc-number|cc-csc|cc-exp|cc-exp-month|cc-exp-year)$/i;
+  const SECRET_NAME = /(passw|pwd|secret|token|otp|ssn|social|cvv|cvc|csc|card[-_ ]?number|cardnum|ccnum|pan$)/i;
+  const isSecretField = (el) => {
+    if ((el.type || '').toLowerCase() === 'password') { everPassword.add(el); return true; }
+    if (everPassword.has(el)) return true;
+    if (SECRET_AC.test(el.getAttribute('autocomplete') || '')) return true;
+    const hint = (el.getAttribute('name') || '') + ' ' + (el.id || '') + ' ' + (el.getAttribute('aria-label') || '');
+    return SECRET_NAME.test(hint);
+  };
+  document.addEventListener('focusin', (ev) => { const el = ev.target; if (el && el.tagName === 'INPUT' && (el.type || '').toLowerCase() === 'password') everPassword.add(el); }, true);
   // FNV-1a: lets the recorder tell "the real password" from "a wrong one on purpose"
   // without the value ever leaving the page.
   const fnv = (str) => {
@@ -98,10 +111,16 @@
     return h.toString(16) + ':' + str.length;
   };
 
+  let lastLabelClick = 0;
+  let lastEnter = 0;
   document.addEventListener('click', (ev) => {
     if (!ev.isTrusted) return; // scripts calling el.click() are app behaviour, not user steps
     const el = target(ev);
     if (!el || isTool(el)) return;
+    // The browser forwards a <label> click to its control, and an Enter keypress to the
+    // submit button, as trusted clicks with detail 0: one user action, record it once.
+    if (ev.detail === 0 && (Date.now() - lastLabelClick < 300 || Date.now() - lastEnter < 300)) return;
+    if (el.tagName === 'LABEL') lastLabelClick = Date.now();
     // text entry and selects are recorded by their value, not by the click that focused them
     if (el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') return;
     if (el.tagName === 'INPUT' && !/^(submit|button|reset|image|checkbox|radio)$/i.test(el.type || '')) return;
@@ -116,10 +135,15 @@
     if (el.tagName === 'SELECT') return;
     if (el.tagName === 'INPUT' && /^(checkbox|radio|submit|button|reset|image|file)$/i.test(el.type || '')) return;
     if (!(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
-    const isPw = (el.type || '').toLowerCase() === 'password';
+    const isPw = isSecretField(el);
     const value = isPw ? '{{secret:' + secretKey(el) + '}}' : (el.value != null ? String(el.value) : txt(el.textContent));
     const a = { type: 'fill', target: describe(el), value: value };
-    if (isPw) a.secretHash = fnv(String(el.value || ''));
+    if (isPw) {
+      a.secretHash = fnv(String(el.value || ''));
+      // shape only (d=digit, a=letter, punctuation kept): lets replay type something of the
+      // same format into a card / SSN / code field without the value ever leaving the page
+      if ((el.type || '').toLowerCase() !== 'password') a.shape = String(el.value || '').replace(/[0-9]/g, 'd').replace(/[A-Za-z]/g, 'a').slice(0, 40);
+    }
     send(a);
   }, true);
 
@@ -141,6 +165,7 @@
     const el = ev.target;
     if (!el || isTool(el) || el.tagName === 'TEXTAREA') return;
     if (!(el.tagName === 'INPUT' || el.isContentEditable)) return;
+    lastEnter = Date.now();
     send({ type: 'press', key: 'Enter', target: describe(el) });
   }, true);
 })();

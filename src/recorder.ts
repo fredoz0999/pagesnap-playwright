@@ -26,7 +26,7 @@ export interface TargetDesc {
 export type RecordedAction =
   | { type: "nav"; url: string }
   | { type: "click"; target: TargetDesc }
-  | { type: "fill"; target: TargetDesc; value: string; secretHash?: string }
+  | { type: "fill"; target: TargetDesc; value: string; secretHash?: string; shape?: string }
   | { type: "select"; target: TargetDesc; value: string[]; label: string[]; index: number[] }
   | { type: "press"; key: string; target: TargetDesc };
 
@@ -76,6 +76,9 @@ export class ActionRecorder {
     for (const p of pages) {
       this.watchNavigation(p);
       await p.evaluate(js).catch(() => undefined); // already-loaded page
+      // a page already open (--connect, or record() after goto) needs its URL as the first step
+      const url = p.url();
+      if (/^https?:/.test(url) && !this.buf.some((a) => a.type === "nav")) this.buf.push({ type: "nav", url });
     }
     if ("pages" in target) target.on("page", (p) => this.watchNavigation(p));
   }
@@ -105,32 +108,46 @@ export class ActionRecorder {
     if (a.type === "fill" && last && last.type === "fill" && sameTarget(last.target, a.target)) {
       last.value = a.value;
       last.secretHash = a.secretHash;
+      last.shape = a.shape;
       return;
     }
     this.buf.push(a);
   }
 
+  /** Redact typed emails (matches the YAML redaction) unless the capture runs with --no-redact. */
+  redactEmails = true;
+
   /** Actions since the last take(), with declared values replaced by {{name}}. */
   take(): RecordedAction[] {
     const out = this.buf;
     this.buf = [];
+    const EMAIL = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
     const subst = (v: string) => {
       let r = v;
       for (const [name, rule] of Object.entries(this.vars)) {
         if (rule.value && r.includes(rule.value)) r = r.split(rule.value).join("{{" + name + "}}");
       }
+      // an undeclared email is personal data: keep it out, replay gets a fresh one
+      if (this.redactEmails) r = r.replace(EMAIL, (m) => (/^\{\{.*\}\}$/.test(m) ? m : "{{email:fresh}}"));
       return r;
+    };
+    // query strings and fragments carry tokens (OAuth code=, #access_token); a replay
+    // re-enters the app from the path, which is what the capture did too
+    const stripUrl = (u: string) => {
+      try { const x = new URL(u); x.search = ""; x.hash = x.hash && /^#!?\//.test(x.hash) ? x.hash : ""; return x.toString(); } catch { return u.split(/[?#]/)[0]; }
     };
     const secrets = Object.entries(this.vars).filter(([, r]) => r.secret);
     return out.map((a) => {
-      if (a.type === "nav") return { ...a, url: subst(a.url) };
+      if (a.type === "nav") return { ...a, url: stripUrl(subst(a.url)) };
       if (a.type !== "fill") return a;
       if (a.secretHash) {
-        const { secretHash: h, ...rest } = a;
+        const { secretHash: h, shape, ...rest } = a;
         const hit = secrets.find(([, r]) => secretHash(r.value) === h);
+        if (hit) return { ...rest, value: "{{secret:" + hit[0] + "}}" };
+        // a sensitive non-password field (card, SSN, code): keep the placeholder and its shape
+        if (shape !== undefined) return { ...rest, value: a.value, shape };
         // a password that is none of the declared secrets was a deliberately wrong one
-        const value = hit ? "{{secret:" + hit[0] + "}}" : secrets.length ? "{{wrong-secret}}" : a.value;
-        return { ...rest, value };
+        return { ...rest, value: secrets.length ? "{{wrong-secret}}" : a.value };
       }
       return { ...a, value: subst(a.value) };
     });

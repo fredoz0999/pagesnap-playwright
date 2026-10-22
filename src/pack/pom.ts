@@ -14,7 +14,8 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { idSelector, parseSnapshot, walk, type Locator, type SnapNode } from "./parse.js";
+import { parseSnapshot, walk, type Locator, type SnapNode } from "./parse.js";
+import { locatorChain } from "./locator-code.js";
 import { snapshotFiles } from "./index.js";
 
 export interface PomMember {
@@ -78,17 +79,7 @@ function js(s: string): string {
 
 /** Playwright code for a PageSnap locator, relative to `this.page`. */
 export function locatorCode(l: Locator): string {
-  switch (l.by) {
-    case "testid": return "this.page.getByTestId(" + js(l.value) + ")";
-    case "id": return "this.page.locator(" + js(idSelector(l.value)) + ")";
-    case "name": return "this.page.locator(" + js('[name="' + l.value + '"]') + ")";
-    case "role": return "this.page.getByRole(" + js(l.value) + (l.name ? ", { name: " + js(l.name) + ", exact: true }" : "") + ")";
-    case "label": return "this.page.getByLabel(" + js(l.value) + ", { exact: true })";
-    case "placeholder": return "this.page.getByPlaceholder(" + js(l.value) + ", { exact: true })";
-    case "linkText": return "this.page.getByRole('link', { name: " + js(l.value) + ", exact: true })";
-    case "xpath": return "this.page.locator(" + js("xpath=" + l.value) + ")";
-    default: return "this.page.locator(" + js(l.value) + ")";
-  }
+  return locatorChain(l, "this.page");
 }
 
 /** A path segment that is a record id (ULID, UUID, number, hash), not a route name. */
@@ -109,12 +100,24 @@ function urlPathOf(url: string): string {
   return p.split("/").map((seg) => (seg && isIdSegment(seg) ? ":id" : seg)).join("/");
 }
 
+/** Hash-routed apps (/#/cart) keep the route in the hash. */
+function routeOf(url: string): string {
+  try {
+    const u = new URL(url);
+    const hashRoute = /^#!?\//.test(u.hash) ? u.hash.replace(/^#!?/, "").split("?")[0] : "";
+    return hashRoute ? urlPathOf(url).replace(/\/$/, "") + "/#" + hashRoute : urlPathOf(url);
+  } catch {
+    return urlPathOf(url);
+  }
+}
+
 function classNameFor(urlPath: string, title: string): string {
-  const last = urlPath.split("/").filter((x) => x && x !== ":id").pop() || "";
-  const stem = last.replace(/\.(html?|htm|jsp|php|aspx?)$/i, "");
+  const last = urlPath.split("/").filter((x) => x && x !== ":id" && x !== "#").pop() || "";
+  const stem = last.replace(/^#/, "").replace(/\.(html?|htm|jsp|php|aspx?)$/i, "");
   const parts = words(stem);
   if (!parts.length || /^(index|home|default)$/i.test(stem)) return "HomePage";
-  return pascal(parts) + "Page";
+  const name = pascal(parts) + "Page";
+  return name === "BasePage" ? "BaseRoutePage" : name; // BasePage is the shared superclass
 }
 
 function bestLocator(n: SnapNode): Locator | null {
@@ -124,6 +127,12 @@ function bestLocator(n: SnapNode): Locator | null {
 }
 
 function memberBase(n: SnapNode, l: Locator): string[] {
+  // A test id is the developers' stable name for the element: members mirror it, so
+  // "Quantity for Claw Hammer" (data in the name) becomes productQuantityInput.
+  if (l.by === "testid") {
+    const w = words(l.value);
+    if (w.length) return w;
+  }
   const idLike = l.by === "testid" || l.by === "id" || l.by === "name";
   // Repeated names (6x "Add to cart") and data text ("$29.99") make bad member names:
   // the test id / id carries the identity there.
@@ -148,8 +157,11 @@ function memberBase(n: SnapNode, l: Locator): string[] {
 
 /** Controls named by data (account numbers, result rows) change every run. */
 function isDataNamed(n: SnapNode, l: Locator): boolean {
-  // test ids that embed a record id (product-01M5GHZ87...) are per-record too
-  if ((l.by === "testid" || l.by === "id") && /[A-Za-z0-9]{16,}/.test(l.value) && /\d/.test(l.value)) return true;
+  // test ids that embed a record id (product-01M5GHZ87...) are per-record too, as scopes as well
+  const recordLike = (v: string) => /[A-Za-z0-9]{16,}/.test(v) && /\d/.test(v);
+  if ((l.by === "testid" || l.by === "id") && recordLike(l.value)) return true;
+  if (l.by === "css" && /href\*?=/.test(l.value) && recordLike(l.value)) return true; // a[href*="/product/01M5..."]
+  if ((l.scopeBy === "testid" || l.scopeBy === "id") && l.scopeValue && recordLike(l.scopeValue)) return true;
   if (l.by === "testid" || l.by === "id" || l.by === "name") return false;
   if (!n.name) return false;
   if (!/[a-z]{2}/i.test(n.name)) return true; // "13677", "2"
@@ -181,7 +193,7 @@ export function buildPom(sessionDir: string): Omit<PomResult, "files"> {
 
   for (const f of files) {
     const snap = parseSnapshot(fs.readFileSync(path.join(sessionDir, f), "utf8"), f);
-    const up = urlPathOf(snap.url);
+    const up = routeOf(snap.url);
     const entry = byPage.get(up) || { title: snap.title, steps: [] as number[], raws: new Map<string, Raw>() };
     entry.steps.push(snap.step);
     walk(snap.roots, (n) => {
@@ -189,7 +201,7 @@ export function buildPom(sessionDir: string): Omit<PomResult, "files"> {
       const l = bestLocator(n);
       if (!l || isDataNamed(n, l) || isRepeatedStructural(n, l)) return;
       if (l.by === "testid" && l.attr && l.attr !== "data-testid") testIdAttribute = l.attr;
-      const key = l.by + "|" + l.value + "|" + (l.name || "");
+      const key = l.by + "|" + l.value + "|" + (l.name || "") + (l.scopeBy ? "|in:" + l.scopeBy + "=" + l.scopeValue + "|" + (l.scopeText || "") : "") + (l.frame ? "|frame:" + l.frame : "");
       if (!entry.raws.has(key)) entry.raws.set(key, { node: n, loc: l, key });
       const set = pagesPerKey.get(key) || new Set<string>();
       set.add(up);
@@ -228,7 +240,7 @@ export function buildPom(sessionDir: string): Omit<PomResult, "files"> {
         name: r.node.name,
         locator: r.loc,
         code: locatorCode(r.loc),
-        fragile: r.loc.by === "xpath" || (r.loc.by === "css" && /nth-child/.test(r.loc.value)),
+        fragile: r.loc.by === "xpath" || (r.loc.by === "css" && /nth-child/.test(r.loc.value)) || (r.loc.scopeBy === "css"),
       });
     }
     return out;
@@ -301,7 +313,7 @@ export function renderPom(p: Omit<PomResult, "files">, sessionDir: string): Map<
       ...(pg.urlPath.includes(":id")
         ? [
             "  async goto(id: string): Promise<void> {",
-            "    await this.page.goto(" + pg.className + ".path.replace(':id', encodeURIComponent(id)));",
+            "    await this.page.goto(" + pg.className + ".path.replace(/:id/g, encodeURIComponent(id)));",
             "  }",
           ]
         : [

@@ -7,7 +7,7 @@ export class ProductPage extends BasePage {
   static readonly path = '/product/:id';
 
   async goto(id: string): Promise<void> {
-    await this.page.goto(ProductPage.path.replace(':id', encodeURIComponent(id)));
+    await this.page.goto(ProductPage.path.replace(/:id/g, encodeURIComponent(id)));
   }
 
   /** link "Andrew George" */
@@ -61,12 +61,12 @@ export class ProductPage extends BasePage {
   }
 
   /** button "Add to favourites" */
-  get addToFavouritesButton(): Locator {
+  get addToFavoritesButton(): Locator {
     return this.page.getByTestId('add-to-favorites');
   }
 
   /** button "Compare" */
-  get compareButton(): Locator {
+  get addToCompareButton(): Locator {
     return this.page.getByTestId('add-to-compare');
   }
 
@@ -80,38 +80,118 @@ export class ProductPage extends BasePage {
     return this.page.getByTestId('product-specs');
   }
 
-  /** link "Claw Hammer with Shock Reduction Grip More information" */
-  get link(): Locator {
-    return this.page.locator('a[href*="/product/01M5GND76DX63X0V1S632TWZFC"]');
+  /** cell "Handle Material" */
+  get specName(): Locator {
+    return this.page.getByTestId('spec-row').filter({ hasText: 'Rubber' }).getByTestId('spec-name');
   }
 
-  /** link "Hammer More information" */
-  get hammerMoreInformationLink(): Locator {
-    return this.page.locator('a[href*="/product/01M5GND76N9P1WQ5T8HJVJ5N3F"]');
+  /** cell "Rubber" */
+  get specValue(): Locator {
+    return this.page.getByTestId('spec-row').filter({ hasText: 'Rubber' }).getByTestId('spec-value');
   }
 
-  /** link "Thor Hammer More information" */
-  get thorHammerMoreInformationLink(): Locator {
-    return this.page.locator('a[href*="/product/01M5GND773BS12QCXFZNCMJA07"]');
+  /** generic "Rubber" */
+  get specValueText(): Locator {
+    return this.page.getByTestId('spec-value').filter({ hasText: 'Rubber' }).getByTestId('spec-value-text');
   }
 
-  /** link "Sledgehammer More information" */
-  get sledgehammerMoreInformationLink(): Locator {
-    return this.page.locator('a[href*="/product/01M5GND77768V5FAP7XFFEBM79"]');
+  /** cell "Head Weight" */
+  get specName2(): Locator {
+    return this.page.getByTestId('spec-row').filter({ hasText: 'Head Weight' }).getByTestId('spec-name');
   }
 
-  /** link "Claw Hammer with Fiberglass Handle More information" */
-  get link2(): Locator {
-    return this.page.locator('a[href*="/product/01M5GND77A1MZV5GJHM225X0Q5"]');
+  /** cell "400g" */
+  get specValue2(): Locator {
+    return this.page.getByTestId('spec-row').filter({ hasText: 'Head Weight' }).getByTestId('spec-value');
   }
 
-  /** link "Court Hammer More information" */
-  get courtHammerMoreInformationLink(): Locator {
-    return this.page.locator('a[href*="/product/01M5GND77C8TVM5Q0SM5PNNXTM"]');
+  /** generic "400" */
+  get specValueText2(): Locator {
+    return this.page.getByTestId('spec-value').filter({ hasText: '400' }).getByTestId('spec-value-text');
+  }
+
+  /** generic "g" */
+  get specUnit(): Locator {
+    return this.page.getByTestId('spec-value').filter({ hasText: '400' }).getByTestId('spec-unit');
+  }
+
+  /** cell "Length" */
+  get specName3(): Locator {
+    return this.page.getByTestId('spec-row').filter({ hasText: 'Length' }).getByTestId('spec-name');
+  }
+
+  /** cell "320mm" */
+  get specValue3(): Locator {
+    return this.page.getByTestId('spec-row').filter({ hasText: 'Length' }).getByTestId('spec-value');
+  }
+
+  /** generic "320" */
+  get specValueText3(): Locator {
+    return this.page.getByTestId('spec-value').filter({ hasText: '320' }).getByTestId('spec-value-text');
+  }
+
+  /** generic "mm" */
+  get specUnit2(): Locator {
+    return this.page.getByTestId('spec-value').filter({ hasText: '320' }).getByTestId('spec-unit');
+  }
+
+  /** cell "Material" */
+  get specName4(): Locator {
+    return this.page.getByTestId('spec-row').filter({ hasText: 'Carbon Steel' }).getByTestId('spec-name');
+  }
+
+  /** cell "Carbon Steel" */
+  get specValue4(): Locator {
+    return this.page.getByTestId('spec-row').filter({ hasText: 'Carbon Steel' }).getByTestId('spec-value');
+  }
+
+  /** generic "Carbon Steel" */
+  get specValueText4(): Locator {
+    return this.page.getByTestId('spec-value').filter({ hasText: 'Carbon Steel' }).getByTestId('spec-value-text');
+  }
+
+  /** cell "Warranty" */
+  get specName5(): Locator {
+    return this.page.getByTestId('spec-row').filter({ hasText: 'years' }).getByTestId('spec-name');
+  }
+
+  /** cell "3years" */
+  get specValue5(): Locator {
+    return this.page.getByTestId('spec-row').filter({ hasText: 'years' }).getByTestId('spec-value');
+  }
+
+  /** generic "3" */
+  get specValueText5(): Locator {
+    return this.page.getByTestId('spec-value').filter({ hasText: 'years' }).getByTestId('spec-value-text');
+  }
+
+  /** generic "years" */
+  get specUnit3(): Locator {
+    return this.page.getByTestId('spec-value').filter({ hasText: 'years' }).getByTestId('spec-unit');
+  }
+
+  /** cell "Weight" */
+  get specName6(): Locator {
+    return this.page.getByTestId('spec-row').filter({ hasText: '500g' }).getByTestId('spec-name');
+  }
+
+  /** cell "500g" */
+  get specValue6(): Locator {
+    return this.page.getByTestId('spec-row').filter({ hasText: '500g' }).getByTestId('spec-value');
+  }
+
+  /** generic "500" */
+  get specValueText6(): Locator {
+    return this.page.getByTestId('spec-value').filter({ hasText: '500' }).getByTestId('spec-value-text');
+  }
+
+  /** generic "g" */
+  get specUnit4(): Locator {
+    return this.page.getByTestId('spec-value').filter({ hasText: '500' }).getByTestId('spec-unit');
   }
 
   /** link "Unsplash" */
   get unsplashLink3(): Locator {
-    return this.page.locator('a[href*="https://unsplash.com/photos/t5YUoHW6zRo"]');
+    return this.page.getByRole('contentinfo').getByRole('link', { name: 'Unsplash', exact: true });
   }
 }

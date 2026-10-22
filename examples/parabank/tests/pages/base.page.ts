@@ -5,6 +5,26 @@ import type { Locator, Page } from '@playwright/test';
 export class BasePage {
   constructor(readonly page: Page) {}
 
+  /** link "About Us" */
+  get aboutUsLink(): Locator {
+    return this.page.getByRole('list').filter({ hasText: 'Admin Page' }).getByRole('link', { name: 'About Us', exact: true });
+  }
+
+  /** link "Services" */
+  get servicesLink(): Locator {
+    return this.page.getByRole('list').filter({ hasText: 'Admin Page' }).getByRole('link', { name: 'Services', exact: true });
+  }
+
+  /** link "Products" */
+  get productsLink(): Locator {
+    return this.page.getByRole('list').filter({ hasText: 'Admin Page' }).getByRole('link', { name: 'Products', exact: true });
+  }
+
+  /** link "Locations" */
+  get locationsLink(): Locator {
+    return this.page.getByRole('list').filter({ hasText: 'Admin Page' }).getByRole('link', { name: 'Locations', exact: true });
+  }
+
   /** link "Admin Page" */
   get adminPageLink(): Locator {
     return this.page.getByRole('link', { name: 'Admin Page', exact: true });
@@ -28,6 +48,26 @@ export class BasePage {
   /** link "Home" */
   get homeLink2(): Locator {
     return this.page.getByRole('link', { name: 'Home', exact: true });
+  }
+
+  /** link "About Us" */
+  get aboutUsLink2(): Locator {
+    return this.page.getByRole('list').filter({ hasText: 'Site Map' }).getByRole('link', { name: 'About Us', exact: true });
+  }
+
+  /** link "Services" */
+  get servicesLink2(): Locator {
+    return this.page.getByRole('list').filter({ hasText: 'Site Map' }).getByRole('link', { name: 'Services', exact: true });
+  }
+
+  /** link "Products" */
+  get productsLink2(): Locator {
+    return this.page.getByRole('list').filter({ hasText: 'Site Map' }).getByRole('link', { name: 'Products', exact: true });
+  }
+
+  /** link "Locations" */
+  get locationsLink2(): Locator {
+    return this.page.getByRole('list').filter({ hasText: 'Site Map' }).getByRole('link', { name: 'Locations', exact: true });
   }
 
   /** link "Site Map" */

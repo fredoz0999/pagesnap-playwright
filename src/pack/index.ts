@@ -4,8 +4,8 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { chunkSnapshot, dedupeChunks, findChrome, type Chunk, type ChunkOptions, type PageEntry } from "./chunk.js";
-import { compactNodes } from "./compact.js";
+import { chromeKey, chunkSnapshot, dedupeChunks, findChrome, type Chunk, type ChunkOptions, type PageEntry } from "./chunk.js";
+import { compactNodes, renderNodes } from "./compact.js";
 import { LEGEND } from "./compact.js";
 import { cosine, expand, makeEmbedder, tokenize } from "./embed.js";
 import { estimateTokens, parseSnapshot } from "./parse.js";
@@ -47,17 +47,18 @@ export async function buildIndex(sessionDir: string, opts: BuildOptions = {}): P
   const pages: PageEntry[] = [];
   let all: Chunk[] = [];
   const snaps = files.map((f) => parseSnapshot(fs.readFileSync(path.join(sessionDir, f), "utf8"), f));
-  const chrome = opts.chrome ?? findChrome(snaps.map((s) => compactNodes(s.roots, opts)));
-  const chromeTexts = new Set<string>();
+  const pathOfUrl = (u: string) => { try { return new URL(u).pathname.replace(/;jsessionid=[^/]*/i, ""); } catch { return u; } };
+  const chrome = opts.chrome ?? findChrome(snaps.map((s) => compactNodes(s.roots, opts)), snaps.map((s) => pathOfUrl(s.url)));
+  const chromeBlocks = new Map<string, string>(); // chromeKey -> rendered block, once
   for (const snap of snaps) {
-    const { chunks, page, compact, chromeText } = chunkSnapshot(snap, { ...opts, chrome });
+    const { chunks, page, compact } = chunkSnapshot(snap, { ...opts, chrome });
     fs.writeFileSync(path.join(leanDir, snap.file.replace(/\.ya?ml$/i, ".txt")), compact, "utf8");
-    if (chromeText) chromeTexts.add(chromeText);
+    for (const n of compactNodes(snap.roots, opts)) if (chrome.has(chromeKey(n))) chromeBlocks.set(chromeKey(n), renderNodes([n]).join("\n"));
     pages.push(page);
     all = all.concat(chunks);
   }
   const chromePath = path.join(leanDir, "CHROME.txt");
-  if (chromeTexts.size) fs.writeFileSync(chromePath, "# Site chrome shared by most pages\n" + [...chromeTexts].join("\n") + "\n", "utf8");
+  if (chromeBlocks.size) fs.writeFileSync(chromePath, "# Site chrome shared by most pages\n" + [...chromeBlocks.values()].join("\n") + "\n", "utf8");
   else fs.rmSync(chromePath, { force: true });
   const chunks = dedupeChunks(all);
   const embedder = makeEmbedder(opts.embedder);

@@ -36,12 +36,12 @@ export class BasePage {
   }
 
   /** link "Home" */
-  get homeLink(): Locator {
+  get navHomeLink(): Locator {
     return this.page.getByTestId('nav-home');
   }
 
   /** button "Categories" */
-  get categoriesButton(): Locator {
+  get navCategoriesButton(): Locator {
     return this.page.getByTestId('nav-categories');
   }
 
@@ -51,7 +51,7 @@ export class BasePage {
   }
 
   /** link "Contact" */
-  get contactLink(): Locator {
+  get navContactLink(): Locator {
     return this.page.getByTestId('nav-contact');
   }
 
@@ -61,12 +61,12 @@ export class BasePage {
   }
 
   /** link "Sign in" */
-  get signInLink(): Locator {
+  get navSignInLink(): Locator {
     return this.page.getByTestId('nav-sign-in');
   }
 
   /** button "Select language" */
-  get selectLanguageButton(): Locator {
+  get languageSelectButton(): Locator {
     return this.page.getByTestId('language-select');
   }
 
@@ -76,7 +76,7 @@ export class BasePage {
   }
 
   /** link "Explore courses" */
-  get exploreCoursesLink(): Locator {
+  get coursePromoLink(): Locator {
     return this.page.getByTestId('course-promo-link');
   }
 
@@ -116,17 +116,17 @@ export class BasePage {
   }
 
   /** button "Open chat" */
-  get openChatButton(): Locator {
+  get chatToggleButton(): Locator {
     return this.page.getByTestId('chat-toggle');
   }
 
   /** button "Show live shop activity" */
-  get showLiveShopActivityButton(): Locator {
+  get liveActivityToggleButton(): Locator {
     return this.page.getByTestId('live-activity-toggle');
   }
 
   /** link "cart" */
-  get cartLink(): Locator {
+  get navCartLink(): Locator {
     return this.page.getByTestId('nav-cart');
   }
 

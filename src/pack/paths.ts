@@ -16,7 +16,10 @@ export function resolveSession(arg: string): string {
   const roots = [...new Set([userPath("pageSnapshots"), path.resolve("pageSnapshots")])];
   for (const root of roots) {
     if (!fs.existsSync(root)) continue;
-    const dirs = fs.readdirSync(root).filter((d) => d.startsWith("session-") && fs.statSync(path.join(root, d)).isDirectory()).sort();
+    // newest by folder mtime: named sessions (session-<name>-<ts>) would sort by name lexically
+    const dirs = fs.readdirSync(root)
+      .filter((d) => d.startsWith("session-") && fs.statSync(path.join(root, d)).isDirectory())
+      .sort((a, b) => fs.statSync(path.join(root, a)).mtimeMs - fs.statSync(path.join(root, b)).mtimeMs);
     if (dirs.length) return path.join(root, dirs[dirs.length - 1]);
   }
   throw new Error("No pageSnapshots/session-* folder found in " + roots.join(" or "));

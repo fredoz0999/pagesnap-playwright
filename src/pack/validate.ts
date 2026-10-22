@@ -25,6 +25,8 @@ export interface Inventory {
   roleNames: { role: string; name: string; level?: number }[];
   labels: string[];
   placeholders: Map<string, number>;
+  alts: Map<string, number>;
+  titles: Map<string, number>;
   css: Set<string>;
   xpath: Set<string>;
   text: string[];
@@ -48,6 +50,11 @@ export interface SidecarLocator {
   locName?: string;
   attr?: string;
   score?: number;
+  scopeBy?: string;
+  scopeValue?: string;
+  scopeName?: string;
+  scopeAttr?: string;
+  scopeText?: string;
 }
 
 /** Read NN_<host>.locators.json (all verified locators) when the capture wrote one. */
@@ -68,6 +75,9 @@ function addLocator(inv: Inventory, l: { by: string; value: string; attr?: strin
   else if (l.by === "name") inc(inv.names, l.value);
   else if (l.by === "label") inv.labels.push(l.value);
   else if (l.by === "placeholder") inc(inv.placeholders, l.value);
+  else if (l.by === "alt") inc(inv.alts, l.value);
+  else if (l.by === "title") inc(inv.titles, l.value);
+  else if (l.by === "text") inv.text.push(l.value);
   else if (l.by === "css") inv.css.add(l.value);
   else if (l.by === "xpath") inv.xpath.add(l.value);
 }
@@ -75,7 +85,7 @@ function addLocator(inv: Inventory, l: { by: string; value: string; attr?: strin
 export function inventoryOf(snap: Snapshot, sidecar?: SidecarLocator[] | null): Inventory {
   const inv: Inventory = {
     step: snap.step, testids: new Map(), ids: new Map(), names: new Map(), roleNames: [], labels: [],
-    placeholders: new Map(), css: new Set(), xpath: new Set(), text: [], testIdAttrs: new Set(),
+    placeholders: new Map(), alts: new Map(), titles: new Map(), css: new Set(), xpath: new Set(), text: [], testIdAttrs: new Set(),
     fieldNames: [], lean: true,
   };
   walk(snap.roots, (n) => {
@@ -109,17 +119,45 @@ interface Call {
   dynamic: boolean;
   /** followed by .first() / .last() / .nth() */
   narrowed: boolean;
+  /** called on another locator (container.getByRole(...)) */
+  scoped: boolean;
 }
 
 const STR = String.raw`(['"\`])((?:\\.|(?!\1).)*)\1`;
 const PATTERNS: { kind: string; re: RegExp }[] = [
-  { kind: "testid", re: new RegExp(String.raw`getByTestId\(\s*` + STR + String.raw`\s*\)`, "g") },
-  { kind: "role", re: new RegExp(String.raw`getByRole\(\s*` + STR + String.raw`\s*(?:,\s*(\{[^)]*\}))?\s*\)`, "g") },
+  { kind: "testid", re: new RegExp(String.raw`getByTestId\(\s*` + STR, "g") },
+  { kind: "role", re: new RegExp(String.raw`getByRole\(\s*` + STR, "g") },
   { kind: "label", re: new RegExp(String.raw`getByLabel\(\s*` + STR, "g") },
   { kind: "placeholder", re: new RegExp(String.raw`getByPlaceholder\(\s*` + STR, "g") },
+  { kind: "alt", re: new RegExp(String.raw`getByAltText\(\s*` + STR, "g") },
+  { kind: "title", re: new RegExp(String.raw`getByTitle\(\s*` + STR, "g") },
   { kind: "text", re: new RegExp(String.raw`getByText\(\s*` + STR, "g") },
   { kind: "locator", re: new RegExp(String.raw`\.locator\(\s*` + STR, "g") },
 ];
+
+/** Index just past the ')' that closes the call opened at `open` (quotes and nesting aware). */
+function closeParen(src: string, open: number): number {
+  let depth = 0;
+  let quote = "";
+  for (let i = open; i < src.length; i++) {
+    const ch = src[i];
+    if (quote) {
+      if (ch === "\\") i++;
+      else if (ch === quote) quote = "";
+      continue;
+    }
+    if (ch === "'" || ch === '"' || ch === "`") quote = ch;
+    else if (ch === "(") depth++;
+    else if (ch === ")" && --depth === 0) return i + 1;
+  }
+  return src.length;
+}
+
+/** The receiver chain before a call: `page.getByTestId('card').filter({ hasText: 'x' })` for a scoped lookup. */
+function receiverOf(src: string, at: number): string {
+  const lineStart = src.lastIndexOf("\n", at) + 1;
+  return src.slice(lineStart, at).replace(/\s+$/, "");
+}
 
 export function extractCalls(src: string): Call[] {
   const calls: Call[] = [];
@@ -129,18 +167,28 @@ export function extractCalls(src: string): Call[] {
     let m: RegExpExecArray | null;
     while ((m = re.exec(src))) {
       const arg = m[2].replace(/\\(.)/g, "$1");
+      const open = m.index + m[0].indexOf("(");
+      const end = closeParen(src, open);
+      const call = src.slice(m.index, end).replace(/\s+/g, " ");
+      const rest = src.slice(m.index + m[0].length, end - 1);
+      const opts = /^\s*,\s*(\{[\s\S]*\})\s*$/.exec(rest)?.[1] ?? "";
+      const receiver = receiverOf(src, m.index);
       calls.push({
-        line: lineAt(m.index), call: m[0].replace(/\s+/g, " "), kind, arg, opts: m[3] || "",
+        line: lineAt(m.index), call, kind, arg, opts,
         dynamic: m[1] === "`" && arg.includes("${"),
-        narrowed: /^\s*\.(first|last|nth|filter|all|allInnerTexts|allTextContents|count)\(/.test(src.slice(m.index + m[0].length, m.index + m[0].length + 40)),
+        narrowed: /^\s*\.(first|last|nth|filter|all|allInnerTexts|allTextContents|count)\(/.test(src.slice(end, end + 40)),
+        // a lookup inside another locator is already narrowed to that container
+        scoped: /\.(getBy\w+|locator|filter|frameLocator|nth|first|last)\([^\n]*\)\s*\.?$/.test(receiver),
       });
     }
   }
   return calls.sort((a, b) => a.line - b.line);
 }
 
-function roleName(opts: string): { name?: string; regex?: RegExp; exact: boolean } {
+function roleName(opts: string): { name?: string; regex?: RegExp; exact: boolean; dynamic?: boolean } {
   const exact = /exact\s*:\s*true/.test(opts);
+  // name: String(x) / name: variable / template with ${}: only checkable at runtime
+  if (/name\s*:\s*[^\s'"`\/]/.test(opts) || /name\s*:\s*`[^`]*\$\{/.test(opts)) return { exact, dynamic: true };
   const s = /name\s*:\s*(['"`])((?:\\.|(?!\1).)*)\1/.exec(opts);
   if (s) return { name: s[2].replace(/\\(.)/g, "$1"), exact };
   const r = /name\s*:\s*\/((?:\\.|[^/])+)\/([a-z]*)/.exec(opts);
@@ -171,6 +219,7 @@ function check(call: Call, invs: Inventory[]): Finding {
     const unique = counts.filter((x) => x.n === 1).map((x) => x.step);
     if (unique.length) return f("ok", "steps " + unique.join(","));
     if (call.narrowed) return f("ok", "steps " + counts.map((x) => x.step).join(",") + " (" + counts[0].n + " matches, narrowed by .first/.last/.nth/.filter)");
+    if (call.scoped) return f("ok", "steps " + counts.map((x) => x.step).join(",") + " (" + counts[0].n + " matches on the page, scoped to a container)");
     return f("ambiguous", counts.map((x) => "step " + x.step + ": " + x.n + " matches").join("; ") + " - scope it to a container or use a more specific locator");
   };
   switch (call.kind) {
@@ -178,6 +227,7 @@ function check(call: Call, invs: Inventory[]): Finding {
       return steps((i) => i.testids.get(call.arg) || 0) || f("missing", "no testid '" + call.arg + "' in any snapshot");
     case "role": {
       const want = roleName(call.opts);
+      if (want.dynamic) return f("unverified", "role name comes from a variable - checked at runtime only");
       const lvl = /level\s*:\s*(\d)/.exec(call.opts);
       const levelOk = (r: { level?: number }) => !lvl || r.level === Number(lvl[1]);
       if (!want.name && !want.regex) {
@@ -197,6 +247,12 @@ function check(call: Call, invs: Inventory[]): Finding {
       return steps((i) => i.placeholders.get(call.arg) || 0)
         || steps((i) => i.fieldNames.filter((n) => n === call.arg).length)
         || notKept("placeholder '" + call.arg + "'");
+    case "alt":
+      return steps((i) => i.alts.get(call.arg) || 0)
+        || steps((i) => i.roleNames.filter((r) => r.role === "img" && r.name === call.arg).length)
+        || f("missing", "no image with alt '" + call.arg + "'");
+    case "title":
+      return steps((i) => i.titles.get(call.arg) || 0) || notKept("title '" + call.arg + "'");
     case "text": {
       const hit = invs.filter((i) => i.text.some((t) => t.toLowerCase().includes(call.arg.toLowerCase()))).map((i) => i.step);
       return hit.length ? f("ok", "text seen in steps " + hit.join(",")) : f("missing", "text '" + call.arg + "' not in any snapshot (may be dynamic)");

@@ -39,6 +39,13 @@ export interface AltLocator {
   name: string;
   locName?: string;
   attr?: string;
+  scopeBy?: string;
+  scopeValue?: string;
+  scopeName?: string;
+  scopeAttr?: string;
+  scopeText?: string;
+  /** iframe path the element lives in */
+  frame?: string;
 }
 
 /** Sidecar next to NN_<host>.yaml listing all verified locators (YAML shows only the best). */

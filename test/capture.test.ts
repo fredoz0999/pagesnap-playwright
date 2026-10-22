@@ -350,24 +350,16 @@ describe("locator scores", () => {
     return new Function(helpers + "; return { SCORE, locatorScore, stampScore };")();
   }
 
-  it("SCORE map matches LocatorLabs-style PageSnap by values", async () => {
+  it("SCORE map follows Playwright's own generator order (user-facing first, structure last)", async () => {
     const { SCORE, locatorScore, stampScore } = await loadScoreHelpers();
-    expect(SCORE).toEqual({
-      testid: 98,
-      role: 95,
-      label: 90,
-      id: 90,
-      name: 88,
-      placeholder: 85,
-      linkText: 75,
-      css: 60,
-      xpath: 40,
-    });
+    const order = Object.entries(SCORE).sort((a, b) => (b[1] as number) - (a[1] as number)).map(([k]) => k);
+    expect(order).toEqual(["testid", "role", "placeholder", "label", "alt", "text", "title", "id", "name", "linkText", "css", "xpath"]);
     expect(locatorScore("testid")).toBe(98);
     expect(locatorScore("role")).toBe(95);
     expect(locatorScore("css")).toBe(60);
     expect(locatorScore("xpath")).toBe(40);
-    expect(stampScore({ by: "id" }).score).toBe(90);
+    expect(stampScore({ by: "id" }).score).toBe(80);
+    expect(locatorScore("testid", 3)).toBe(40); // non-unique is capped
   });
 
   it("caps score at 40 when matches is present without raising xpath", async () => {
@@ -515,8 +507,8 @@ describe("capture-tree locator ranking", () => {
   it("picks locators sorted by score descending then stability then byRank", async () => {
     const src = await readFile(treeJs, "utf8");
     const body = src.slice(src.indexOf("const buildLocators"), src.indexOf("const readValue"));
-    expect(body).toContain("b.score - a.score");
-    expect(body).toContain("testid: 0, role: 1, label: 2, id: 3, name: 4");
+    expect(body).toContain("(b.score - scopePenalty(b)) - (a.score - scopePenalty(a))");
+    expect(body).toContain("testid: 0, role: 1, placeholder: 2, label: 3, alt: 4, text: 5, title: 6, id: 7, name: 8");
   });
 });
 

@@ -23,6 +23,7 @@ import { writePom } from "./pom.js";
 import { verifySession } from "./verify.js";
 
 export const PROTOCOL_VERSION = "2025-06-18";
+const SUPPORTED_VERSIONS = new Set(["2024-11-05", "2025-03-26", "2025-06-18"]);
 
 type Args = Record<string, unknown>;
 interface Tool {
@@ -138,12 +139,13 @@ export const TOOLS: Tool[] = [
 interface Req { jsonrpc: "2.0"; id?: number | string | null; method: string; params?: Record<string, unknown> }
 
 export async function handle(req: Req): Promise<object | null> {
-  const reply = (result: object) => ({ jsonrpc: "2.0", id: req.id ?? null, result });
-  const fail = (code: number, message: string) => ({ jsonrpc: "2.0", id: req.id ?? null, error: { code, message } });
+  const isNotification = req.id === undefined;
+  const reply = (result: object) => (isNotification ? null : { jsonrpc: "2.0", id: req.id, result });
+  const fail = (code: number, message: string) => (isNotification ? null : { jsonrpc: "2.0", id: req.id, error: { code, message } });
   switch (req.method) {
     case "initialize":
       return reply({
-        protocolVersion: typeof req.params?.protocolVersion === "string" ? req.params.protocolVersion : PROTOCOL_VERSION,
+        protocolVersion: SUPPORTED_VERSIONS.has(String(req.params?.protocolVersion)) ? String(req.params?.protocolVersion) : PROTOCOL_VERSION,
         capabilities: { tools: {} },
         serverInfo: { name: "pagesnap", version: "1.1.0" },
         instructions: "PageSnap lean pack. Call pagesnap_overview first, pagesnap_pom for page objects, pagesnap_query per step, pagesnap_validate before running a spec.",
@@ -164,8 +166,7 @@ export async function handle(req: Req): Promise<object | null> {
       }
     }
     default:
-      if (req.id === undefined) return null; // notification (e.g. notifications/initialized)
-      return fail(-32601, "Method not found: " + req.method);
+      return fail(-32601, "Method not found: " + req.method); // null for notifications
   }
 }
 
@@ -181,8 +182,16 @@ export function serve(input: NodeJS.ReadableStream = process.stdin, output: Node
       output.write(JSON.stringify({ jsonrpc: "2.0", id: null, error: { code: -32700, message: "Parse error" } }) + "\n");
       return;
     }
-    const res = await handle(req);
-    if (res) output.write(JSON.stringify(res) + "\n");
+    if (!req || typeof req !== "object" || Array.isArray(req) || typeof req.method !== "string") {
+      output.write(JSON.stringify({ jsonrpc: "2.0", id: (req && typeof req === "object" && "id" in req ? (req as Req).id : null) ?? null, error: { code: -32600, message: "Invalid Request" } }) + "\n");
+      return;
+    }
+    try {
+      const res = await handle(req);
+      if (res) output.write(JSON.stringify(res) + "\n");
+    } catch (e) {
+      if (req.id !== undefined) output.write(JSON.stringify({ jsonrpc: "2.0", id: req.id, error: { code: -32603, message: e instanceof Error ? e.message : String(e) } }) + "\n");
+    }
   });
 }
 

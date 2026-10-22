@@ -3,11 +3,19 @@
 Use these members in specs instead of raw selectors. `import { LoginPage } from './pages';`
 
 ## BasePage (on half or more of the pages; every page class extends it)
+- aboutUsLink = link "About Us"
+- servicesLink = link "Services"
+- productsLink = link "Products"
+- locationsLink = link "Locations"
 - adminPageLink = link "Admin Page"
 - homeLink = link "home"
 - aboutLink = link "about"
 - contactLink = link "contact"
 - homeLink2 = link "Home"
+- aboutUsLink2 = link "About Us"
+- servicesLink2 = link "Services"
+- productsLink2 = link "Products"
+- locationsLink2 = link "Locations"
 - siteMapLink = link "Site Map"
 - contactUsLink = link "Contact Us"
 - wwwParasoftComLink = link "www.parasoft.com"
@@ -21,8 +29,8 @@ Use these members in specs instead of raw selectors. `import { LoginPage } from 
 - logOutLink = link "Log Out"
 
 ## RegisterPage /parabank/register.htm (steps 1,2)
-- link = link (fragile)
-- link2 = link (fragile)
+- link = link
+- link2 = link
 - usernameInput = textbox "username"
 - passwordInput = textbox "password"
 - logInButton = button "Log In"
@@ -55,7 +63,6 @@ Use these members in specs instead of raw selectors. `import { LoginPage } from 
 - transferButton = button "Transfer"
 
 ## BillpayPage /parabank/billpay.htm (steps 8,9)
-- aboutUsLink = link "About Us" (fragile)
 - payeeNameInput = textbox "payee.name"
 - payeeAddressStreetInput = textbox "payee.address.street"
 - payeeAddressCityInput = textbox "payee.address.city"
@@ -88,9 +95,11 @@ Use these members in specs instead of raw selectors. `import { LoginPage } from 
 - forgotLoginInfoLink = link "Forgot login info?"
 - registerLink = link "Register"
 - withdrawFundsLink = link "Withdraw Funds"
+- transferFundsLink2 = link "Transfer Funds"
 - checkBalancesLink = link "Check Balances"
 - makeDepositsLink = link "Make Deposits"
 - accountHistoryLink = link "Account History"
+- transferFundsLink3 = link "Transfer Funds"
 - paraBankIsNowReOpenedLink = link "ParaBank Is Now Re-Opened"
 - newOnlineBillPayLink = link "New! Online Bill Pay"
 - newOnlineAccountTransfersLink = link "New! Online Account Transfers"

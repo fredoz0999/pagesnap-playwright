@@ -1,7 +1,7 @@
 # URL: https://www.saucedemo.com/inventory.html
 # Title: Swag Labs
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:02:27Z
+# Captured: 2026-10-22T02:50:33Z
 # Trigger: manual
 # Step: 3
 # Note: action: add Backpack and Bike Light to cart | assert: cart badge shows 2
@@ -55,19 +55,19 @@
             - {by: testid, value: "inventory-item-sauce-labs-backpack-img", attr: data-test, stability: high, score: 98}
       - generic:
         locators:
-          - {by: css, value: "#contents_wrapper > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)", stability: low, score: 60}
+          - {by: testid, value: "inventory-item-description", attr: data-test, scopeBy: testid, scopeValue: "inventory-item", scopeAttr: data-test, scopeText: "Sauce Labs Backpack", stability: high, score: 98}
         - link "Sauce Labs Backpack":
           locators:
             - {by: testid, value: "item-4-title-link", attr: data-test, stability: high, score: 98}
           - generic "Sauce Labs Backpack":
             locators:
-              - {by: css, value: "#item_4_title_link > div:nth-child(1)", stability: low, score: 60}
+              - {by: testid, value: "inventory-item-name", attr: data-test, scopeBy: testid, scopeValue: "item-4-title-link", scopeAttr: data-test, stability: high, score: 98}
         - generic:
           locators:
-            - {by: css, value: "div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)", stability: low, score: 60}
+            - {by: testid, value: "inventory-item-desc", attr: data-test, scopeBy: testid, scopeValue: "inventory-item-description", scopeAttr: data-test, scopeText: "Sauce Labs Backpack", stability: high, score: 98}
         - generic "$29.99":
           locators:
-            - {by: css, value: "div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)", stability: low, score: 60}
+            - {by: testid, value: "inventory-item-price", attr: data-test, scopeBy: testid, scopeValue: "inventory-item-description", scopeAttr: data-test, scopeText: "Sauce Labs Backpack", stability: high, score: 98}
         - button "Remove" [dup 1/2]:
           locators:
             - {by: testid, value: "remove-sauce-labs-backpack", attr: data-test, stability: high, score: 98}
@@ -82,19 +82,19 @@
             - {by: testid, value: "inventory-item-sauce-labs-bike-light-img", attr: data-test, stability: high, score: 98}
       - generic:
         locators:
-          - {by: css, value: "#contents_wrapper > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)", stability: low, score: 60}
+          - {by: testid, value: "inventory-item-description", attr: data-test, scopeBy: testid, scopeValue: "inventory-item", scopeAttr: data-test, scopeText: "Sauce Labs Bike Light", stability: high, score: 98}
         - link "Sauce Labs Bike Light":
           locators:
             - {by: testid, value: "item-0-title-link", attr: data-test, stability: high, score: 98}
           - generic "Sauce Labs Bike Light":
             locators:
-              - {by: css, value: "#item_0_title_link > div:nth-child(1)", stability: low, score: 60}
+              - {by: testid, value: "inventory-item-name", attr: data-test, scopeBy: testid, scopeValue: "item-0-title-link", scopeAttr: data-test, stability: high, score: 98}
         - generic:
           locators:
-            - {by: css, value: "div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)", stability: low, score: 60}
+            - {by: testid, value: "inventory-item-desc", attr: data-test, scopeBy: testid, scopeValue: "inventory-item-description", scopeAttr: data-test, scopeText: "Sauce Labs Bike Light", stability: high, score: 98}
         - generic "$9.99":
           locators:
-            - {by: css, value: "div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)", stability: low, score: 60}
+            - {by: testid, value: "inventory-item-price", attr: data-test, scopeBy: testid, scopeValue: "inventory-item-description", scopeAttr: data-test, scopeText: "Sauce Labs Bike Light", stability: high, score: 98}
         - button "Remove" [dup 2/2]:
           locators:
             - {by: testid, value: "remove-sauce-labs-bike-light", attr: data-test, stability: high, score: 98}
@@ -109,19 +109,19 @@
             - {by: testid, value: "inventory-item-sauce-labs-bolt-t-shirt-img", attr: data-test, stability: high, score: 98}
       - generic:
         locators:
-          - {by: css, value: "#contents_wrapper > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2)", stability: low, score: 60}
+          - {by: testid, value: "inventory-item-description", attr: data-test, scopeBy: testid, scopeValue: "inventory-item", scopeAttr: data-test, scopeText: "Sauce Labs Bolt T-Shirt", stability: high, score: 98}
         - link "Sauce Labs Bolt T-Shirt":
           locators:
             - {by: testid, value: "item-1-title-link", attr: data-test, stability: high, score: 98}
           - generic "Sauce Labs Bolt T-Shirt":
             locators:
-              - {by: css, value: "#item_1_title_link > div:nth-child(1)", stability: low, score: 60}
+              - {by: testid, value: "inventory-item-name", attr: data-test, scopeBy: testid, scopeValue: "item-1-title-link", scopeAttr: data-test, stability: high, score: 98}
         - generic:
           locators:
-            - {by: css, value: "div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)", stability: low, score: 60}
+            - {by: testid, value: "inventory-item-desc", attr: data-test, scopeBy: testid, scopeValue: "inventory-item-description", scopeAttr: data-test, scopeText: "Sauce Labs Bolt T-Shirt", stability: high, score: 98}
         - generic "$15.99" [dup 1/2]:
           locators:
-            - {by: css, value: "div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)", stability: low, score: 60}
+            - {by: testid, value: "inventory-item-price", attr: data-test, scopeBy: testid, scopeValue: "inventory-item-description", scopeAttr: data-test, scopeText: "Sauce Labs Bolt T-Shirt", stability: high, score: 98}
         - button "Add to cart" [dup 1/4]:
           locators:
             - {by: testid, value: "add-to-cart-sauce-labs-bolt-t-shirt", attr: data-test, stability: high, score: 98}
@@ -136,19 +136,19 @@
             - {by: testid, value: "inventory-item-sauce-labs-fleece-jacket-img", attr: data-test, stability: high, score: 98}
       - generic:
         locators:
-          - {by: css, value: "#contents_wrapper > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(2)", stability: low, score: 60}
+          - {by: testid, value: "inventory-item-description", attr: data-test, scopeBy: testid, scopeValue: "inventory-item", scopeAttr: data-test, scopeText: "Sauce Labs Fleece Jacket", stability: high, score: 98}
         - link "Sauce Labs Fleece Jacket":
           locators:
             - {by: testid, value: "item-5-title-link", attr: data-test, stability: high, score: 98}
           - generic "Sauce Labs Fleece Jacket":
             locators:
-              - {by: css, value: "#item_5_title_link > div:nth-child(1)", stability: low, score: 60}
+              - {by: testid, value: "inventory-item-name", attr: data-test, scopeBy: testid, scopeValue: "item-5-title-link", scopeAttr: data-test, stability: high, score: 98}
         - generic:
           locators:
-            - {by: css, value: "div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)", stability: low, score: 60}
+            - {by: testid, value: "inventory-item-desc", attr: data-test, scopeBy: testid, scopeValue: "inventory-item-description", scopeAttr: data-test, scopeText: "Sauce Labs Fleece Jacket", stability: high, score: 98}
         - generic "$49.99":
           locators:
-            - {by: css, value: "div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)", stability: low, score: 60}
+            - {by: testid, value: "inventory-item-price", attr: data-test, scopeBy: testid, scopeValue: "inventory-item-description", scopeAttr: data-test, scopeText: "Sauce Labs Fleece Jacket", stability: high, score: 98}
         - button "Add to cart" [dup 2/4]:
           locators:
             - {by: testid, value: "add-to-cart-sauce-labs-fleece-jacket", attr: data-test, stability: high, score: 98}
@@ -163,19 +163,19 @@
             - {by: testid, value: "inventory-item-sauce-labs-onesie-img", attr: data-test, stability: high, score: 98}
       - generic:
         locators:
-          - {by: css, value: "#contents_wrapper > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(2)", stability: low, score: 60}
+          - {by: testid, value: "inventory-item-description", attr: data-test, scopeBy: testid, scopeValue: "inventory-item", scopeAttr: data-test, scopeText: "Sauce Labs Onesie", stability: high, score: 98}
         - link "Sauce Labs Onesie":
           locators:
             - {by: testid, value: "item-2-title-link", attr: data-test, stability: high, score: 98}
           - generic "Sauce Labs Onesie":
             locators:
-              - {by: css, value: "#item_2_title_link > div:nth-child(1)", stability: low, score: 60}
+              - {by: testid, value: "inventory-item-name", attr: data-test, scopeBy: testid, scopeValue: "item-2-title-link", scopeAttr: data-test, stability: high, score: 98}
         - generic:
           locators:
-            - {by: css, value: "div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)", stability: low, score: 60}
+            - {by: testid, value: "inventory-item-desc", attr: data-test, scopeBy: testid, scopeValue: "inventory-item-description", scopeAttr: data-test, scopeText: "Sauce Labs Onesie", stability: high, score: 98}
         - generic "$7.99":
           locators:
-            - {by: css, value: "div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)", stability: low, score: 60}
+            - {by: testid, value: "inventory-item-price", attr: data-test, scopeBy: testid, scopeValue: "inventory-item-description", scopeAttr: data-test, scopeText: "Sauce Labs Onesie", stability: high, score: 98}
         - button "Add to cart" [dup 3/4]:
           locators:
             - {by: testid, value: "add-to-cart-sauce-labs-onesie", attr: data-test, stability: high, score: 98}
@@ -190,19 +190,19 @@
             - {by: testid, value: "inventory-item-test-allthethings-t-shirt-red-img", attr: data-test, stability: high, score: 98}
       - generic:
         locators:
-          - {by: css, value: "#contents_wrapper > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(2)", stability: low, score: 60}
+          - {by: testid, value: "inventory-item-description", attr: data-test, scopeBy: testid, scopeValue: "inventory-item", scopeAttr: data-test, scopeText: "Test.allTheThings() T-Shirt (Red)", stability: high, score: 98}
         - link "Test.allTheThings() T-Shirt (Red)":
           locators:
             - {by: testid, value: "item-3-title-link", attr: data-test, stability: high, score: 98}
           - generic "Test.allTheThings() T-Shirt (Red)":
             locators:
-              - {by: css, value: "#item_3_title_link > div:nth-child(1)", stability: low, score: 60}
+              - {by: testid, value: "inventory-item-name", attr: data-test, scopeBy: testid, scopeValue: "item-3-title-link", scopeAttr: data-test, stability: high, score: 98}
         - generic:
           locators:
-            - {by: css, value: "div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2)", stability: low, score: 60}
+            - {by: testid, value: "inventory-item-desc", attr: data-test, scopeBy: testid, scopeValue: "inventory-item-description", scopeAttr: data-test, scopeText: "Test.allTheThings() T-Shirt (Red)", stability: high, score: 98}
         - generic "$15.99" [dup 2/2]:
           locators:
-            - {by: css, value: "div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)", stability: low, score: 60}
+            - {by: testid, value: "inventory-item-price", attr: data-test, scopeBy: testid, scopeValue: "inventory-item-description", scopeAttr: data-test, scopeText: "Test.allTheThings() T-Shirt (Red)", stability: high, score: 98}
         - button "Add to cart" [dup 4/4]:
           locators:
             - {by: testid, value: "add-to-cart-test-allthethings-t-shirt-red", attr: data-test, stability: high, score: 98}

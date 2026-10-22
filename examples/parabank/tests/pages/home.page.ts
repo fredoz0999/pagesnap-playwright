@@ -40,6 +40,11 @@ export class HomePage extends BasePage {
     return this.page.getByRole('link', { name: 'Withdraw Funds', exact: true });
   }
 
+  /** link "Transfer Funds" */
+  get transferFundsLink2(): Locator {
+    return this.page.getByRole('list').filter({ hasText: 'Make Deposits' }).getByRole('link', { name: 'Transfer Funds', exact: true });
+  }
+
   /** link "Check Balances" */
   get checkBalancesLink(): Locator {
     return this.page.getByRole('link', { name: 'Check Balances', exact: true });
@@ -53,6 +58,11 @@ export class HomePage extends BasePage {
   /** link "Account History" */
   get accountHistoryLink(): Locator {
     return this.page.getByRole('link', { name: 'Account History', exact: true });
+  }
+
+  /** link "Transfer Funds" */
+  get transferFundsLink3(): Locator {
+    return this.page.getByRole('list').filter({ hasText: 'Account History' }).getByRole('link', { name: 'Transfer Funds', exact: true });
   }
 
   /** link "ParaBank Is Now Re-Opened" */

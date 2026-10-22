@@ -16,7 +16,7 @@ export class CheckoutPage extends BasePage {
   }
 
   /** spinbutton "Quantity for Claw Hammer" */
-  get quantityForClawHammerInput(): Locator {
+  get productQuantityInput(): Locator {
     return this.page.getByTestId('product-quantity');
   }
 
@@ -56,7 +56,7 @@ export class CheckoutPage extends BasePage {
   }
 
   /** textbox "Email address" */
-  get emailAddressInput(): Locator {
+  get emailInput(): Locator {
     return this.page.getByTestId('email');
   }
 
@@ -66,17 +66,17 @@ export class CheckoutPage extends BasePage {
   }
 
   /** button "Login" */
-  get loginButton(): Locator {
+  get loginSubmitButton(): Locator {
     return this.page.getByTestId('login-submit');
   }
 
   /** link "Register your account" */
-  get registerYourAccountLink(): Locator {
+  get registerLink(): Locator {
     return this.page.getByTestId('register-link');
   }
 
   /** link "Forgot your Password?" */
-  get forgotYourPasswordLink(): Locator {
+  get forgotPasswordLink(): Locator {
     return this.page.getByTestId('forgot-password-link');
   }
 
@@ -96,7 +96,7 @@ export class CheckoutPage extends BasePage {
   }
 
   /** button "Page Snap" */
-  get pageSnapButton(): Locator {
+  get navMenuButton(): Locator {
     return this.page.getByTestId('nav-menu');
   }
 
@@ -146,7 +146,7 @@ export class CheckoutPage extends BasePage {
   }
 
   /** button "Check payment" */
-  get checkPaymentButton(): Locator {
+  get finishButton(): Locator {
     return this.page.getByTestId('finish');
   }
 

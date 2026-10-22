@@ -3,7 +3,7 @@ import { expect, type APIRequestContext } from "@playwright/test";
 
 export const API = process.env.TOOLSHOP_API || "https://api.practicesoftwaretesting.com";
 
-export interface Product { id: string; name: string; price: number }
+export interface Product { id: string; name: string; price: number; in_stock?: boolean }
 export interface Customer { email: string; password: string; first: string; last: string }
 
 export class ToolshopApi {

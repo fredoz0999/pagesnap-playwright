@@ -10,14 +10,14 @@ export class RegisterPage extends BasePage {
     await this.page.goto(RegisterPage.path);
   }
 
-  /** link - FRAGILE structural locator, ask dev for a test id */
+  /** link */
   get link(): Locator {
-    return this.page.locator('#topPanel > a:nth-child(1)');
+    return this.page.locator('#topPanel').locator('a[href*="admin.htm"]');
   }
 
-  /** link - FRAGILE structural locator, ask dev for a test id */
+  /** link */
   get link2(): Locator {
-    return this.page.locator('#topPanel > a:nth-child(2)');
+    return this.page.locator('#topPanel').locator('a[href*="index.htm"]');
   }
 
   /** textbox "username" */

@@ -48,7 +48,34 @@ Pass `--connect=` or `--cdp=` with a Chrome DevTools debugging-port URL (for exa
 
 ## Framework-agnostic locators
 
-YAML `by` values: `id | name | css | testid | role | label | placeholder | linkText | xpath`.
+YAML `by` values: `testid | role | placeholder | label | alt | text | title | id | name | linkText | css | xpath`.
+
+### How locators are chosen (Playwright's own rules)
+
+Every candidate is verified in the live DOM (exactly one **visible** match) and ranked the way
+Playwright's codegen ranks them ([locator guide](https://playwright.dev/docs/locators), [best practices](https://playwright.dev/docs/best-practices)):
+
+| rank | strategy | emitted as |
+|---|---|---|
+| 1 | test id (`data-testid`, `data-test`, …) | `getByTestId('x')` |
+| 2 | role + accessible name | `getByRole('button', { name: 'Save', exact: true })` |
+| 3 | placeholder / label / alt / text / title | `getByPlaceholder` `getByLabel` `getByAltText` `getByText` `getByTitle` (all `exact: true`) |
+| 4 | stable `id` / `name` | `locator('#id')` `locator('input[name="q"]')` |
+| 5 | structural css, xpath | last resort, flagged in the pack |
+
+Also applied:
+
+- **Strict mode** - a locator that matches several elements is never "fixed" with `.first()` / `.nth()`. The element is
+  **scoped** to the nearest ancestor with its own unique locator, or to a repeated container narrowed by its distinguishing
+  text: `getByRole('listitem').filter({ hasText: 'Sauce Labs Backpack' }).getByRole('button', { name: 'Add to cart' })`.
+  Headings, links and labels are preferred as the distinguishing text; prices and dates are avoided.
+- **Accessible name** computed per the accname spec (aria-label/labelledby, `<label>`, button text, `input[type=submit]` value,
+  `alt`, `title`). An input with no label gets no role locator - Playwright would not match it either - and the role
+  rows are re-checked with Playwright itself after capture.
+- **Generated ids rejected** - per-render ids (`:r3:`, `ember123`, `mat-input-7`, uuids) and record-id test ids
+  (`product-01M5…`, `row-4812`) are never used as locators or scopes, so the page objects survive a reload.
+- **Iframes** - elements inside frames carry `frame=…` and are emitted as `page.frameLocator('#f').getByRole(...)`.
+- **Visible only** - a hidden copy (inactive wizard step, closed menu) never counts as a match.
 
 `--framework=` swaps PROMPT.md, Reading-Snapshots.md, and footer hints only. `--style=` and `--waits=` copy into the prompt.
 

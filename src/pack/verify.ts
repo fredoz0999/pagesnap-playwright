@@ -8,7 +8,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { chromium, selectors, type Browser, type Page } from "playwright";
+import { chromium, type Browser, type FrameLocator, type Locator as PwLocator, type Page } from "playwright";
 import { launchOptions } from "../browser-session.js";
 import { idSelector, parseSnapshot, walk, type Locator } from "./parse.js";
 import { snapshotFiles } from "./index.js";
@@ -52,23 +52,43 @@ export interface VerifyReport {
 
 const ACTIONABLE = new Set(["button", "link", "textbox", "searchbox", "combobox", "listbox", "checkbox", "radio", "switch", "tab", "menuitem", "slider", "spinbutton"]);
 
-/** Same mapping the page objects use, applied to a live page. */
-export function toPlaywright(page: Page, l: Locator) {
-  switch (l.by) {
+type Root = Page | FrameLocator | PwLocator;
+
+function strategy(root: Root, by: string, value: string, name?: string, attr?: string): PwLocator {
+  switch (by) {
     case "testid":
       // explicit attribute: independent of the process-wide testIdAttribute setting
-      return l.attr && l.attr !== "data-testid" ? page.locator(`[${l.attr}="${l.value.replace(/"/g, '\\"')}"]`) : page.getByTestId(l.value);
-    case "id": return page.locator(idSelector(l.value));
-    case "name": return page.locator('[name="' + l.value.replace(/"/g, '\\"') + '"]');
-    case "role": return page.getByRole(l.value as Parameters<Page["getByRole"]>[0], l.name ? { name: l.name, exact: true } : {});
-    case "label": return page.getByLabel(l.value, { exact: true });
-    case "placeholder": return page.getByPlaceholder(l.value, { exact: true });
-    case "linkText": return page.getByRole("link", { name: l.value, exact: true });
-    case "xpath": return page.locator("xpath=" + l.value);
-    default: return page.locator(l.value);
+      return attr && attr !== "data-testid" ? root.locator(`[${attr}="${value.replace(/"/g, '\\"')}"]`) : root.getByTestId(value);
+    case "id": return root.locator(idSelector(value));
+    case "name": return root.locator('[name="' + value.replace(/"/g, '\\"') + '"]');
+    case "role": return root.getByRole(value as Parameters<Page["getByRole"]>[0], name ? { name, exact: true } : {});
+    case "label": return root.getByLabel(value, { exact: true });
+    case "placeholder": return root.getByPlaceholder(value, { exact: true });
+    case "linkText": return root.getByRole("link", { name: value, exact: true });
+    case "alt": return root.getByAltText(value, { exact: true });
+    case "title": return root.getByTitle(value, { exact: true });
+    case "text": return root.getByText(value, { exact: true });
+    case "xpath": return root.locator("xpath=" + value);
+    default: return root.locator(value);
   }
 }
 
+/** Same mapping the page objects use (frame > scope > filter > strategy), applied to a live page. */
+export function toPlaywright(page: Page, l: Locator): PwLocator {
+  let root: Root = page;
+  if (l.frame) {
+    for (const seg of l.frame.split("/").filter(Boolean)) {
+      const m = /^frame-(\d+)$/.exec(seg);
+      root = root.frameLocator(m ? "iframe >> nth=" + m[1] : 'iframe[name="' + seg + '"], iframe#' + seg);
+    }
+  }
+  if (l.scopeBy && l.scopeValue != null) {
+    let scope = strategy(root, l.scopeBy, l.scopeValue, l.scopeName, l.scopeAttr);
+    if (l.scopeText) scope = scope.filter({ hasText: l.scopeText });
+    root = scope;
+  }
+  return strategy(root, l.by, l.value, l.name, l.attr);
+}
 
 function samePath(a: string, b: string): boolean {
   try {
@@ -129,7 +149,8 @@ async function measureHere(page: Page, locs: Loc[], settlePasses: number) {
   await page.waitForLoadState("networkidle", { timeout: 3000 }).catch(() => undefined);
   let best = await countAll(page, locs);
   let bestOk = best.filter((c) => c === 1).length;
-  for (let pass = 0, still = 0; pass < settlePasses && bestOk < locs.length && still < 2; pass++) {
+  // while most locators are missing the page may still be navigating: allow more quiet passes
+  for (let pass = 0, still = 0; pass < settlePasses && bestOk < locs.length && still < (bestOk < locs.length / 2 ? 4 : 2); pass++) {
     await page.waitForTimeout(750);
     const next = await countAll(page, locs);
     const ok = next.filter((c) => c === 1).length;
@@ -185,8 +206,7 @@ async function collectByReplay(sessionDir: string, files: string[], opts: Verify
     }
     // A step reached without recorded actions (capture started mid-flow): fall back to its URL.
     if (!actions.length && fi > 0 && !samePath(page.url(), snap.url)) await page.goto(snap.url, { waitUntil: "domcontentloaded" });
-    const { locs, testIdAttr } = locsOf(snap);
-    if (testIdAttr) selectors.setTestIdAttribute(testIdAttr);
+    const { locs } = locsOf(snap);
     if (opts.steps && !opts.steps.includes(snap.step)) continue; // still replayed, not reported
     const r = await measureHere(page, locs, opts.settlePasses ?? 6);
     pages.push({ step: snap.step, url: snap.url, landedOn: r.landed, context: "replay" });
@@ -207,7 +227,6 @@ async function collectByReplay(sessionDir: string, files: string[], opts: Verify
 async function collectByUrl(sessionDir: string, files: string[], opts: VerifyOptions, browser: Browser) {
   const items: VerifyItem[] = [];
   const pages: VerifyPage[] = [];
-  let testIdAttr: string | null = null;
   const hasStorage = !!(opts.storage && fs.existsSync(opts.storage));
   const contexts: { label: string; page: Page }[] = [];
   const open = async (storage?: string) => {
@@ -229,10 +248,7 @@ async function collectByUrl(sessionDir: string, files: string[], opts: VerifyOpt
   for (const f of files) {
     const snap = parseSnapshot(fs.readFileSync(path.join(sessionDir, f), "utf8"), f);
     if (opts.steps && !opts.steps.includes(snap.step)) continue;
-    const got = locsOf(snap);
-    const locs = got.locs;
-    testIdAttr = got.testIdAttr ?? testIdAttr;
-    if (testIdAttr) selectors.setTestIdAttribute(testIdAttr);
+    const { locs } = locsOf(snap);
     let best: { landed: string; counts: number[]; ok: number; label: string } | null = null;
     let navError = "";
     for (const attempt of [0, 1]) {

@@ -251,12 +251,16 @@ describe("diff query", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "ps-diff-"));
     cpSync(FIXTURE, dir, { recursive: true });
     await buildIndex(dir);
-    const plain = await queryIndex(dir, "cart badge shows 2", { step: 3, legend: false });
+    // the Onesie card is identical in steps 2 and 3: referenced, not repeated
+    const same = await queryIndex(dir, "add Sauce Labs Onesie to cart", { step: 3, legend: false, diff: true });
+    expect(same.text).toContain("unchanged since step 2");
+    expect(same.text).not.toContain("add-to-cart-sauce-labs-onesie");
+    // the header (badge) and the two cards with Remove changed between the steps
     const diff = await queryIndex(dir, "cart badge shows 2", { step: 3, legend: false, diff: true });
-    expect(diff.text).toContain("unchanged since step 2");
     expect(diff.text).toContain("testid=shopping-cart-badge");
     expect(diff.text).toContain("testid=remove-sauce-labs-backpack");
     expect(diff.text).toMatch(/CHANGED/);
+    const plain = await queryIndex(dir, "cart badge shows 2", { step: 3, legend: false });
     expect(plain.text).not.toContain("unchanged since");
     // step 3 hits are shown under step 3 even when shared with step 2
     expect(plain.text).not.toContain("@ step 2");
@@ -277,11 +281,11 @@ describe("heal", () => {
     ].join("\n") + "\n");
     const r = healSpec(dir, spec, { write: true });
     expect(r.suggestions.map((s) => s.line)).toEqual([1, 2, 3]);
-    expect(r.suggestions[1].candidates[0].code).toBe('getByTestId("add-to-cart-sauce-labs-fleece-jacket")');
+    expect(r.suggestions[1].candidates[0].code).toBe("getByTestId('add-to-cart-sauce-labs-fleece-jacket')");
     expect(r.suggestions[1].applied).toBeUndefined(); // too close to the other add-to-cart buttons
     const out = readFileSync(spec, "utf8").split("\n");
-    expect(out[0]).toBe('await page.getByTestId("checkout").click();');
-    expect(out[2]).toBe('await page.getByTestId("username").fill(\'x\');');
+    expect(out[0]).toBe("await page.getByTestId('checkout').click();");
+    expect(out[2]).toBe("await page.getByTestId('username').fill('x');");
     expect(out[3]).toBe("await page.getByTestId('username').fill('ok');");
     expect(replaceCall("a.locator('x(y)').click()", "locator('x(y)'", "getByTestId(\"z\")")).toBe('a.getByTestId("z").click()');
     expect(failingCallsFromLog("Error: locator.click: Timeout\n  - waiting for getByTestId('checkout-button')\n")).toEqual(["getByTestId('checkout-button')"]);

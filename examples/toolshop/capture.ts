@@ -72,9 +72,13 @@ async function main() {
   await t("sorting_completed").waitFor({ state: "attached" }); // grid re-sorts in place, no navigation
   await cap("action: sort by Price (Low - High) | assert: cheapest hammer first");
 
-  await t("product-name").filter({ hasText: "Claw Hammer" }).first().click();
+  // first hammer that is in stock (the shared demo's stock moves), skipping Thor Hammer:
+  // the app caps it at one per cart on purpose, and this flow buys two
+  const card = page.locator('a[data-test^="product-"]').filter({ has: t("product-name") }).filter({ hasNot: t("out-of-stock") }).filter({ hasNotText: "Thor Hammer" }).first();
+  const productName = (await card.locator('[data-test="product-name"]').innerText()).trim();
+  await card.click();
   await t("add-to-cart").waitFor();
-  await cap("action: open Claw Hammer | assert: name, unit price, quantity 1, Add to cart");
+  await cap("action: open the first in-stock hammer (" + productName + ") | assert: name, unit price, quantity 1, Add to cart");
 
   await t("increase-quantity").click();
   await t("add-to-cart").click();
@@ -83,7 +87,7 @@ async function main() {
 
   await t("nav-cart").click();
   await t("proceed-1").waitFor();
-  await cap("action: open cart | assert: Claw Hammer x2, line price = 2 x unit price, cart total");
+  await cap("action: open cart | assert: the product x2, line price = 2 x unit price, cart total");
 
   await t("proceed-1").click();
   await t("email").waitFor();

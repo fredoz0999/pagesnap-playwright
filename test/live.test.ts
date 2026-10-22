@@ -27,7 +27,7 @@ describe.skipIf(!hasBrowser)("live: capture, verify, heal", () => {
   let browser: Browser;
   let session = "";
   const pages: Record<string, string> = {
-    "/": "login.html", "/inventory.html": "inventory.html", "/cart.html": "cart.html", "/form.html": "unlabeled-form.html", "/spa.html": "spa.html",
+    "/": "login.html", "/inventory.html": "inventory.html", "/cart.html": "cart.html", "/form.html": "unlabeled-form.html", "/spa.html": "spa.html", "/locators.html": "locators.html",
   };
   let renamed = false;
 
@@ -177,6 +177,55 @@ describe.skipIf(!hasBrowser)("live: capture, verify, heal", () => {
     expect(wrong.text).toContain("REPLAY STOPPED at step 3");
   }, 120000);
 
+  it("captures Playwright-style scoped, alt, title, text and iframe locators, and they all resolve", async () => {
+    const { toPlaywright } = await import("../src/pack/verify.js");
+    const { parseSnapshot, walk } = await import("../src/pack/parse.js");
+    const { locatorCode } = await import("../src/pack/pom.js");
+    const page = await browser.newPage();
+    const dir = mkdtempSync(path.join(tmpdir(), "ps-loc-"));
+    const snap = new ScriptedSession({ outputDir: dir, buildPack: false, record: false });
+    await page.goto(base + "/locators.html");
+    const file = await snap.capture(page, "catalog");
+    const yaml = readFileSync(path.join(dir, file), "utf8");
+    const parsed = parseSnapshot(yaml, file);
+    const all: { role: string; name: string; l: import("../src/pack/parse.js").Locator }[] = [];
+    walk(parsed.roots, (n) => n.locators.forEach((l) => all.push({ role: n.role, name: n.name, l })));
+    const find = (pred: (x: typeof all[number]) => boolean) => all.find(pred)?.l;
+
+    // repeated card buttons: scoped to the card and filtered by its heading text
+    const blue = find((x) => x.role === "button" && x.name === "Add to cart" && x.l.scopeText === "Blue Chair");
+    expect(blue?.scopeBy).toBe("role");
+    expect(blue?.scopeValue).toBe("listitem");
+    expect(locatorCode(blue!)).toBe("this.page.getByRole('listitem').filter({ hasText: 'Blue Chair' }).getByRole('button', { name: 'Add to cart', exact: true })");
+    // rows in an id'd table: scope to the table, filter by the row's order id
+    const view2 = find((x) => x.role === "link" && x.name === "View" && x.l.scopeText === "ORD-2");
+    expect(view2?.scopeBy).toBe("role");
+    // same text in two id'd sections: chain only, no filter
+    const saveShip = find((x) => x.role === "button" && x.name === "Save" && x.l.scopeValue === "shipping");
+    expect(saveShip?.scopeBy).toBe("id");
+    expect(saveShip?.scopeText).toBeUndefined();
+    // alt / title / text strategies exist (lean YAML shows one locator; the sidecar has them all)
+    expect(all.some((x) => x.l.by === "alt" && x.l.value === "Acme logo")).toBe(true);
+    const side = JSON.parse(readFileSync(path.join(dir, file.replace(".yaml", ".locators.json")), "utf8")).locators as { by: string; value: string }[];
+    expect(side.some((x) => x.by === "title" && x.value === "Go home")).toBe(true);
+    expect(yaml).toContain('text "Your order was placed successfully."');
+    // iframe content carries the frame path
+    const ask = find((x) => x.role === "button" && x.name === "Ask support");
+    expect(ask?.frame).toBe("help");
+    expect(locatorCode(ask!)).toContain("frameLocator('iframe[name=\"help\"], iframe#help')");
+
+    // every locator the capture wrote resolves to exactly one element in Playwright
+    let checked = 0;
+    for (const x of all) {
+      if (x.l.matches != null) continue;
+      expect(await toPlaywright(page, x.l).count(), x.role + " " + x.name + " via " + JSON.stringify(x.l)).toBe(1);
+      checked++;
+    }
+    expect(checked).toBeGreaterThanOrEqual(10); // link, 3 card buttons, 2 row links, 2 Save, img, iframe button
+    expect(all.filter((x) => x.l.by === "css" && /nth-child/.test(x.l.value))).toEqual([]); // no structural paths needed
+    await page.close();
+  }, 60000);
+
   it("verify passes against the unchanged app", async () => {
     const rep = await verifySession(session);
     expect(rep.counts.gone).toBe(0);
@@ -192,7 +241,7 @@ describe.skipIf(!hasBrowser)("live: capture, verify, heal", () => {
     const spec = path.join(session, "x.spec.ts");
     writeFileSync(spec, "await page.getByTestId('checkout-button').click();\n");
     const h = healSpec(session, spec, { write: true });
-    expect(h.suggestions[0].candidates[0].code).toBe('getByTestId("checkout")');
-    expect(readFileSync(spec, "utf8")).toContain('getByTestId("checkout")');
+    expect(h.suggestions[0].candidates[0].code).toBe("getByTestId('checkout')");
+    expect(readFileSync(spec, "utf8")).toContain("getByTestId('checkout')");
   }, 60000);
 });

@@ -1,0 +1,22 @@
+<!doctype html><html><head><title>Locator techniques</title></head><body>
+<header><a href="/" title="Go home"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Acme logo"></a></header>
+<main>
+  <h1>Catalog</h1>
+  <!-- repeated cards with no test id on the button: needs scope + hasText -->
+  <ul class="cards">
+    <li class="card"><h3>Red Chair</h3><span class="price">$10</span><button>Add to cart</button></li>
+    <li class="card"><h3>Blue Chair</h3><span class="price">$12</span><button>Add to cart</button></li>
+    <li class="card"><h3>Green Chair</h3><span class="price">$14</span><button>Add to cart</button></li>
+  </ul>
+  <!-- repeated rows inside a uniquely identified table: scope to the row text -->
+  <table id="orders"><tbody>
+    <tr><td>ORD-1</td><td><a href="#1">View</a></td></tr>
+    <tr><td>ORD-2</td><td><a href="#2">View</a></td></tr>
+  </tbody></table>
+  <!-- same button text in two uniquely identified sections: chain only -->
+  <section id="billing"><h2>Billing</h2><button>Save</button></section>
+  <section id="shipping"><h2>Shipping</h2><button>Save</button></section>
+  <p>Your order was placed successfully.</p>
+  <iframe name="help" srcdoc="<button id=&quot;ask&quot;>Ask support</button>"></iframe>
+</main>
+</body></html>

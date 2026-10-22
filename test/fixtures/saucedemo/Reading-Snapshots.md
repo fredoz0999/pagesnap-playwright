@@ -33,17 +33,27 @@ Assert from notes and YAML snapshots (visible text, URL, enabled/visible). Do no
 
 ## Mapping to @playwright/test
 
+Every name match is exact: pass `exact: true` so "Log In" never matches "Log In now".
+
 | YAML `by` | Playwright |
 |-------------|------------|
-| testid | `page.getByTestId('…')` even when YAML `attr` is `data-test` / `data-cy` / `data-qa`. Never `getByRole("generic")`. |
-| id | `page.locator('#id')` |
+| testid | `page.getByTestId('…')` even when YAML `attr` is `data-test` / `data-cy` / `data-qa` (set `use.testIdAttribute` in playwright.config). Never `getByRole("generic")`. |
+| role | `page.getByRole('button', { name: '…', exact: true })` |
+| label | `page.getByLabel('…', { exact: true })` |
+| placeholder | `page.getByPlaceholder('…', { exact: true })` |
+| alt | `page.getByAltText('…', { exact: true })` |
+| text | `page.getByText('…', { exact: true })` (non-interactive text only; buttons and links use role) |
+| title | `page.getByTitle('…', { exact: true })` |
+| id | `page.locator('#id')` (`[id="a.b"]` when the id has dots) |
 | name | `page.locator('[name="…"]')` |
-| role | `page.getByRole('button', { name: '…' })` |
-| label | `page.getByLabel('…')` |
-| placeholder | `page.getByPlaceholder('…')` |
+| linkText | `page.getByRole('link', { name: '…', exact: true })` |
 | css | `page.locator('…')` |
-| linkText | `page.getByRole('link', { name: '…' })` |
 | xpath | `page.locator('xpath=…')` |
+
+Scoped locators (a control that repeats, e.g. "Add to cart" on every card) carry `scopeBy`/`scopeValue`
+(+ `scopeName`, `scopeText`). Chain them: container first, then `.filter({ hasText: scopeText })` when present, then the
+control: `page.getByTestId('inventory-item').filter({ hasText: 'Backpack' }).getByRole('button', { name: 'Add to cart', exact: true })`.
+Never reach for `.first()` / `.nth()` to silence a strict-mode violation; use the scoped locator the YAML gives.
 
 Use web-first `expect(locator).toBeVisible()` / `toHaveValue` / `toHaveURL`. Native select: `locator.selectOption({ label })`. Iframes: `page.frameLocator('iframe[name=…]')`. Page Object when style=pageobject.
 

@@ -71,6 +71,7 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
   let captureCount = 0;
   // Actions between captures, so `pack verify` can replay into every captured state.
   const recorder = new ActionRecorder();
+  recorder.redactEmails = cap.redactEmails;
 
   const installOnPage = async (page: Page) => {
     try {

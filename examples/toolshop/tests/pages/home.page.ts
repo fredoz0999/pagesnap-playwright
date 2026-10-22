@@ -31,7 +31,7 @@ export class HomePage extends BasePage {
   }
 
   /** textbox "Search" */
-  get searchInput(): Locator {
+  get searchQueryInput(): Locator {
     return this.page.getByTestId('search-query');
   }
 
@@ -41,12 +41,12 @@ export class HomePage extends BasePage {
   }
 
   /** button "Search" */
-  get searchButton(): Locator {
+  get searchSubmitButton(): Locator {
     return this.page.getByTestId('search-submit');
   }
 
   /** checkbox "Show only eco-friendly products" */
-  get showOnlyEcoFriendlyProductsCheckbox(): Locator {
+  get ecoFriendlyFilterCheckbox(): Locator {
     return this.page.getByTestId('eco-friendly-filter');
   }
 
@@ -56,7 +56,7 @@ export class HomePage extends BasePage {
   }
 
   /** button "Previous" */
-  get previousButton(): Locator {
+  get paginationPrevButton(): Locator {
     return this.page.getByTestId('pagination-prev');
   }
 
@@ -86,7 +86,7 @@ export class HomePage extends BasePage {
   }
 
   /** button "Next" */
-  get nextButton(): Locator {
+  get paginationNextButton(): Locator {
     return this.page.getByTestId('pagination-next');
   }
 

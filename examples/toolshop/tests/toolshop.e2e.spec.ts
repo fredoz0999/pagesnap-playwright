@@ -22,15 +22,17 @@ const cartIdOf = (page: Page) => page.evaluate(() => sessionStorage.getItem("car
 test.beforeAll(async ({ request }) => {
   const api = new ToolshopApi(request);
   await api.register(customer);
-  hammer = (await api.search("Claw Hammer")).data.find((p) => p.name === "Claw Hammer")!;
-  expect(hammer, "Claw Hammer exists in the catalog").toBeTruthy();
+  // the shared demo's stock moves: take the cheapest in-stock hammer that allows quantity 2
+  // (Thor Hammer is capped at one per cart by design)
+  hammer = (await api.productsSorted("hammer", "price,asc")).find((p) => p.in_stock !== false && p.name !== "Thor Hammer")!;
+  expect(hammer, "an in-stock hammer exists in the catalog").toBeTruthy();
 });
 
 test("step 1-2: UI search shows exactly the products the API search returns", async ({ page, request }) => {
   const home = new HomePage(page);
   await home.goto();
-  await home.searchInput.fill("hammer");
-  await home.searchButton.click();
+  await home.searchQueryInput.fill("hammer");
+  await home.searchSubmitButton.click();
   await expect(home.searchCompleted).toBeAttached();
   await expect(home.searchCaptionHeading).toHaveText("Searched for: hammer");
 
@@ -43,8 +45,8 @@ test("step 1-2: UI search shows exactly the products the API search returns", as
 test("step 3: sort by price low to high matches the API price order", async ({ page, request }) => {
   const home = new HomePage(page);
   await home.goto();
-  await home.searchInput.fill("hammer");
-  await home.searchButton.click();
+  await home.searchQueryInput.fill("hammer");
+  await home.searchSubmitButton.click();
   await expect(home.searchCompleted).toBeAttached();
   await home.sortSelect.selectOption({ label: "Price (Low - High)" });
   await expect(home.sortingCompleted).toBeAttached();
@@ -57,7 +59,7 @@ test("step 3: sort by price low to high matches the API price order", async ({ p
 test("step 4-6: product price matches the API, quantity 2 lands in the API cart with the right totals", async ({ page, request }) => {
   const product = new ProductPage(page);
   await product.goto(hammer.id);
-  await expect(product.productNameHeading).toHaveText("Claw Hammer");
+  await expect(product.productNameHeading).toHaveText(hammer.name);
   await expect(product.unitPrice).toHaveText(hammer.price.toFixed(2));
 
   await product.increaseQuantityButton.click();
@@ -71,12 +73,12 @@ test("step 4-6: product price matches the API, quantity 2 lands in the API cart 
   const apiCart = await new ToolshopApi(request).cart(cartId);
   expect(apiCart.cart_items).toHaveLength(1);
   expect(apiCart.cart_items[0].quantity).toBe(2);
-  expect(apiCart.cart_items[0].product.name).toBe("Claw Hammer");
+  expect(apiCart.cart_items[0].product.name).toBe(hammer.name);
 
   const checkout = new CheckoutPage(page);
-  await checkout.cartLink.click();
-  await expect(checkout.productTitle).toHaveText("Claw Hammer");
-  await expect(checkout.quantityForClawHammerInput).toHaveValue("2");
+  await checkout.navCartLink.click();
+  await expect(checkout.productTitle).toHaveText(hammer.name);
+  await expect(checkout.productQuantityInput).toHaveValue("2");
   await expect(checkout.linePrice).toHaveText(money(2 * hammer.price));
   await expect(checkout.cartTotal).toHaveText(money(2 * hammer.price));
 });
@@ -90,11 +92,11 @@ test("step 7-13: API-registered customer checks out in the UI; the API has the i
   await expect(product.cartQuantity).toHaveText("2");
 
   const checkout = new CheckoutPage(page);
-  await checkout.cartLink.click();
+  await checkout.navCartLink.click();
   await checkout.proceed1Button.click();
-  await checkout.emailAddressInput.fill(customer.email);
+  await checkout.emailInput.fill(customer.email);
   await checkout.passwordInput.fill(customer.password);
-  await checkout.loginButton.click();
+  await checkout.loginSubmitButton.click();
   await checkout.proceed2Button.click();
 
   // address comes from the API registration
@@ -114,12 +116,12 @@ test("step 7-13: API-registered customer checks out in the UI; the API has the i
   await checkout.proceed3Button.click();
 
   await checkout.paymentMethodSelect.selectOption({ label: "Cash on Delivery" });
-  await checkout.checkPaymentButton.click();
+  await checkout.finishButton.click();
   await expect(checkout.paymentSuccessMessage).toHaveText("Payment was successful");
   // same button, relabelled from "Check payment" to "Confirm" once the payment check passes
-  await expect(checkout.checkPaymentButton).toHaveText(/Confirm/);
-  await expect(checkout.checkPaymentButton).toBeEnabled();
-  await checkout.checkPaymentButton.click();
+  await expect(checkout.finishButton).toHaveText(/Confirm/);
+  await expect(checkout.finishButton).toBeEnabled();
+  await checkout.finishButton.click();
 
   await expect(page.getByText("Thanks for your order!")).toBeVisible({ timeout: 30_000 });
   const invoiceNumber = (await page.getByText(/^INV-\d+$/).innerText()).trim();
@@ -140,11 +142,11 @@ test("step 8 (negative): wrong password is rejected in the UI and by the API", a
   await product.goto(hammer.id);
   await product.addToCartButton.click();
   const checkout = new CheckoutPage(page);
-  await checkout.cartLink.click();
+  await checkout.navCartLink.click();
   await checkout.proceed1Button.click();
-  await checkout.emailAddressInput.fill(customer.email);
+  await checkout.emailInput.fill(customer.email);
   await checkout.passwordInput.fill("wrong-password");
-  await checkout.loginButton.click();
+  await checkout.loginSubmitButton.click();
   await expect(checkout.loginError).toHaveText("Invalid email or password");
   await expect(checkout.proceed2Button).toBeHidden();
 

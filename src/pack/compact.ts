@@ -44,24 +44,39 @@ function q(s: string): string {
   return '"' + s.replace(/"/g, '\\"') + '"';
 }
 
-/** Render one locator; empty string when it is implied by role + name. */
+/** One strategy in short form. */
+function fmtStrategy(by: string, value: string, name: string | undefined, attr: string | undefined, node: { role: string; name: string }): string {
+  switch (by) {
+    case "testid": return "testid=" + value;
+    case "id": return idSelector(value);
+    case "name": return "[name=" + value + "]";
+    case "role": {
+      const implied = value === node.role && (name || "") === node.name;
+      return implied ? "role" : "role=" + value + (name ? " name=" + q(name) : "");
+    }
+    case "label": return value === node.name ? "label" : "label=" + q(value);
+    case "placeholder": return "placeholder=" + q(value);
+    case "linkText": return value === node.name ? "link" : "link=" + q(value);
+    case "alt": return value === node.name ? "alt" : "alt=" + q(value);
+    case "title": return "title=" + q(value);
+    case "text": return value === node.name ? "text" : "text=" + q(value);
+    case "css": return "css=" + value;
+    case "xpath": return "xpath=" + value;
+    default: return by + "=" + value;
+  }
+}
+
+/** Render one locator; "role" alone when it is implied by the node's role + name. */
 export function fmtLocator(l: Locator, node: { role: string; name: string }): string {
   const dup = l.matches != null ? " (x" + l.matches + " not unique)" : "";
-  switch (l.by) {
-    case "testid": return "testid=" + l.value + dup;
-    case "id": return idSelector(l.value) + dup;
-    case "name": return "[name=" + l.value + "]" + dup;
-    case "role": {
-      const implied = l.value === node.role && (l.name || "") === node.name;
-      return implied && !dup ? "role" : "role=" + l.value + (l.name ? " name=" + q(l.name) : "") + dup;
-    }
-    case "label": return l.value === node.name && !dup ? "label" : "label=" + q(l.value) + dup;
-    case "placeholder": return "placeholder=" + q(l.value) + dup;
-    case "linkText": return l.value === node.name && !dup ? "link" : "link=" + q(l.value) + dup;
-    case "css": return "css=" + l.value + dup;
-    case "xpath": return "xpath=" + l.value + dup;
-    default: return l.by + "=" + l.value + dup;
+  let s = "";
+  if (l.frame) s += "frame=" + l.frame + " > ";
+  if (l.scopeBy && l.scopeValue != null) {
+    s += "in " + fmtStrategy(l.scopeBy, l.scopeValue, l.scopeName, l.scopeAttr, { role: "", name: "" });
+    if (l.scopeText) s += " hasText=" + q(l.scopeText);
+    s += " > ";
   }
+  return s + fmtStrategy(l.by, l.value, l.name, l.attr, node) + dup;
 }
 
 function nodeLine(n: SnapNode, maxOptions: number): string {
@@ -228,8 +243,10 @@ export function compactSnapshot(snap: Snapshot, opts: CompactOptions = {}): stri
 }
 
 export const LEGEND =
-  "Legend: one node per line, 1-space indent = nesting. `=> x` is the verified locator: " +
+  "Legend: one node per line, 1-space indent = nesting. `=> x` is the verified locator (all name matches are exact: true): " +
   "testid=V -> getByTestId('V'); #id -> locator('#id'); [name=V] -> locator('[name=\"V\"]'); " +
-  "role -> getByRole(<role>, {name: <name>}); label -> getByLabel(<name>); link -> getByRole('link', {name}); " +
-  "placeholder=\"V\" -> getByPlaceholder; css=/xpath= -> locator(). \"in=\" / \"dup k/n\" flags disambiguate repeats. " +
+  "role -> getByRole(<role>, {name: <name>, exact: true}); label -> getByLabel; link -> getByRole('link', {name}); " +
+  "placeholder=/alt=/title=/text= -> getByPlaceholder/getByAltText/getByTitle/getByText; css=/xpath= -> locator(). " +
+  "`in A hasText=\"T\" > B` means A.filter({hasText: 'T'}).B (scoped: the control repeats, this chain is unique); " +
+  "`frame=F > B` means page.frameLocator('iframe[name=\"F\"]').B. " +
   "Never invent locators that are not shown.";

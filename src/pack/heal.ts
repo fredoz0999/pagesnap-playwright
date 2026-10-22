@@ -8,7 +8,8 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { idSelector, parseSnapshot, walk } from "./parse.js";
+import { parseSnapshot, walk } from "./parse.js";
+import { locatorChain } from "./locator-code.js";
 import { snapshotFiles } from "./index.js";
 import { extractCalls, readSidecar, validateSpec } from "./validate.js";
 import { tokenize } from "./embed.js";
@@ -44,18 +45,8 @@ function q(s: string): string {
 }
 
 /** Spec-style code for a candidate (page.xxx). */
-export function candidateCode(c: { by: string; value: string; locName?: string }): string {
-  switch (c.by) {
-    case "testid": return "getByTestId(" + q(c.value) + ")";
-    case "id": return "locator(" + q(idSelector(c.value)) + ")";
-    case "name": return "locator(" + q('[name="' + c.value + '"]') + ")";
-    case "role": return "getByRole(" + q(c.value) + (c.locName ? ", { name: " + q(c.locName) + " }" : "") + ")";
-    case "label": return "getByLabel(" + q(c.value) + ")";
-    case "placeholder": return "getByPlaceholder(" + q(c.value) + ")";
-    case "linkText": return "getByRole(\"link\", { name: " + q(c.value) + " })";
-    case "xpath": return "locator(" + q("xpath=" + c.value) + ")";
-    default: return "locator(" + q(c.value) + ")";
-  }
+export function candidateCode(c: { by: string; value: string; locName?: string; attr?: string; scopeBy?: string; scopeValue?: string; scopeName?: string; scopeAttr?: string; scopeText?: string; frame?: string }): string {
+  return locatorChain({ by: c.by, value: c.value, name: c.locName, attr: c.attr, scopeBy: c.scopeBy, scopeValue: c.scopeValue, scopeName: c.scopeName, scopeAttr: c.scopeAttr, scopeText: c.scopeText, frame: c.frame }, "").replace(/^\./, "");
 }
 
 /** Token weights: words on many controls ("button", "add", "cart") count less. */
@@ -105,7 +96,7 @@ function wantedText(call: string): { text: string; role?: string } {
   return { text, role };
 }
 
-interface Pool { ctl: string; step: number; role: string; name: string; by: string; value: string; locName?: string; attr?: string; uScore: number }
+interface Pool { ctl: string; step: number; role: string; name: string; by: string; value: string; locName?: string; attr?: string; uScore: number; scopeBy?: string; scopeValue?: string; scopeName?: string; scopeAttr?: string; scopeText?: string }
 
 function poolFor(sessionDir: string): Pool[] {
   const out: Pool[] = [];
@@ -113,7 +104,7 @@ function poolFor(sessionDir: string): Pool[] {
     const snap = parseSnapshot(fs.readFileSync(path.join(sessionDir, f), "utf8"), f);
     const side = readSidecar(sessionDir, f);
     if (side) {
-      side.forEach((l, i) => out.push({ ctl: String(l.ctl ?? "r" + i), step: snap.step, role: l.role || "", name: l.name || "", by: l.by, value: l.value, locName: l.locName, attr: l.attr, uScore: l.score ?? 60 }));
+      side.forEach((l, i) => out.push({ ctl: String(l.ctl ?? "r" + i), step: snap.step, role: l.role || "", name: l.name || "", by: l.by, value: l.value, locName: l.locName, attr: l.attr, uScore: l.score ?? 60, scopeBy: l.scopeBy, scopeValue: l.scopeValue, scopeName: l.scopeName, scopeAttr: l.scopeAttr, scopeText: l.scopeText }));
       continue;
     }
     let nodeNo = 0;
@@ -121,7 +112,7 @@ function poolFor(sessionDir: string): Pool[] {
       nodeNo++;
       for (const l of n.locators) {
         if (l.matches != null) continue;
-        out.push({ ctl: "n" + nodeNo, step: snap.step, role: n.role, name: n.name, by: l.by, value: l.value, locName: l.name, attr: l.attr, uScore: l.score ?? 60 });
+        out.push({ ctl: "n" + nodeNo, step: snap.step, role: n.role, name: n.name, by: l.by, value: l.value, locName: l.name, attr: l.attr, uScore: l.score ?? 60, scopeBy: l.scopeBy, scopeValue: l.scopeValue, scopeName: l.scopeName, scopeAttr: l.scopeAttr, scopeText: l.scopeText });
       }
     });
   }

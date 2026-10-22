@@ -69,8 +69,13 @@ async function main(argv: string[]): Promise<number> {
   const dir = resolveSession(sess);
   switch (cmd) {
     case "bench": {
-      const rep = await bench(benchTmpCopy(dir), path.basename(dir));
-      process.stdout.write(rest.includes("--md") ? rep.markdown : rep.text);
+      const tmp = benchTmpCopy(dir);
+      try {
+        const rep = await bench(tmp, path.basename(dir));
+        process.stdout.write(rest.includes("--md") ? rep.markdown : rep.text);
+      } finally {
+        fs.rmSync(tmp, { recursive: true, force: true }); // the copy holds recorded actions
+      }
       return 0;
     }
     case "verify": {

@@ -55,14 +55,27 @@ export function chromeKey(n: CNode): string {
   return hashText(renderNodes([n]).join("\n").replace(/,? ?dup \d+\/\d+/g, "").replace(/ \[\]/g, ""));
 }
 
-/** Top-level blocks that repeat on at least half of the pages (min 2). */
-export function findChrome(trees: CNode[][]): Set<string> {
-  const counts = new Map<string, number>();
+/**
+ * Top-level blocks that repeat across at least half of the distinct pages (URL paths),
+ * minimum 3 pages. Counting pages, not captures, keeps a page captured twice from
+ * turning its own content (a title, a sort box) into "chrome".
+ */
+export function findChrome(trees: CNode[][], pageKeys?: string[]): Set<string> {
+  const keys = pageKeys && pageKeys.length === trees.length ? pageKeys : trees.map((_, i) => String(i));
+  const pagesOf = new Map<string, Set<string>>();
   // Toasts and dialogs are state, never chrome, even when they linger across steps.
   const STATE = new Set(["alert", "alertdialog", "dialog", "status"]);
-  for (const t of trees) for (const k of new Set(t.filter((n) => !STATE.has(n.role)).map(chromeKey))) counts.set(k, (counts.get(k) || 0) + 1);
-  const min = Math.max(2, Math.ceil(trees.length / 2));
-  return new Set([...counts].filter(([, c]) => c >= min).map(([k]) => k));
+  trees.forEach((t, i) => {
+    for (const k of new Set(t.filter((n) => !STATE.has(n.role)).map(chromeKey))) {
+      const set = pagesOf.get(k) || new Set<string>();
+      set.add(keys[i]);
+      pagesOf.set(k, set);
+    }
+  });
+  const distinct = new Set(keys).size;
+  if (distinct < 3) return new Set();
+  const min = Math.max(3, Math.ceil(distinct / 2));
+  return new Set([...pagesOf].filter(([, p]) => p.size >= min).map(([k]) => k));
 }
 
 function chromeLabel(n: CNode): string {
@@ -94,7 +107,7 @@ export function outlineOf(nodes: CNode[], max = 12): string[] {
   return out;
 }
 
-export function chunkSnapshot(snap: Snapshot, opts: ChunkOptions = {}): { chunks: Chunk[]; page: PageEntry; compact: string; chromeText: string } {
+export function chunkSnapshot(snap: Snapshot, opts: ChunkOptions = {}): { chunks: Chunk[]; page: PageEntry; compact: string } {
   const max = opts.maxTokens ?? 200;
   const full = compactNodes(snap.roots, opts);
   const isChrome = (n: CNode) => !!opts.chrome && opts.chrome.has(chromeKey(n));
@@ -164,7 +177,6 @@ export function chunkSnapshot(snap: Snapshot, opts: ChunkOptions = {}): { chunks
   return {
     chunks,
     compact,
-    chromeText: chromeNodes.length ? renderNodes(chromeNodes).join("\n") : "",
     page: {
       step: snap.step,
       file: snap.file,
