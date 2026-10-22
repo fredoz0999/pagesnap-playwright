@@ -1,0 +1,140 @@
+# URL: https://parabank.parasoft.com/parabank/findtrans.htm
+# Title: ParaBank | Find Transactions
+# Viewport: 1280x900
+# Captured: 2026-10-22T00:01:30Z
+# Trigger: manual
+# Step: 11
+# Note: action: click Find Transactions by amount | assert: results table lists the Bill Payment to Electric Co
+# Session goal: Parabank: register, open savings account, transfer, pay bill, find transaction
+
+- img
+- img "ParaBank"
+- list
+  - listitem
+  - listitem
+    - link "About Us" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Services" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Products" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Locations" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Admin Page":
+      locators:
+        - {by: role, value: "link", name: "Admin Page", stability: medium, score: 95}
+- list
+  - listitem
+    - link "home":
+      locators:
+        - {by: role, value: "link", name: "home", stability: medium, score: 95}
+  - listitem
+    - link "about":
+      locators:
+        - {by: role, value: "link", name: "about", stability: medium, score: 95}
+  - listitem
+    - link "contact":
+      locators:
+        - {by: role, value: "link", name: "contact", stability: medium, score: 95}
+- heading "Account Services" [level=2]
+- list
+  - listitem
+    - link "Open New Account":
+      locators:
+        - {by: role, value: "link", name: "Open New Account", stability: medium, score: 95}
+  - listitem
+    - link "Accounts Overview":
+      locators:
+        - {by: role, value: "link", name: "Accounts Overview", stability: medium, score: 95}
+  - listitem
+    - link "Transfer Funds":
+      locators:
+        - {by: role, value: "link", name: "Transfer Funds", stability: medium, score: 95}
+  - listitem
+    - link "Bill Pay":
+      locators:
+        - {by: role, value: "link", name: "Bill Pay", stability: medium, score: 95}
+  - listitem
+    - link "Find Transactions":
+      locators:
+        - {by: role, value: "link", name: "Find Transactions", stability: medium, score: 95}
+  - listitem
+    - link "Update Contact Info":
+      locators:
+        - {by: role, value: "link", name: "Update Contact Info", stability: medium, score: 95}
+  - listitem
+    - link "Request Loan":
+      locators:
+        - {by: role, value: "link", name: "Request Loan", stability: medium, score: 95}
+  - listitem
+    - link "Log Out":
+      locators:
+        - {by: role, value: "link", name: "Log Out", stability: medium, score: 95}
+- heading "Transaction Results" [level=1]
+- table
+  - row
+    - columnheader
+    - columnheader
+    - columnheader
+    - columnheader
+  - row
+    - cell
+    - cell
+      - link "Bill Payment to Electric Co":
+        locators:
+          - {by: role, value: "link", name: "Bill Payment to Electric Co", stability: medium, score: 95}
+    - cell
+    - cell
+- list
+  - listitem
+    - link "Home":
+      locators:
+        - {by: role, value: "link", name: "Home", stability: medium, score: 95}
+  - listitem
+    - link "About Us" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Services" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Products" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Locations" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Site Map":
+      locators:
+        - {by: role, value: "link", name: "Site Map", stability: medium, score: 95}
+  - listitem
+    - link "Contact Us":
+      locators:
+        - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- list
+  - listitem
+  - listitem
+    - link "www.parasoft.com":
+      locators:
+        - {by: role, value: "link", name: "www.parasoft.com", stability: medium, score: 95}
+
+# --- All <select> options ---
+# <select> "accountId":
+#   - 13677
+#   - 13566 (selected)
+
+# --- Tables (headers + first rows) ---
+# table "transactionTable":
+#   headers: Date | Transaction | Debit (-) | Credit (+)
+#   row 1: 10-21-2026 | Bill Payment to Electric Co | $12.34 | 

@@ -10,7 +10,7 @@ import crypto from "node:crypto";
 import { type CNode, compactNodes, compactTail, isLandmarkLike, renderNodes, snapshotHeaderLine, type CompactOptions } from "./compact.js";
 import { estimateTokens, type Snapshot } from "./parse.js";
 
-export type ChunkKind = "region" | "item" | "tables";
+export type ChunkKind = "region" | "item" | "tables" | "chrome";
 
 export interface Chunk {
   id: string;
@@ -36,6 +36,8 @@ export interface PageEntry {
 }
 
 export interface ChunkOptions extends CompactOptions {
+  /** chromeKey()s of top-level blocks repeated on many pages (nav, header, footer) */
+  chrome?: Set<string>;
   /** soft token budget per chunk (default 200) */
   maxTokens?: number;
 }
@@ -46,6 +48,30 @@ function shortLabel(n: CNode): string {
 
 export function hashText(t: string): string {
   return crypto.createHash("sha1").update(t).digest("hex").slice(0, 12);
+}
+
+/** Identity of a block for cross-page repetition ("dup k/n" indexes ignored). */
+export function chromeKey(n: CNode): string {
+  return hashText(renderNodes([n]).join("\n").replace(/,? ?dup \d+\/\d+/g, "").replace(/ \[\]/g, ""));
+}
+
+/** Top-level blocks that repeat on at least half of the pages (min 2). */
+export function findChrome(trees: CNode[][]): Set<string> {
+  const counts = new Map<string, number>();
+  for (const t of trees) for (const k of new Set(t.map(chromeKey))) counts.set(k, (counts.get(k) || 0) + 1);
+  const min = Math.max(2, Math.ceil(trees.length / 2));
+  return new Set([...counts].filter(([, c]) => c >= min).map(([k]) => k));
+}
+
+function chromeLabel(n: CNode): string {
+  const named = (x: CNode): CNode | null => {
+    if (x.name) return x;
+    for (const c of x.children) { const h = named(c); if (h) return h; }
+    return null;
+  };
+  if (n.name) return shortLabel(n);
+  const h = named(n);
+  return h ? n.role + " (" + shortLabel(h) + ", ...)" : n.role;
 }
 
 /** Top-level regions plus headings: a ~10-line map of the page. */
@@ -66,9 +92,12 @@ export function outlineOf(nodes: CNode[], max = 12): string[] {
   return out;
 }
 
-export function chunkSnapshot(snap: Snapshot, opts: ChunkOptions = {}): { chunks: Chunk[]; page: PageEntry; compact: string } {
+export function chunkSnapshot(snap: Snapshot, opts: ChunkOptions = {}): { chunks: Chunk[]; page: PageEntry; compact: string; chromeText: string } {
   const max = opts.maxTokens ?? 200;
-  const tree = compactNodes(snap.roots, opts);
+  const full = compactNodes(snap.roots, opts);
+  const isChrome = (n: CNode) => !!opts.chrome && opts.chrome.has(chromeKey(n));
+  const chromeNodes = full.filter(isChrome);
+  const tree = full.filter((n) => !isChrome(n));
   const chunks: Chunk[] = [];
   const add = (kind: ChunkKind, path: string[], lines: string[]) => {
     const text = lines.join("\n");
@@ -118,20 +147,28 @@ export function chunkSnapshot(snap: Snapshot, opts: ChunkOptions = {}): { chunks
 
   emit(tree, [], []);
   items(tree, []);
+  // Shared site chrome: chunked separately, so page content stays small and a
+  // step diff is not "changed" just because the content next to the nav changed.
+  for (const n of chromeNodes) add("chrome", ["site chrome"], renderNodes([n]));
+  items(chromeNodes, ["site chrome"]);
   const tail = compactTail(snap.tail);
   if (tail.length) add("tables", ["tables"], tail);
 
-  const compactLines = [snapshotHeaderLine(snap), ...renderNodes(tree), ...tail];
+  const chromeLine = chromeNodes.length
+    ? ["~ site chrome on most pages (lean/CHROME.txt, BasePage): " + chromeNodes.map(chromeLabel).join("; ")]
+    : [];
+  const compactLines = [snapshotHeaderLine(snap), ...chromeLine, ...renderNodes(tree), ...tail];
   const compact = compactLines.join("\n") + "\n";
   return {
     chunks,
     compact,
+    chromeText: chromeNodes.length ? renderNodes(chromeNodes).join("\n") : "",
     page: {
       step: snap.step,
       file: snap.file,
       url: snap.url,
       header: snapshotHeaderLine(snap),
-      outline: outlineOf(tree),
+      outline: [...(chromeNodes.length ? ["~ site chrome: " + chromeNodes.length + " shared blocks (nav, header, footer) - lean/CHROME.txt, BasePage"] : []), ...outlineOf(tree)],
       compactTokens: estimateTokens(compact),
       rawTokens: estimateTokens(snap.raw),
     },

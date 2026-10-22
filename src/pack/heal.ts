@@ -8,7 +8,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { parseSnapshot, walk } from "./parse.js";
+import { idSelector, parseSnapshot, walk } from "./parse.js";
 import { snapshotFiles } from "./index.js";
 import { extractCalls, readSidecar, validateSpec } from "./validate.js";
 import { tokenize } from "./embed.js";
@@ -47,7 +47,7 @@ function q(s: string): string {
 export function candidateCode(c: { by: string; value: string; locName?: string }): string {
   switch (c.by) {
     case "testid": return "getByTestId(" + q(c.value) + ")";
-    case "id": return "locator(" + q("#" + c.value) + ")";
+    case "id": return "locator(" + q(idSelector(c.value)) + ")";
     case "name": return "locator(" + q('[name="' + c.value + '"]') + ")";
     case "role": return "getByRole(" + q(c.value) + (c.locName ? ", { name: " + q(c.locName) + " }" : "") + ")";
     case "label": return "getByLabel(" + q(c.value) + ")";

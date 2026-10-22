@@ -27,7 +27,7 @@ describe.skipIf(!hasBrowser)("live: capture, verify, heal", () => {
   let browser: Browser;
   let session = "";
   const pages: Record<string, string> = {
-    "/": "login.html", "/inventory.html": "inventory.html", "/cart.html": "cart.html",
+    "/": "login.html", "/inventory.html": "inventory.html", "/cart.html": "cart.html", "/form.html": "unlabeled-form.html",
   };
   let renamed = false;
 
@@ -68,6 +68,29 @@ describe.skipIf(!hasBrowser)("live: capture, verify, heal", () => {
     const r = await queryIndex(session, "click Checkout", { step: 2, legend: false });
     expect(r.text).toContain("testid=checkout");
   });
+
+  it("unlabeled inputs never get role locators; submit inputs are named by value", async () => {
+    const page = await browser.newPage();
+    const dir = mkdtempSync(path.join(tmpdir(), "ps-form-"));
+    const snap = new ScriptedSession({ outputDir: dir, buildPack: false });
+    await page.goto(base + "/form.html");
+    const file = await snap.capture(page, "form");
+    await page.close();
+    const yaml = readFileSync(path.join(dir, file), "utf8");
+    expect(yaml).toContain('button "Register"');
+    expect(yaml).toContain('{by: role, value: "button", name: "Register"');
+    expect(yaml).not.toMatch(/by: role, value: "textbox"/);
+    const side = JSON.parse(readFileSync(path.join(dir, file.replace(".yaml", ".locators.json")), "utf8"));
+    expect(side.locators.filter((l: { by: string; role: string }) => l.role === "textbox" && l.by === "role")).toEqual([]);
+    expect(side.locators.some((l: { by: string; value: string }) => l.by === "id" && l.value === "customer.firstName")).toBe(true);
+    // the locator Playwright would use for that id must actually resolve
+    const { idSelector } = await import("../src/pack/parse.js");
+    const p2 = await browser.newPage();
+    await p2.goto(base + "/form.html");
+    expect(await p2.locator(idSelector("customer.firstName")).count()).toBe(1);
+    expect(await p2.locator("#customer.firstName").count()).toBe(0); // the naive selector is wrong
+    await p2.close();
+  }, 60000);
 
   it("verify passes against the unchanged app", async () => {
     const rep = await verifySession(session);

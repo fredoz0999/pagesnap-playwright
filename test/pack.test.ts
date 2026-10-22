@@ -229,7 +229,7 @@ describe("pom", () => {
     const { writePom, locatorCode } = await import("../src/pack/pom.js");
     const out = mkdtempSync(path.join(tmpdir(), "ps-pom-"));
     const r = writePom(FIXTURE, out);
-    expect(r.pages.map((p) => p.className)).toEqual(["SwagLabsPage", "InventoryPage", "CartPage"]);
+    expect(r.pages.map((p) => p.className)).toEqual(["HomePage", "InventoryPage", "CartPage"]);
     expect(r.testIdAttribute).toBe("data-test");
     const inv = r.pages.find((p) => p.className === "InventoryPage")!;
     expect(inv.steps).toEqual([2, 3]);

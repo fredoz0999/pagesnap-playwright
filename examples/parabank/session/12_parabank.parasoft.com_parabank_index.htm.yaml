@@ -1,0 +1,156 @@
+# URL: https://parabank.parasoft.com/parabank/index.htm
+# Title: ParaBank | Welcome | Online Banking
+# Viewport: 1280x900
+# Captured: 2026-10-22T00:01:30Z
+# Trigger: manual
+# Step: 12
+# Note: action: log out | assert: Customer Login form visible
+# Session goal: Parabank: register, open savings account, transfer, pay bill, find transaction
+
+- img
+- img "ParaBank"
+- list
+  - listitem
+  - listitem
+    - link "About Us" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Services" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Products" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Locations" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Admin Page":
+      locators:
+        - {by: role, value: "link", name: "Admin Page", stability: medium, score: 95}
+- list
+  - listitem
+    - link "home":
+      locators:
+        - {by: role, value: "link", name: "home", stability: medium, score: 95}
+  - listitem
+    - link "about":
+      locators:
+        - {by: role, value: "link", name: "about", stability: medium, score: 95}
+  - listitem
+    - link "contact":
+      locators:
+        - {by: role, value: "link", name: "contact", stability: medium, score: 95}
+- heading "Customer Login" [level=2]
+- form:
+  locators:
+    - {by: name, value: "login", stability: high, score: 88}
+  - textbox "username":
+    value: ""
+    locators:
+      - {by: name, value: "username", stability: high, score: 88}
+  - textbox "password":
+    value: "***"
+    locators:
+      - {by: name, value: "password", stability: high, score: 88}
+  - button "Log In":
+    value: "Log In"
+    locators:
+      - {by: role, value: "button", name: "Log In", stability: medium, score: 95}
+- link "Forgot login info?":
+  locators:
+    - {by: role, value: "link", name: "Forgot login info?", stability: medium, score: 95}
+- link "Register":
+  locators:
+    - {by: role, value: "link", name: "Register", stability: medium, score: 95}
+- list
+  - listitem
+  - listitem
+    - link "Withdraw Funds":
+      locators:
+        - {by: role, value: "link", name: "Withdraw Funds", stability: medium, score: 95}
+  - listitem
+    - link "Transfer Funds" [dup 1/2]:
+      locators:
+        - {by: css, value: "#rightPanel > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Check Balances":
+      locators:
+        - {by: role, value: "link", name: "Check Balances", stability: medium, score: 95}
+  - listitem
+    - link "Make Deposits":
+      locators:
+        - {by: role, value: "link", name: "Make Deposits", stability: medium, score: 95}
+- list
+  - listitem
+  - listitem
+    - link "Bill Pay":
+      locators:
+        - {by: role, value: "link", name: "Bill Pay", stability: medium, score: 95}
+  - listitem
+    - link "Account History":
+      locators:
+        - {by: role, value: "link", name: "Account History", stability: medium, score: 95}
+  - listitem
+    - link "Transfer Funds" [dup 2/2]:
+      locators:
+        - {by: css, value: "#rightPanel > ul:nth-child(3) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+- link "Read More" [dup 1/2]:
+  locators:
+    - {by: css, value: "#rightPanel > p:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+- heading "LATEST NEWS" [level=4]
+- list
+  - listitem
+  - listitem
+    - link "ParaBank Is Now Re-Opened":
+      locators:
+        - {by: role, value: "link", name: "ParaBank Is Now Re-Opened", stability: medium, score: 95}
+  - listitem
+    - link "New! Online Bill Pay":
+      locators:
+        - {by: role, value: "link", name: "New! Online Bill Pay", stability: medium, score: 95}
+  - listitem
+    - link "New! Online Account Transfers":
+      locators:
+        - {by: role, value: "link", name: "New! Online Account Transfers", stability: medium, score: 95}
+- link "Read More" [dup 2/2]:
+  locators:
+    - {by: css, value: "#rightPanel > p:nth-child(7) > a:nth-child(1)", stability: low, score: 60}
+- list
+  - listitem
+    - link "Home":
+      locators:
+        - {by: role, value: "link", name: "Home", stability: medium, score: 95}
+  - listitem
+    - link "About Us" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Services" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Products" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Locations" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Site Map":
+      locators:
+        - {by: role, value: "link", name: "Site Map", stability: medium, score: 95}
+  - listitem
+    - link "Contact Us":
+      locators:
+        - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- list
+  - listitem
+  - listitem
+    - link "www.parasoft.com":
+      locators:
+        - {by: role, value: "link", name: "www.parasoft.com", stability: medium, score: 95}

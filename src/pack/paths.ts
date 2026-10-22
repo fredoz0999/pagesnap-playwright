@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { buildIndex, indexIsStale, loadIndex } from "./index.js";
+import { buildIndex, indexIsStale, INDEX_FILE, LEAN_DIR } from "./index.js";
 
 /** npm run changes cwd to the tool folder; INIT_CWD is where the user (or agent) ran it. */
 export function userPath(p: string): string {
@@ -26,6 +26,9 @@ export function resolveSession(arg: string): string {
 export async function ensureIndex(dir: string): Promise<void> {
   if (!indexIsStale(dir)) return;
   let embedder: string | undefined;
-  try { embedder = loadIndex(dir).embedder; } catch { /* first build */ }
+  try {
+    // read raw: an index from an older version still tells us the embedder
+    embedder = (JSON.parse(fs.readFileSync(path.join(dir, LEAN_DIR, INDEX_FILE), "utf8")) as { embedder?: string }).embedder;
+  } catch { /* first build */ }
   await buildIndex(dir, { embedder });
 }

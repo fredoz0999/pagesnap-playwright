@@ -179,3 +179,11 @@ export function walk(nodes: SnapNode[], fn: (n: SnapNode, path: SnapNode[]) => v
 export function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4);
 }
+
+/**
+ * CSS selector for an element id. "#customer.firstName" would mean id=customer
+ * with class firstName, so ids that are not plain identifiers use [id="..."].
+ */
+export function idSelector(id: string): string {
+  return /^[A-Za-z_][\w-]*$/.test(id) ? "#" + id : '[id="' + id.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"]';
+}

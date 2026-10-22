@@ -131,7 +131,7 @@ export function extractCalls(src: string): Call[] {
       calls.push({
         line: lineAt(m.index), call: m[0].replace(/\s+/g, " "), kind, arg, opts: m[3] || "",
         dynamic: m[1] === "`" && arg.includes("${"),
-        narrowed: /^\s*\.(first|last|nth)\(/.test(src.slice(m.index + m[0].length, m.index + m[0].length + 40)),
+        narrowed: /^\s*\.(first|last|nth|filter)\(/.test(src.slice(m.index + m[0].length, m.index + m[0].length + 40)),
       });
     }
   }
@@ -169,7 +169,7 @@ function check(call: Call, invs: Inventory[]): Finding {
     if (!counts.length) return null;
     const unique = counts.filter((x) => x.n === 1).map((x) => x.step);
     if (unique.length) return f("ok", "steps " + unique.join(","));
-    if (call.narrowed) return f("ok", "steps " + counts.map((x) => x.step).join(",") + " (" + counts[0].n + " matches, narrowed by .first/.last/.nth - prefer a unique locator)");
+    if (call.narrowed) return f("ok", "steps " + counts.map((x) => x.step).join(",") + " (" + counts[0].n + " matches, narrowed by .first/.last/.nth/.filter)");
     return f("ambiguous", counts.map((x) => "step " + x.step + ": " + x.n + " matches").join("; ") + " - scope it to a container or use a more specific locator");
   };
   switch (call.kind) {
@@ -199,7 +199,7 @@ function check(call: Call, invs: Inventory[]): Finding {
     }
     case "locator": {
       const a = call.arg.trim();
-      const idm = /^#([\w-]+)$/.exec(a);
+      const idm = /^#([\w-]+)$/.exec(a) || /^\[id=["']([^"'\]]+)["']\]$/.exec(a);
       if (idm) return steps((i) => i.ids.get(idm[1]) || 0) || notKept("id '" + idm[1] + "'");
       const nm = /^(?:[a-z]+)?\[name=["']?([^"'\]]+)["']?\]$/.exec(a);
       if (nm) return steps((i) => i.names.get(nm[1]) || 0) || notKept("name='" + nm[1] + "'");

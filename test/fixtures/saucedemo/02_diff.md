@@ -101,7 +101,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 
 ## Removed
 
-- - button "login-button":
+- - button "Login":
 - - form:
 - - generic "secret_sauce":
 - - heading "Accepted usernames are:" [level=4]

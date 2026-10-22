@@ -1,0 +1,218 @@
+# URL: https://parabank.parasoft.com/parabank/register.htm
+# Title: ParaBank | Register for Free Online Account Access
+# Viewport: 1280x900
+# Captured: 2026-10-22T00:01:25Z
+# Trigger: manual
+# Step: 1
+# Note: action: open Register | data: new unique username
+# Session goal: Parabank: register, open savings account, transfer, pay bill, find transaction
+
+- link:
+  locators:
+    - {by: css, value: "#topPanel > a:nth-child(1)", stability: low, score: 60}
+  - img
+- link:
+  locators:
+    - {by: css, value: "#topPanel > a:nth-child(2)", stability: low, score: 60}
+  - img "ParaBank"
+- list
+  - listitem
+  - listitem
+    - link "About Us" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Services" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Products" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Locations" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Admin Page":
+      locators:
+        - {by: role, value: "link", name: "Admin Page", stability: medium, score: 95}
+- list
+  - listitem
+    - link "home":
+      locators:
+        - {by: role, value: "link", name: "home", stability: medium, score: 95}
+  - listitem
+    - link "about":
+      locators:
+        - {by: role, value: "link", name: "about", stability: medium, score: 95}
+  - listitem
+    - link "contact":
+      locators:
+        - {by: role, value: "link", name: "contact", stability: medium, score: 95}
+- heading "Customer Login" [level=2]
+- form:
+  locators:
+    - {by: name, value: "login", stability: high, score: 88}
+  - textbox "username":
+    value: ""
+    locators:
+      - {by: name, value: "username", stability: high, score: 88}
+  - textbox "password":
+    value: "***"
+    locators:
+      - {by: name, value: "password", stability: high, score: 88}
+  - button "Log In":
+    value: "Log In"
+    locators:
+      - {by: role, value: "button", name: "Log In", stability: medium, score: 95}
+- link "Forgot login info?":
+  locators:
+    - {by: role, value: "link", name: "Forgot login info?", stability: medium, score: 95}
+- link "Register":
+  locators:
+    - {by: role, value: "link", name: "Register", stability: medium, score: 95}
+- heading "Signing up is easy!" [level=1]
+- form:
+  locators:
+    - {by: id, value: "customerForm", stability: high, score: 90}
+  - table
+    - row
+      - cell
+      - cell
+        - textbox "customer.firstName":
+          value: ""
+          locators:
+            - {by: id, value: "customer.firstName", stability: high, score: 90}
+      - cell
+    - row
+      - cell
+      - cell
+        - textbox "customer.lastName":
+          value: ""
+          locators:
+            - {by: id, value: "customer.lastName", stability: high, score: 90}
+      - cell
+    - row
+      - cell
+      - cell
+        - textbox "customer.address.street":
+          value: ""
+          locators:
+            - {by: id, value: "customer.address.street", stability: high, score: 90}
+      - cell
+    - row
+      - cell
+      - cell
+        - textbox "customer.address.city":
+          value: ""
+          locators:
+            - {by: id, value: "customer.address.city", stability: high, score: 90}
+      - cell
+    - row
+      - cell
+      - cell
+        - textbox "customer.address.state":
+          value: ""
+          locators:
+            - {by: id, value: "customer.address.state", stability: high, score: 90}
+      - cell
+    - row
+      - cell
+      - cell
+        - textbox "customer.address.zipCode":
+          value: ""
+          locators:
+            - {by: id, value: "customer.address.zipCode", stability: high, score: 90}
+      - cell
+    - row
+      - cell
+      - cell
+        - textbox "customer.phoneNumber":
+          value: ""
+          locators:
+            - {by: id, value: "customer.phoneNumber", stability: high, score: 90}
+      - cell
+    - row
+      - cell
+      - cell
+        - textbox "customer.ssn":
+          value: ""
+          locators:
+            - {by: id, value: "customer.ssn", stability: high, score: 90}
+      - cell
+    - row
+      - cell
+    - row
+      - cell
+      - cell
+        - textbox "customer.username":
+          value: ""
+          locators:
+            - {by: id, value: "customer.username", stability: high, score: 90}
+      - cell
+    - row
+      - cell
+      - cell
+        - textbox "customer.password":
+          value: "***"
+          locators:
+            - {by: id, value: "customer.password", stability: high, score: 90}
+      - cell
+    - row
+      - cell
+      - cell
+        - textbox "repeatedPassword":
+          value: "***"
+          locators:
+            - {by: id, value: "repeatedPassword", stability: high, score: 90}
+      - cell
+    - row
+      - cell
+      - cell
+        - button "Register":
+          value: "Register"
+          locators:
+            - {by: role, value: "button", name: "Register", stability: medium, score: 95}
+- list
+  - listitem
+    - link "Home":
+      locators:
+        - {by: role, value: "link", name: "Home", stability: medium, score: 95}
+  - listitem
+    - link "About Us" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Services" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Products" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Locations" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Site Map":
+      locators:
+        - {by: role, value: "link", name: "Site Map", stability: medium, score: 95}
+  - listitem
+    - link "Contact Us":
+      locators:
+        - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- list
+  - listitem
+  - listitem
+    - link "www.parasoft.com":
+      locators:
+        - {by: role, value: "link", name: "www.parasoft.com", stability: medium, score: 95}
+
+# --- Tables (headers + first rows) ---
+# table "table-0":
+#   row 1: First Name: |  | 
+#   row 2: Last Name: |  | 
+#   row 3: Address: |  | 
+#   … 10 more rows (truncated)

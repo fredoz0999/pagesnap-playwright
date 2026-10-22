@@ -86,6 +86,7 @@ async function main() {
     ["payee.accountNumber", "12345"], ["verifyAccount", "12345"], ["amount", "12.34"],
   ];
   for (const [k, v] of bp) await page.locator(`input[name="${k}"]`).fill(v);
+  const billFrom = await page.locator('select[name="fromAccountId"]').inputValue();
   await page.locator('input[value="Send Payment"]').click();
   await page.getByText("Bill Payment Complete").waitFor();
   await cap("action: click Send Payment | assert: 'Bill Payment Complete' naming Electric Co and $12.34");
@@ -93,7 +94,8 @@ async function main() {
   // 10-11 find transactions
   await page.getByRole("link", { name: "Find Transactions" }).click();
   await page.locator("#accountId option").first().waitFor({ state: "attached" });
-  await cap("action: open Find Transactions | data: find by amount 12.34");
+  await cap("action: open Find Transactions | data: account used for the bill payment, find by amount 12.34");
+  await page.locator("#accountId").selectOption(billFrom); // option order differs per page
   await page.locator("#amount").fill("12.34");
   await page.locator("#findByAmount").click();
   await page.locator("#transactionTable tbody tr").first().waitFor();

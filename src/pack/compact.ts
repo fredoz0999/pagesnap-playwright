@@ -9,7 +9,7 @@
  *  - nameless generic wrappers flattened, `- ` bullets and 2-space indents dropped
  *  - the duplicate "All <select> options" and hint footer blocks removed
  */
-import { type Locator, type SnapNode, type Snapshot } from "./parse.js";
+import { idSelector, type Locator, type SnapNode, type Snapshot } from "./parse.js";
 
 export interface CNode {
   /** one compact line, no indentation */
@@ -49,7 +49,7 @@ export function fmtLocator(l: Locator, node: { role: string; name: string }): st
   const dup = l.matches != null ? " (x" + l.matches + " not unique)" : "";
   switch (l.by) {
     case "testid": return "testid=" + l.value + dup;
-    case "id": return "#" + l.value + dup;
+    case "id": return idSelector(l.value) + dup;
     case "name": return "[name=" + l.value + "]" + dup;
     case "role": {
       const implied = l.value === node.role && (l.name || "") === node.name;
@@ -96,6 +96,8 @@ function usefulLocators(n: SnapNode): Locator[] {
   if (ACTIONABLE.has(n.role)) return n.locators;
   return n.locators.filter((l) => !(l.by === "css" && l.stability === "low"));
 }
+
+const TABLE_PARTS = new Set(["row", "cell", "gridcell", "columnheader", "rowheader", "rowgroup"]);
 
 function isBareWrapper(n: SnapNode): boolean {
   return (n.role === "generic" || n.role === "group" || n.role === "none" || n.role === "presentation")
@@ -159,6 +161,12 @@ export function compactNodes(nodes: SnapNode[], opts: CompactOptions = {}): CNod
       // A generic child that only repeats its parent's name (link > div text) adds nothing.
       const children = n.children.filter((c) => !(c.role === "generic" && c.name && c.name === n.name && !c.children.length && !usefulLocators(c).length));
       const kids = conv(children);
+      // Empty table scaffolding (row / cell with no name): the table text is in the
+      // "tables:" block; keep only the controls inside (links, inputs).
+      if (TABLE_PARTS.has(n.role) && !n.name && !n.flags.length && !usefulLocators(n).length && !n.details.length) {
+        out.push(...kids);
+        continue;
+      }
       if (isBareWrapper(n)) {
         // Single-child wrappers flatten away. Multi-child ones stay as a bare
         // "generic" line so repeated cards keep their boundaries and collapse.

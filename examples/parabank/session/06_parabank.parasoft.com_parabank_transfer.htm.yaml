@@ -1,0 +1,149 @@
+# URL: https://parabank.parasoft.com/parabank/transfer.htm
+# Title: ParaBank | Transfer Funds
+# Viewport: 1280x900
+# Captured: 2026-10-22T00:01:28Z
+# Trigger: manual
+# Step: 6
+# Note: action: open Transfer Funds | data: amount 25 from first account to the new savings account
+# Session goal: Parabank: register, open savings account, transfer, pay bill, find transaction
+
+- img
+- img "ParaBank"
+- list
+  - listitem
+  - listitem
+    - link "About Us" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Services" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Products" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Locations" [dup 1/2]:
+      locators:
+        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Admin Page":
+      locators:
+        - {by: role, value: "link", name: "Admin Page", stability: medium, score: 95}
+- list
+  - listitem
+    - link "home":
+      locators:
+        - {by: role, value: "link", name: "home", stability: medium, score: 95}
+  - listitem
+    - link "about":
+      locators:
+        - {by: role, value: "link", name: "about", stability: medium, score: 95}
+  - listitem
+    - link "contact":
+      locators:
+        - {by: role, value: "link", name: "contact", stability: medium, score: 95}
+- heading "Account Services" [level=2]
+- list
+  - listitem
+    - link "Open New Account":
+      locators:
+        - {by: role, value: "link", name: "Open New Account", stability: medium, score: 95}
+  - listitem
+    - link "Accounts Overview":
+      locators:
+        - {by: role, value: "link", name: "Accounts Overview", stability: medium, score: 95}
+  - listitem
+    - link "Transfer Funds":
+      locators:
+        - {by: role, value: "link", name: "Transfer Funds", stability: medium, score: 95}
+  - listitem
+    - link "Bill Pay":
+      locators:
+        - {by: role, value: "link", name: "Bill Pay", stability: medium, score: 95}
+  - listitem
+    - link "Find Transactions":
+      locators:
+        - {by: role, value: "link", name: "Find Transactions", stability: medium, score: 95}
+  - listitem
+    - link "Update Contact Info":
+      locators:
+        - {by: role, value: "link", name: "Update Contact Info", stability: medium, score: 95}
+  - listitem
+    - link "Request Loan":
+      locators:
+        - {by: role, value: "link", name: "Request Loan", stability: medium, score: 95}
+  - listitem
+    - link "Log Out":
+      locators:
+        - {by: role, value: "link", name: "Log Out", stability: medium, score: 95}
+- heading "Transfer Funds" [level=1]
+- form:
+  locators:
+    - {by: id, value: "transferForm", stability: high, score: 90}
+  - textbox "input":
+    value: ""
+    locators:
+      - {by: id, value: "amount", stability: high, score: 90}
+  - combobox "fromAccountId":
+    value: "13566"
+    locators:
+      - {by: id, value: "fromAccountId", stability: high, score: 90}
+    options:  # native <select> - available without opening UI
+      - option "13566" [selected]
+      - option "13677"
+  - combobox "toAccountId":
+    value: "13566"
+    locators:
+      - {by: id, value: "toAccountId", stability: high, score: 90}
+    options:  # native <select> - available without opening UI
+      - option "13566" [selected]
+      - option "13677"
+  - button "Transfer":
+    value: "Transfer"
+    locators:
+      - {by: role, value: "button", name: "Transfer", stability: medium, score: 95}
+- list
+  - listitem
+    - link "Home":
+      locators:
+        - {by: role, value: "link", name: "Home", stability: medium, score: 95}
+  - listitem
+    - link "About Us" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Services" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Products" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Locations" [dup 2/2]:
+      locators:
+        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+  - listitem
+    - link "Site Map":
+      locators:
+        - {by: role, value: "link", name: "Site Map", stability: medium, score: 95}
+  - listitem
+    - link "Contact Us":
+      locators:
+        - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- list
+  - listitem
+  - listitem
+    - link "www.parasoft.com":
+      locators:
+        - {by: role, value: "link", name: "www.parasoft.com", stability: medium, score: 95}
+
+# --- All <select> options ---
+# <select> "fromAccountId":
+#   - 13566 (selected)
+#   - 13677
+# <select> "toAccountId":
+#   - 13566 (selected)
+#   - 13677

@@ -14,7 +14,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { parseSnapshot, walk, type Locator, type SnapNode } from "./parse.js";
+import { idSelector, parseSnapshot, walk, type Locator, type SnapNode } from "./parse.js";
 import { snapshotFiles } from "./index.js";
 
 export interface PomMember {
@@ -80,7 +80,7 @@ function js(s: string): string {
 export function locatorCode(l: Locator): string {
   switch (l.by) {
     case "testid": return "this.page.getByTestId(" + js(l.value) + ")";
-    case "id": return "this.page.locator(" + js("#" + l.value) + ")";
+    case "id": return "this.page.locator(" + js(idSelector(l.value)) + ")";
     case "name": return "this.page.locator(" + js('[name="' + l.value + '"]') + ")";
     case "role": return "this.page.getByRole(" + js(l.value) + (l.name ? ", { name: " + js(l.name) + ", exact: true }" : "") + ")";
     case "label": return "this.page.getByLabel(" + js(l.value) + ", { exact: true })";
@@ -104,10 +104,7 @@ function classNameFor(urlPath: string, title: string): string {
   const last = urlPath.split("/").filter(Boolean).pop() || "";
   const stem = last.replace(/\.(html?|htm|jsp|php|aspx?)$/i, "");
   const parts = words(stem);
-  if (!parts.length || /^index$/i.test(stem)) {
-    const t = words(title);
-    return (t.length ? pascal(t) : "Home") + "Page";
-  }
+  if (!parts.length || /^(index|home|default)$/i.test(stem)) return "HomePage";
   return pascal(parts) + "Page";
 }
 
@@ -127,11 +124,23 @@ function memberBase(n: SnapNode, l: Locator): string[] {
     const w = words(l.value);
     if (w.length) return w;
   }
+  // Unlabeled inputs show their name attribute ("input", "customer.ssn"); when the
+  // verified locator is an id, the id names the field better (#amount).
+  if (l.by === "id" && n.name && /^[a-z][\w.-]*$/.test(n.name)) {
+    const w = words(l.value);
+    if (w.length) return w;
+  }
   const base = n.name && n.name.length <= 40 ? words(n.name) : [];
   if (base.length) return base;
   if (l.by === "testid" || l.by === "id" || l.by === "name") return words(l.value);
   if (l.by === "label" || l.by === "placeholder") return words(l.value);
   return [n.role];
+}
+
+/** Controls named by data (account numbers, result rows) change every run. */
+function isDataNamed(n: SnapNode, l: Locator): boolean {
+  if (l.by === "testid" || l.by === "id" || l.by === "name") return false;
+  return !!n.name && !/[a-z]{2}/i.test(n.name);
 }
 
 function wanted(n: SnapNode): boolean {
@@ -158,7 +167,7 @@ export function buildPom(sessionDir: string): Omit<PomResult, "files"> {
     walk(snap.roots, (n) => {
       if (!wanted(n)) return;
       const l = bestLocator(n);
-      if (!l) return;
+      if (!l || isDataNamed(n, l)) return;
       if (l.by === "testid" && l.attr && l.attr !== "data-testid") testIdAttribute = l.attr;
       const key = l.by + "|" + l.value + "|" + (l.name || "");
       if (!entry.raws.has(key)) entry.raws.set(key, { node: n, loc: l, key });
@@ -169,7 +178,10 @@ export function buildPom(sessionDir: string): Omit<PomResult, "files"> {
     byPage.set(up, entry);
   }
 
-  const shared = new Set([...pagesPerKey.entries()].filter(([, s]) => s.size >= 2).map(([k]) => k));
+  // BasePage = chrome present on at least half of the pages (min 2): nav, header,
+  // footer. A field shared by two forms ("amount") stays on each page class.
+  const minPages = Math.max(2, Math.ceil(byPage.size / 2));
+  const shared = new Set([...pagesPerKey.entries()].filter(([, s]) => s.size >= minPages).map(([k]) => k));
   const toMembers = (raws: Raw[], taken: Set<string>): PomMember[] => {
     const out: PomMember[] = [];
     for (const r of raws) {
@@ -238,7 +250,7 @@ export function renderPom(p: Omit<PomResult, "files">, sessionDir: string): Map<
   files.set("base.page.ts", [
     header + "import type { Locator, Page } from '@playwright/test';",
     "",
-    "/** Controls present on two or more captured pages (header, nav, footer). */",
+    "/** Controls present on half or more of the captured pages (header, nav, footer). */",
     "export class BasePage {",
     "  constructor(readonly page: Page) {}",
     ...(p.base.length ? [""] : []),
@@ -276,7 +288,7 @@ export function renderPom(p: Omit<PomResult, "files">, sessionDir: string): Map<
     md.push("", "## " + title);
     for (const m of ms) md.push("- " + m.prop + " = " + m.role + (m.name ? ' "' + m.name + '"' : "") + (m.fragile ? " (fragile)" : ""));
   };
-  section("BasePage (on 2+ pages; every page class extends it)", p.base);
+  section("BasePage (on half or more of the pages; every page class extends it)", p.base);
   for (const pg of p.pages) section(pg.className + " " + pg.urlPath + " (steps " + pg.steps.join(",") + ")", pg.members);
   files.set("PAGES.md", md.join("\n") + "\n");
   return files;

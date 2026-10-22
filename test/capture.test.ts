@@ -553,7 +553,7 @@ describe("accessible name cleanup", () => {
   async function loadCleanAccName(): Promise<(s: string) => string> {
     const src = await readFile(treeJs, "utf8");
     const start = src.indexOf("const cleanAccName = (s) => {");
-    const end = src.indexOf("const accessibleName = (el) => {");
+    const end = src.indexOf("const accessibleName = (el, strict) => {");
     expect(start).toBeGreaterThan(-1);
     expect(end).toBeGreaterThan(start);
     const helpers = src.slice(start, end);

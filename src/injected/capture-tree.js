@@ -169,7 +169,10 @@ const cleanAccName = (s) => {
   return t.replace(/\s+/g, ' ').trim();
 };
 
-const accessibleName = (el) => {
+// strict=true approximates the real accessible name (what Playwright getByRole
+// matches). strict=false adds name/id attribute fallbacks so unlabeled inputs
+// still read well in the tree, but those must never become role locators.
+const accessibleName = (el, strict) => {
   const aria = el.getAttribute('aria-label');
   if (aria && aria.trim()) return redactText(cleanAccName(aria));
 
@@ -194,8 +197,19 @@ const accessibleName = (el) => {
       const lt = Array.from(el.labels).map(l => visibleNameText(l) || (l.innerText || '').trim()).filter(Boolean).join(' ');
       if (lt) return redactText(cleanAccName(lt));
     }
+    // <input type=submit|button|reset value="Log In"> is a button named by its value
+    const itype = (el.getAttribute('type') || '').toLowerCase();
+    if (el.tagName === 'INPUT' && /^(submit|button|reset)$/.test(itype)) {
+      const v = (el.getAttribute('value') || '').trim();
+      if (v) return redactText(cleanAccName(v));
+      if (itype === 'submit') return 'Submit';
+      if (itype === 'reset') return 'Reset';
+    }
     const ph = el.getAttribute('placeholder');
     if (ph && ph.trim()) return redactText(ph.trim());
+    const ttl = el.getAttribute('title');
+    if (ttl && ttl.trim()) return redactText(cleanAccName(ttl));
+    if (strict) return '';
     const name = el.getAttribute('name');
     if (name && name.trim()) return name.trim();
     const id = el.getAttribute('id');
@@ -299,7 +313,7 @@ const resolveLocator = (el, cand) => {
         const r = n.getAttribute('role') || implicitRole(n);
         if (r !== wantRole) return false;
         if (!wantName) return true;
-        return accessibleName(n) === wantName;
+        return accessibleName(n, true) === wantName;
       });
     }
     if (cand.by === 'label') {
@@ -476,7 +490,7 @@ const buildLocators = (el, nodeRole, nodeName) => {
   }
 
   const roleForPw = el.getAttribute('role') || implicitRole(el);
-  const anameForPw = accessibleName(el);
+  const anameForPw = accessibleName(el, true);
   // generic is not a locator strategy (testid-only nodes). Never emit by: role, value: generic.
   if (roleForPw && anameForPw && anameForPw.length < 60 && ACTIONABLE.has(roleForPw) && roleForPw !== 'generic') {
     push('role', roleForPw, 'medium', { name: anameForPw });

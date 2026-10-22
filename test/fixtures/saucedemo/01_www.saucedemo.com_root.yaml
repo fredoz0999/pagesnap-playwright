@@ -1,7 +1,7 @@
 # URL: https://www.saucedemo.com/
 # Title: Swag Labs
 # Viewport: 1280x900
-# Captured: 2026-10-21T21:32:33Z
+# Captured: 2026-10-22T00:10:51Z
 # Trigger: manual
 # Step: 1
 # Note: Open the login page
@@ -18,7 +18,7 @@
     value: "***"
     locators:
       - {by: testid, value: "password", attr: data-test, stability: high, score: 98}
-  - button "login-button":
+  - button "Login":
     value: "Login"
     locators:
       - {by: testid, value: "login-button", attr: data-test, stability: high, score: 98}

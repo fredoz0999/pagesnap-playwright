@@ -1,0 +1,45 @@
+# Diff step 6 → 7
+
+Both steps were captured on the same URL: https://parabank.parasoft.com/parabank/transfer.htm
+
+_Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with notes)._
+
+## Dropdown / options changes
+
+- - combobox "fromAccountId":
+- - combobox "toAccountId":
+- - option "13566" [selected]
+- - option "13566" [selected]
+- - option "13677"
+- - option "13677"
+- options:  # native <select> - available without opening UI
+- options:  # native <select> - available without opening UI
+
+## Added
+
++ #   - 13566
++ #   - 13677 (selected)
++ - heading "Transfer Complete!" [level=1]
+
+## Removed
+
+- #   - 13566 (selected)
+- #   - 13677
+- - button "Transfer":
+- - form:
+- - heading "Transfer Funds" [level=1]
+- - textbox "input":
+- - {by: id, value: "amount", stability: high, score: 90}
+- - {by: id, value: "fromAccountId", stability: high, score: 90}
+- - {by: id, value: "toAccountId", stability: high, score: 90}
+- - {by: id, value: "transferForm", stability: high, score: 90}
+- - {by: role, value: "button", name: "Transfer", stability: medium, score: 95}
+- locators:
+- locators:
+- locators:
+- locators:
+- locators:
+- value: ""
+- value: "13566"
+- value: "13566"
+- value: "Transfer"

@@ -110,24 +110,32 @@ What it does:
   controls (word overlap weighted by rarity, plus character bigrams for respellings like `user_name` -> `username`).
   `--write` replaces a call only when the winner is clear (confidence >= 0.75 and 0.15 ahead of the runner-up).
 - **Verify**: reopens each captured page headless and counts matches for every recorded locator: ok / gone / ambiguous.
-  Pages behind login need `--storage` (save it during capture with `--save-storage`).
+  Pass `--storage` for logged-in pages; pages captured logged out are retried in a fresh session automatically.
+  Controls named by data (account numbers) report as `data`, and pages whose state differs from the capture (a POST
+  result page) are reported but not counted as drift.
+- **Site chrome**: top-level blocks repeated on at least half the pages (nav, header, footer) are written once to
+  `lean/CHROME.txt`, chunked separately and ranked lower, so per-step answers carry the page content, not the menu.
 - **Scripted capture**: `ScriptedSession` (`src/scripted.ts`) captures from your own Playwright code, same output as
   Ctrl+M, for CI smoke runs or regenerating fixtures.
 
-`npm run pack -- bench test/fixtures/saucedemo` (4 captures, ~4 chars/token, whole flow):
+### Measured: `npm run pack -- bench <session>` (~4 chars/token, whole flow)
 
-| Approach | Tokens | vs raw |
+| Approach | Sauce Demo fixture (4 steps) | Parabank live capture (13 steps) |
 |---|---|---|
-| raw YAML | 7,455 | baseline |
-| compact lean | 1,173 | -84% |
-| query per step | 1,330 | -82% |
-| query --diff per step | 1,232 | -83% |
-| PAGES.md + query --diff | 1,759 | -76% |
-| Playwright ariaSnapshot, one per step | 1,600 | -79% |
+| raw YAML | 7,453 | 16,758 |
+| compact lean | 895 (-88%) | 2,779 (-83%) |
+| query per step | 1,282 (-83%) | 3,140 (-81%) |
+| query --diff per step | 1,126 (-85%) | 3,186 (-81%) |
+| PAGES.md once + query --diff | 1,654 (-78%) | 4,376 (-74%) |
+| Playwright ariaSnapshot, one per step (MCP-style floor) | 1,600 (-79%) | 8,532 (-49%) |
 
-On pages this small the lean pack and a raw ariaSnapshot are about the same size; the difference is that the lean pack
-carries verified locators (test ids, ids) that ariaSnapshot does not, and a live MCP browser re-sends a snapshot after
-most actions rather than once per step. Run `bench` on your own app before quoting numbers.
+On the larger app the lean pack is about a third of the ariaSnapshot floor, and it carries verified ids/test ids that
+ariaSnapshot does not. A live MCP browser re-sends a snapshot after most actions, so its real total is higher than
+that floor. `--diff` helps on same-page steps (Sauce Demo) and is neutral on Parabank, where every step changes the
+main content. Run `bench` on your own app before quoting numbers.
+
+See [examples/parabank](examples/parabank) for the full loop on a live app: scripted capture, page objects, UI + API
+E2E spec, validate, verify and heal.
 
 Embedders: `hash` (default) is offline, dependency-free feature hashing. `--embedder=minilm` uses all-MiniLM-L6-v2
 through the optional `@huggingface/transformers` package (`npm i -D @huggingface/transformers`, ~23 MB model download on

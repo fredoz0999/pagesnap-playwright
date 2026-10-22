@@ -4,7 +4,8 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { chunkSnapshot, dedupeChunks, type Chunk, type ChunkOptions, type PageEntry } from "./chunk.js";
+import { chunkSnapshot, dedupeChunks, findChrome, type Chunk, type ChunkOptions, type PageEntry } from "./chunk.js";
+import { compactNodes } from "./compact.js";
 import { LEGEND } from "./compact.js";
 import { cosine, expand, makeEmbedder, tokenize } from "./embed.js";
 import { estimateTokens, parseSnapshot } from "./parse.js";
@@ -12,7 +13,7 @@ import { writeSessionPrompts } from "./prompts.js";
 
 export const LEAN_DIR = "lean";
 export const INDEX_FILE = "index.json";
-export const INDEX_VERSION = 1;
+export const INDEX_VERSION = 2;
 
 export interface SessionIndex {
   version: number;
@@ -45,13 +46,19 @@ export async function buildIndex(sessionDir: string, opts: BuildOptions = {}): P
 
   const pages: PageEntry[] = [];
   let all: Chunk[] = [];
-  for (const f of files) {
-    const snap = parseSnapshot(fs.readFileSync(path.join(sessionDir, f), "utf8"), f);
-    const { chunks, page, compact } = chunkSnapshot(snap, opts);
-    fs.writeFileSync(path.join(leanDir, f.replace(/\.ya?ml$/i, ".txt")), compact, "utf8");
+  const snaps = files.map((f) => parseSnapshot(fs.readFileSync(path.join(sessionDir, f), "utf8"), f));
+  const chrome = opts.chrome ?? findChrome(snaps.map((s) => compactNodes(s.roots, opts)));
+  const chromeTexts = new Set<string>();
+  for (const snap of snaps) {
+    const { chunks, page, compact, chromeText } = chunkSnapshot(snap, { ...opts, chrome });
+    fs.writeFileSync(path.join(leanDir, snap.file.replace(/\.ya?ml$/i, ".txt")), compact, "utf8");
+    if (chromeText) chromeTexts.add(chromeText);
     pages.push(page);
     all = all.concat(chunks);
   }
+  const chromePath = path.join(leanDir, "CHROME.txt");
+  if (chromeTexts.size) fs.writeFileSync(chromePath, "# Site chrome shared by most pages\n" + [...chromeTexts].join("\n") + "\n", "utf8");
+  else fs.rmSync(chromePath, { force: true });
   const chunks = dedupeChunks(all);
   const embedder = makeEmbedder(opts.embedder);
   const vectors = (await embedder.embed(chunks.map((c) => c.path + "\n" + c.text))).map((v) =>
@@ -88,6 +95,11 @@ export function loadIndex(sessionDir: string): SessionIndex {
 export function indexIsStale(sessionDir: string): boolean {
   const p = path.join(sessionDir, LEAN_DIR, INDEX_FILE);
   if (!fs.existsSync(p)) return true;
+  try {
+    if ((JSON.parse(fs.readFileSync(p, "utf8")) as { version?: number }).version !== INDEX_VERSION) return true;
+  } catch {
+    return true;
+  }
   const t = fs.statSync(p).mtimeMs;
   return snapshotFiles(sessionDir).some((f) => fs.statSync(path.join(sessionDir, f)).mtimeMs > t);
 }
@@ -181,7 +193,9 @@ export async function queryIndex(sessionDir: string, query: string, opts: QueryO
     const vec = Math.max(0, cosine(qv, idx.vectors[i]));
     const b = bm[i] / bmMax;
     const exact = exactBonus(query, chunk);
-    return { chunk, bm25: b, vec, exact, score: 0.5 * b + 0.5 * vec + exact };
+    // Site chrome (nav, footer) matches many step texts; rank it below page content.
+    const w = chunk.kind === "chrome" ? 0.6 : 1;
+    return { chunk, bm25: b, vec, exact, score: w * (0.5 * b + 0.5 * vec + exact) };
   });
   if (opts.step != null) hits = hits.filter((h) => h.chunk.steps.includes(opts.step!));
   if (opts.urlContains) hits = hits.filter((h) => h.chunk.url.includes(opts.urlContains!));
