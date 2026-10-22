@@ -10,6 +10,7 @@
  */
 import type { Page } from "playwright";
 import { parseLocator } from "./pack/parse.js";
+import { toPlaywright } from "./pack/verify.js";
 import type { AltLocator } from "./snapshot-write.js";
 
 export interface RoleCheckResult {
@@ -20,6 +21,7 @@ export interface RoleCheckResult {
   removed: number;
 }
 
+const NAME_BASED = new Set(["linkText", "label", "placeholder"]);
 const esc = (s: string) => s.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 const key = (role: string, name: string) => role + "\u0000" + name;
 
@@ -56,17 +58,23 @@ export async function checkRoleLocators(page: Page, tree: string, locators: AltL
   if (!bad.size) return { tree, locators, checked: seen.size, replaced: 0, removed: 0 };
 
   const badCtl = new Set(roleRows.filter((l) => bad.has(key(l.value, l.locName ?? ""))).map((l) => l.ctl));
-  const kept = locators.filter((l) => !(l.by === "role" && bad.has(key(l.value, l.locName ?? ""))));
-  // Best remaining locator for each control whose role locator failed.
+  let kept = locators.filter((l) => !(l.by === "role" && bad.has(key(l.value, l.locName ?? ""))));
+  // Best remaining locator for each control whose role locator failed, itself checked
+  // with Playwright (link text and labels are name-based too and can be just as wrong).
   const fallback = new Map<string, AltLocator>();
-  for (const l of kept) {
-    if (!badCtl.has(l.ctl)) continue;
-    const role = locators.find((x) => x.ctl === l.ctl && x.by === "role");
+  const rejected = new Set<AltLocator>();
+  for (const ctl of badCtl) {
+    const role = locators.find((x) => x.ctl === ctl && x.by === "role");
     if (!role) continue;
-    const k = key(role.value, role.locName ?? "");
-    const cur = fallback.get(k);
-    if (!cur || (l.score ?? 0) > (cur.score ?? 0)) fallback.set(k, l);
+    const alts = kept.filter((l) => l.ctl === ctl).sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+    for (const l of alts) {
+      let n = -1;
+      try { n = await toPlaywright(page, { by: l.by, value: l.value, name: l.locName, attr: l.attr }).filter({ visible: true }).count(); } catch { /* bad selector */ }
+      if (n === 1) { fallback.set(key(role.value, role.locName ?? ""), l); break; }
+      if (NAME_BASED.has(l.by)) rejected.add(l);
+    }
   }
+  kept = kept.filter((l) => !rejected.has(l));
 
   let replaced = 0;
   let removed = 0;

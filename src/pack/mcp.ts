@@ -111,13 +111,17 @@ export const TOOLS: Tool[] = [
   },
   {
     name: "pagesnap_verify",
-    description: "Reopen each captured page in a headless browser and count matches for every recorded locator (drift check). Needs network access to the app; storage = Playwright storageState for logged-in pages.",
-    inputSchema: { type: "object", properties: { session, storage: { type: "string" }, step: { type: "integer" } }, required: ["session"] },
+    description: "Drift check in a headless browser: replays the recorded flow and counts matches for every locator at each captured step (byUrl: open each URL instead). Needs network access to the app. Secrets come from PAGESNAP_VAR_* env.",
+    inputSchema: { type: "object", properties: { session, storage: { type: "string" }, step: { type: "integer" }, byUrl: { type: "boolean" } }, required: ["session"] },
     async run(a) {
       const storage = str(a, "storage");
       const step = num(a, "step");
-      const rep = await verifySession(resolveSession(need(a, "session")), { storage: storage ? userPath(storage) : undefined, steps: step != null ? [step] : undefined });
-      return { text: rep.text, isError: rep.counts.gone > 0 };
+      const rep = await verifySession(resolveSession(need(a, "session")), {
+        storage: storage ? userPath(storage) : undefined,
+        steps: step != null ? [step] : undefined,
+        mode: a.byUrl === true ? "url" : undefined,
+      });
+      return { text: rep.text, isError: rep.counts.gone > 0 || !!rep.blocked };
     },
   },
   {

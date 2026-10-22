@@ -1,0 +1,15 @@
+{
+  "actions": [
+    {
+      "type": "click",
+      "target": {
+        "tag": "a",
+        "testid": "nav-cart",
+        "testidAttr": "data-test",
+        "role": "link",
+        "accName": "cart",
+        "css": "#navbarSupportedContent > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)"
+      }
+    }
+  ]
+}

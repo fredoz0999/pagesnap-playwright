@@ -10,6 +10,11 @@ export class BillpayPage extends BasePage {
     await this.page.goto(BillpayPage.path);
   }
 
+  /** link "About Us" - FRAGILE structural locator, ask dev for a test id */
+  get aboutUsLink(): Locator {
+    return this.page.locator('#headerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)');
+  }
+
   /** textbox "payee.name" */
   get payeeNameInput(): Locator {
     return this.page.locator('[name="payee.name"]');

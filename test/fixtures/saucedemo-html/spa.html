@@ -1,0 +1,35 @@
+<!doctype html><html><head><title>SPA bank</title></head><body>
+<!-- One URL, three states: sign-in, dashboard, orders. Account ids change on every load. -->
+<section id="login">
+  <h1>Sign in</h1>
+  <label>Email <input data-test="email" type="email"></label>
+  <label>Password <input data-test="password" type="password"></label>
+  <button data-test="sign-in" onclick="signIn()">Sign in</button>
+  <p data-test="login-error" hidden>Wrong password</p>
+</section>
+<section id="dash" hidden>
+  <h1>Dashboard</h1>
+  <label>Account <select data-test="account"></select></label>
+  <button data-test="load-orders" id="load" onclick="load()">Load orders</button>
+</section>
+<section id="orders" hidden>
+  <h2>Orders</h2>
+  <table><tbody><tr><td>Hammer</td><td data-test="order-total">$22.96</td></tr></tbody></table>
+  <button data-test="checkout">Checkout</button>
+</section>
+<script>
+  const rnd = () => String(Math.floor(Math.random() * 1e9));
+  const sel = document.querySelector('[data-test=account]');
+  for (const label of ['Checking', 'Savings']) { const o = document.createElement('option'); o.value = rnd(); o.textContent = label; sel.appendChild(o); }
+  function signIn() {
+    const ok = document.querySelector('[data-test=password]').value === 'pw';
+    document.querySelector('[data-test=login-error]').hidden = ok;
+    if (!ok) return;
+    setTimeout(() => { document.getElementById('login').hidden = true; document.getElementById('dash').hidden = false; }, 300);
+  }
+  function load() {
+    if (sel.selectedOptions[0].textContent !== 'Savings') return;
+    setTimeout(() => { document.getElementById('orders').hidden = false; }, 300);
+  }
+</script>
+</body></html>

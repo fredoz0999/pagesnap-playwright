@@ -1,0 +1,30 @@
+{
+  "actions": [
+    {
+      "type": "click",
+      "target": {
+        "tag": "button",
+        "testid": "increase-quantity",
+        "testidAttr": "data-test",
+        "id": "btn-increase-quantity",
+        "role": "button",
+        "accName": "Increase quantity",
+        "type": "submit",
+        "css": "#btn-increase-quantity"
+      }
+    },
+    {
+      "type": "click",
+      "target": {
+        "tag": "button",
+        "testid": "add-to-cart",
+        "testidAttr": "data-test",
+        "id": "btn-add-to-cart",
+        "role": "button",
+        "accName": "Add to cart",
+        "type": "submit",
+        "css": "#btn-add-to-cart"
+      }
+    }
+  ]
+}

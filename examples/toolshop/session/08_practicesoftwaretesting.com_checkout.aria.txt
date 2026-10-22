@@ -40,7 +40,7 @@
   - text: Email address *
   - textbox "Email address *":
     - /placeholder: Your email
-    - text: ps1792634504038@example.com
+    - text: ps1792636130915@example.com
   - text: Password *
   - textbox "Password *":
     - /placeholder: Your password

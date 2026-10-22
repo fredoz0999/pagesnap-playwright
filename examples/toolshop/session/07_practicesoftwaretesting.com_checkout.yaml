@@ -1,7 +1,7 @@
 # URL: https://practicesoftwaretesting.com/checkout
 # Title: Checkout - Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:01:56Z
+# Captured: 2026-10-22T02:29:02Z
 # Trigger: manual
 # Step: 7
 # Note: action: Proceed to checkout | assert: Sign in step with email, password, Login
@@ -31,7 +31,6 @@
       locators:
         - {by: testid, value: "nav-home", attr: data-test, stability: high, score: 98}
   - menuitem "Categories Hand ToolsPower ToolsOtherSpecial ToolsRentals":
-    locators:
     - button "Categories" [collapsed]:
       dropdown: closed
       locators:
@@ -49,7 +48,6 @@
       locators:
         - {by: testid, value: "nav-sign-in", attr: data-test, stability: high, score: 98}
   - menuitem "2":
-    locators:
     - link "cart":
       locators:
         - {by: testid, value: "nav-cart", attr: data-test, stability: high, score: 98}

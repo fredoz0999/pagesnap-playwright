@@ -20,6 +20,7 @@ import { buildIndex, type SessionIndex } from "./pack/index.js";
 import { refreshFlow, writePromptPack, type StepRecord } from "./session-pack.js";
 import { persistSnapshot, type AltLocator } from "./snapshot-write.js";
 import { checkRoleLocators } from "./role-check.js";
+import { ActionRecorder, type VarRule } from "./recorder.js";
 
 export interface ScriptedOptions {
   /** session folder to write into (created; existing NN_* files are kept) */
@@ -33,6 +34,8 @@ export interface ScriptedOptions {
   buildPack?: boolean;
   /** also save Playwright's ariaSnapshot as NN_<host>.aria.txt (for `pack bench`) */
   saveAria?: boolean;
+  /** record actions between captures for replay verification (default true) */
+  record?: boolean;
 }
 
 export class ScriptedSession {
@@ -44,6 +47,8 @@ export class ScriptedSession {
   private readonly treeJs = loadInjected("capture-tree.js");
   private readonly started = new Date();
   private packed = false;
+  private readonly recorder = new ActionRecorder();
+  private recording = false;
 
   constructor(private opts: ScriptedOptions) {
     const cap = new SnapshotCapture();
@@ -62,9 +67,25 @@ export class ScriptedSession {
     return this.cap.sessionDir;
   }
 
+  /**
+   * Start recording actions on this page now (before its first goto, so the start
+   * URL and any login are part of the replay). capture() also starts it if needed.
+   */
+  async record(page: Page): Promise<void> {
+    if (this.opts.record === false || this.recording) return;
+    this.recording = true;
+    await this.recorder.attach(page);
+  }
+
+  /** Values to parameterise in recorded actions: fresh per replay, or secret (never written). */
+  vars(vars: Record<string, VarRule>): void {
+    this.recorder.setVars(vars);
+  }
+
   /** Capture the current page state as the next step. Returns the YAML file name. */
   async capture(page: Page, note = ""): Promise<string> {
     const cap = this.cap;
+    await this.record(page);
     const url = page.url();
     if (!cap.sessionStartUrl) {
       cap.sessionStartUrl = url;
@@ -96,6 +117,7 @@ export class ScriptedSession {
     });
     this.lastTreeBody = saved.lastTreeBody;
     this.lastCaptureUrl = saved.lastCaptureUrl;
+    if (this.recording) this.recorder.writeStep(cap.sessionDir, saved.filename, this.recorder.take());
     if (this.opts.saveAria) {
       const aria = await page.locator("body").ariaSnapshot().catch(() => "");
       fs.writeFileSync(path.join(cap.sessionDir, saved.filename.replace(/\.ya?ml$/i, ".aria.txt")), aria + "\n", "utf8");
@@ -106,6 +128,7 @@ export class ScriptedSession {
   /** Write flow.md and build lean/ (index, PACK.md, prompts). */
   async finish(name?: string): Promise<SessionIndex | null> {
     refreshFlow(this.cap, this.steps, this.cap.writeDiff);
+    if (this.recording) this.recorder.writeReplayRules(this.cap.sessionDir);
     if (this.opts.buildPack === false || this.step === 0 || this.packed) return null;
     this.packed = true;
     return buildIndex(this.cap.sessionDir, { name });

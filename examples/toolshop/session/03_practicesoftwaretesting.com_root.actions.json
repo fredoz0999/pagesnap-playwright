@@ -1,0 +1,25 @@
+{
+  "actions": [
+    {
+      "type": "select",
+      "target": {
+        "tag": "select",
+        "testid": "sort",
+        "testidAttr": "data-test",
+        "role": "combobox",
+        "accName": "sort",
+        "type": "select-one",
+        "css": "#filters > form:nth-child(3) > div:nth-child(1) > select:nth-child(1)"
+      },
+      "value": [
+        "price,asc"
+      ],
+      "label": [
+        "Price (Low - High)"
+      ],
+      "index": [
+        4
+      ]
+    }
+  ]
+}

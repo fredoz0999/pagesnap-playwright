@@ -70,13 +70,13 @@ playwright.config: `use: { testIdAttribute: 'data-test' }`
 - compareButton = button "Compare"
 - specsTitleHeading = heading "Specifications"
 - productSpecsTable = table
+- unsplashLink3 = link "Unsplash"
 - link = link "Claw Hammer with Shock Reduction Grip More information"
 - hammerMoreInformationLink = link "Hammer More information"
 - thorHammerMoreInformationLink = link "Thor Hammer More information"
 - sledgehammerMoreInformationLink = link "Sledgehammer More information"
 - link2 = link "Claw Hammer with Fiberglass Handle More information"
 - courtHammerMoreInformationLink = link "Court Hammer More information"
-- unsplashLink3 = link "Unsplash"
 
 ## CheckoutPage /checkout (steps 6,7,8,9,10,11,12,13)
 - productTitle = generic "Claw Hammer"

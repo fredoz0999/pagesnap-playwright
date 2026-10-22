@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/register.htm
 # Title: ParaBank | Customer Created
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:06:46Z
+# Captured: 2026-10-22T02:28:01Z
 # Trigger: manual
 # Step: 2
 # Note: action: submit registration | assert: welcome title with username, account created message
@@ -81,7 +81,7 @@
     - link "Log Out":
       locators:
         - {by: role, value: "link", name: "Log Out", stability: medium, score: 95}
-- heading "Welcome psmviwh6bb" [level=1]
+- heading "Welcome psmvix8i1o" [level=1]
 - text "Your account was created successfully. You are now logged in."
 - list
   - listitem

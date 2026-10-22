@@ -1,0 +1,114 @@
+{
+  "actions": [
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "name": "payee.name",
+        "role": "textbox",
+        "type": "text",
+        "css": "form:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "Electric Co"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "name": "payee.address.street",
+        "role": "textbox",
+        "type": "text",
+        "css": "form:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "2 Power St"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "name": "payee.address.city",
+        "role": "textbox",
+        "type": "text",
+        "css": "form:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "Reston"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "name": "payee.address.state",
+        "role": "textbox",
+        "type": "text",
+        "css": "form:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "VA"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "name": "payee.address.zipCode",
+        "role": "textbox",
+        "type": "text",
+        "css": "form:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "20190"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "72a19fb4-4468-4a9f-af3f-208cd25b3dd1",
+        "name": "payee.phoneNumber",
+        "role": "textbox",
+        "type": "text",
+        "css": "form:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "5550111"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "name": "payee.accountNumber",
+        "role": "textbox",
+        "type": "text",
+        "css": "form:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(8) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "12345"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "name": "verifyAccount",
+        "role": "textbox",
+        "type": "text",
+        "css": "form:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(9) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "12345"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "name": "amount",
+        "role": "textbox",
+        "type": "text",
+        "css": "form:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(11) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "12.34"
+    },
+    {
+      "type": "click",
+      "target": {
+        "tag": "input",
+        "role": "button",
+        "accName": "Send Payment",
+        "type": "button",
+        "css": "form:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(14) > td:nth-child(2) > input:nth-child(1)"
+      }
+    }
+  ]
+}

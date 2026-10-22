@@ -1,7 +1,7 @@
 # URL: https://practicesoftwaretesting.com/
 # Title: Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:01:48Z
+# Captured: 2026-10-22T02:28:55Z
 # Trigger: manual
 # Step: 1
 # Note: action: open the shop | assert: product grid, search, sort and filters visible
@@ -31,7 +31,6 @@
       locators:
         - {by: testid, value: "nav-home", attr: data-test, stability: high, score: 98}
   - menuitem "Categories Hand ToolsPower ToolsOtherSpecial ToolsRentals":
-    locators:
     - button "Categories" [collapsed]:
       dropdown: closed
       locators:

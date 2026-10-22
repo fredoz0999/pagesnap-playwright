@@ -1,0 +1,36 @@
+{
+  "actions": [
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "name": "username",
+        "role": "textbox",
+        "type": "text",
+        "css": "#loginPanel > form:nth-child(1) > div:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "{{username}}"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "name": "password",
+        "role": "textbox",
+        "type": "password",
+        "css": "#loginPanel > form:nth-child(1) > div:nth-child(4) > input:nth-child(1)"
+      },
+      "value": "{{wrong-secret}}"
+    },
+    {
+      "type": "click",
+      "target": {
+        "tag": "input",
+        "role": "button",
+        "accName": "Log In",
+        "type": "submit",
+        "css": "#loginPanel > form:nth-child(1) > div:nth-child(5) > input:nth-child(1)"
+      }
+    }
+  ]
+}

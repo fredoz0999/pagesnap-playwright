@@ -27,7 +27,7 @@ describe.skipIf(!hasBrowser)("live: capture, verify, heal", () => {
   let browser: Browser;
   let session = "";
   const pages: Record<string, string> = {
-    "/": "login.html", "/inventory.html": "inventory.html", "/cart.html": "cart.html", "/form.html": "unlabeled-form.html",
+    "/": "login.html", "/inventory.html": "inventory.html", "/cart.html": "cart.html", "/form.html": "unlabeled-form.html", "/spa.html": "spa.html",
   };
   let renamed = false;
 
@@ -119,6 +119,63 @@ describe.skipIf(!hasBrowser)("live: capture, verify, heal", () => {
     expect(r.tree).not.toContain('name: "Shop x", stability');
     expect(r.locators.some((l) => l.by === "role" && l.value === "menuitem")).toBe(false);
   });
+
+  it("replay verify reaches states a URL cannot (sign-in, dashboard, loaded orders)", async () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "ps-replay-"));
+    const page = await browser.newPage();
+    const snap = new ScriptedSession({ outputDir: dir, goal: "Sign in, load savings orders" });
+    await snap.record(page);
+    snap.vars({ email: { value: "fred1@example.com", fresh: "fred{ts}@example.com" }, password: { value: "pw", secret: true } });
+    await page.goto(base + "/spa.html");
+    await snap.capture(page, "sign-in form");
+    await page.locator('[data-test="email"]').fill("fred1@example.com");
+    await page.locator('[data-test="password"]').fill("not-it");
+    await page.locator('[data-test="sign-in"]').click();
+    await page.locator('[data-test="login-error"]').waitFor();
+    await snap.capture(page, "wrong password: error shown");
+    await page.locator('[data-test="password"]').fill("pw");
+    await page.locator('[data-test="sign-in"]').click();
+    await page.locator('[data-test="load-orders"]').waitFor();
+    await snap.capture(page, "dashboard");
+    await page.locator('[data-test="account"]').selectOption({ label: "Savings" });
+    await page.locator('[data-test="load-orders"]').click();
+    await page.locator('[data-test="order-total"]').waitFor();
+    await snap.capture(page, "orders loaded");
+    await snap.finish();
+    await page.close();
+
+    // recorded: start URL, typed values with placeholders, never the password
+    const all = fs.readdirSync(dir).filter((f) => f.endsWith(".actions.json")).sort()
+      .map((f) => readFileSync(path.join(dir, f), "utf8")).join("\n");
+    expect(all).toContain('"type": "nav"');
+    expect(all).toContain("{{email}}");
+    expect(all).toContain("{{secret:password}}"); // the declared secret
+    expect(all).toContain("{{wrong-secret}}"); // the deliberately wrong one
+    expect(all).not.toContain('"pw"');
+    expect(all).not.toContain("not-it");
+    expect(readFileSync(path.join(dir, "replay.json"), "utf8")).not.toContain('"pw"');
+
+    // by URL: only the sign-in state is reachable
+    const byUrl = await verifySession(dir, { mode: "url" });
+    expect(byUrl.pages.filter((p) => p.skipped).map((p) => p.step)).toEqual([2, 3, 4]); // the error, dashboard and orders states are not URLs
+
+    // replay: every step in its captured state; the select falls back from the
+    // per-load option value to its label
+    const rep = await verifySession(dir, { vars: { password: "pw" } });
+    expect(rep.mode).toBe("replay");
+    expect(rep.blocked).toBeUndefined();
+    expect(rep.pages.map((p) => p.skipped)).toEqual([undefined, undefined, undefined, undefined]);
+    expect(rep.items.find((i) => i.locator.value === "login-error" && i.step === 2)?.status).toBe("ok");
+    expect(rep.counts.gone).toBe(0);
+    expect(rep.items.find((i) => i.locator.value === "order-total")?.status).toBe("ok");
+
+    // a secret is required, never guessed
+    await expect(verifySession(dir, {})).rejects.toThrow(/secret:password|PAGESNAP_VAR_PASSWORD/);
+    // a wrong secret stops the replay and says where
+    const wrong = await verifySession(dir, { vars: { password: "nope" } });
+    expect(wrong.blocked?.step).toBe(3);
+    expect(wrong.text).toContain("REPLAY STOPPED at step 3");
+  }, 120000);
 
   it("verify passes against the unchanged app", async () => {
     const rep = await verifySession(session);

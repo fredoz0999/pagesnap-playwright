@@ -1,0 +1,30 @@
+{
+  "actions": [
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "testid": "house_number",
+        "testidAttr": "data-test",
+        "id": "house_number",
+        "role": "textbox",
+        "accName": "House number",
+        "type": "text",
+        "css": "#house_number"
+      },
+      "value": "12"
+    },
+    {
+      "type": "click",
+      "target": {
+        "tag": "button",
+        "testid": "proceed-3",
+        "testidAttr": "data-test",
+        "role": "button",
+        "accName": "Proceed to checkout",
+        "type": "button",
+        "css": "app-address:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)"
+      }
+    }
+  ]
+}

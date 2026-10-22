@@ -1,7 +1,7 @@
 # URL: https://practicesoftwaretesting.com/product/01M5GND76XN01H7QVXZRB78RDZ
 # Title: Claw Hammer - Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:01:55Z
+# Captured: 2026-10-22T02:29:00Z
 # Trigger: manual
 # Step: 5
 # Note: action: quantity 2, Add to cart | assert: toast shown, cart badge shows 2
@@ -31,7 +31,6 @@
       locators:
         - {by: testid, value: "nav-home", attr: data-test, stability: high, score: 98}
   - menuitem "Categories Hand ToolsPower ToolsOtherSpecial ToolsRentals":
-    locators:
     - button "Categories" [collapsed]:
       dropdown: closed
       locators:
@@ -49,7 +48,6 @@
       locators:
         - {by: testid, value: "nav-sign-in", attr: data-test, stability: high, score: 98}
   - menuitem "2":
-    locators:
     - link "cart":
       locators:
         - {by: testid, value: "nav-cart", attr: data-test, stability: high, score: 98}
@@ -194,7 +192,7 @@
 - heading "Related products" [level=2]
 - link "Claw Hammer with Shock Reduction Grip More information":
   locators:
-    - {by: linkText, value: "Claw Hammer with Shock Reduction Grip More information", stability: medium, score: 75}
+    - {by: css, value: "a[href*=\"/product/01M5GND76DX63X0V1S632TWZFC\"]", stability: medium, score: 60}
   - img "Claw Hammer with Shock Reduction Grip"
   - heading "Claw Hammer with Shock Reduction Grip" [level=5]
   - link "More information" [dup 1/6]:
@@ -202,7 +200,7 @@
       - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(1) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
 - link "Hammer More information":
   locators:
-    - {by: linkText, value: "Hammer More information", stability: medium, score: 75}
+    - {by: css, value: "a[href*=\"/product/01M5GND76N9P1WQ5T8HJVJ5N3F\"]", stability: medium, score: 60}
   - img "Hammer"
   - heading "Hammer" [level=5]
   - link "More information" [dup 2/6]:
@@ -210,7 +208,7 @@
       - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(2) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
 - link "Thor Hammer More information":
   locators:
-    - {by: linkText, value: "Thor Hammer More information", stability: medium, score: 75}
+    - {by: css, value: "a[href*=\"/product/01M5GND773BS12QCXFZNCMJA07\"]", stability: medium, score: 60}
   - img "Thor Hammer"
   - heading "Thor Hammer" [level=5]
   - link "More information" [dup 3/6]:
@@ -218,7 +216,7 @@
       - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(3) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
 - link "Sledgehammer More information":
   locators:
-    - {by: linkText, value: "Sledgehammer More information", stability: medium, score: 75}
+    - {by: css, value: "a[href*=\"/product/01M5GND77768V5FAP7XFFEBM79\"]", stability: medium, score: 60}
   - img "Sledgehammer"
   - heading "Sledgehammer" [level=5]
   - link "More information" [dup 4/6]:
@@ -226,7 +224,7 @@
       - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(4) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
 - link "Claw Hammer with Fiberglass Handle More information":
   locators:
-    - {by: linkText, value: "Claw Hammer with Fiberglass Handle More information", stability: medium, score: 75}
+    - {by: css, value: "a[href*=\"/product/01M5GND77A1MZV5GJHM225X0Q5\"]", stability: medium, score: 60}
   - img "Claw Hammer with Fiberglass Handle"
   - heading "Claw Hammer with Fiberglass Handle" [level=5]
   - link "More information" [dup 5/6]:
@@ -234,7 +232,7 @@
       - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(4) > div:nth-child(2) > div:nth-child(1) > a:nth-child(5) > div:nth-child(2) > a:nth-child(2)", stability: low, score: 60}
 - link "Court Hammer More information":
   locators:
-    - {by: linkText, value: "Court Hammer More information", stability: medium, score: 75}
+    - {by: css, value: "a[href*=\"/product/01M5GND77C8TVM5Q0SM5PNNXTM\"]", stability: medium, score: 60}
   - img "Court Hammer"
   - heading "Court Hammer" [level=5]
   - link "More information" [dup 6/6]:

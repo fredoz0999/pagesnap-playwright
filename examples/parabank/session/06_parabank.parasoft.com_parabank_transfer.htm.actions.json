@@ -1,0 +1,13 @@
+{
+  "actions": [
+    {
+      "type": "click",
+      "target": {
+        "tag": "a",
+        "role": "link",
+        "accName": "Transfer Funds",
+        "css": "#leftPanel > ul:nth-child(3) > li:nth-child(3) > a:nth-child(1)"
+      }
+    }
+  ]
+}

@@ -42,6 +42,8 @@ async function main() {
   if (reg.status() !== 201) throw new Error("register failed: " + reg.status() + " " + (await reg.text()));
   fs.mkdirSync(path.join(here, ".auth"), { recursive: true });
   fs.writeFileSync(path.join(here, ".auth", "user.json"), JSON.stringify(user, null, 2));
+  // values for `pack verify --vars=examples/toolshop/.auth/vars.json` (git-ignored)
+  fs.writeFileSync(path.join(here, ".auth", "vars.json"), JSON.stringify({ password: user.password }, null, 2));
 
   fs.rmSync(out, { recursive: true, force: true });
   const browser = await chromium.launch(launchOptions(true));
@@ -49,6 +51,11 @@ async function main() {
   page.setDefaultTimeout(30000);
   const t = (id: string) => page.locator(`[data-test="${id}"]`);
   const snap = new ScriptedSession({ outputDir: out, goal: "Toolshop: search, sort, add to cart, sign in, check out, get invoice", saveAria: true });
+  // Record clicks/typing so `pack verify` can replay into every step (cart, sign-in, payment).
+  // The customer already exists (registered above), so the replay signs in with the same email;
+  // the password is a secret: never written, supplied at verify time.
+  await snap.record(page);
+  snap.vars({ email: { value: user.email }, password: { value: user.password, secret: true } });
   const cap = async (note: string) => console.log("  " + (await snap.capture(page, note)));
 
   await page.goto(WEB + "/");

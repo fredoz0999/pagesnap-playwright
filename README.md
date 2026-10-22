@@ -79,7 +79,7 @@ npm run pack -- query    latest "add the Fleece Jacket to the cart" [--step=2] [
 npm run pack -- pom      latest --out=tests/pages   # page objects from verified locators, no LLM
 npm run pack -- validate latest tests/cart.spec.ts  # exit 1 if a locator is not in any snapshot
 npm run pack -- heal     latest tests/cart.spec.ts [--log=pw-output.txt] [--write]
-npm run pack -- verify   latest [--storage=state.json]   # live drift check, exit 1 if a locator is gone
+npm run pack -- verify   latest [--vars=vars.json]   # live drift check by replaying the flow; exit 1 on drift
 npm run pack -- bench    latest [--md]               # tokens per approach for the whole flow
 npm run pack -- stats    latest
 npm run mcp                                          # same tools as an MCP server (stdio)
@@ -109,10 +109,20 @@ What it does:
 - **Heal**: for missing / ambiguous locators, or ones a Playwright run reported (`--log`), ranks the closest captured
   controls (word overlap weighted by rarity, plus character bigrams for respellings like `user_name` -> `username`).
   `--write` replaces a call only when the winner is clear (confidence >= 0.75 and 0.15 ahead of the runner-up).
-- **Verify**: reopens each captured page headless and counts matches for every recorded locator: ok / gone / ambiguous.
-  Pass `--storage` for logged-in pages; pages captured logged out are retried in a fresh session automatically.
-  Controls named by data (account numbers) report as `data`, and pages whose state differs from the capture (a POST
-  result page) are reported but not counted as drift.
+- **Verify** (drift check): capture records the clicks, typing and selections between snapshots
+  (`NN_<host>.actions.json`). `verify` replays that flow in one headless browser and, at each step, counts matches
+  for every recorded locator in the state the step was captured in: signed in, cart filled, wizard step 3, search
+  results. ok / gone / ambiguous, and where the replay stopped if an action no longer works.
+  - Passwords are never recorded. A typed password matching a declared secret becomes `{{secret:password}}`
+    (supplied at verify time with `--vars=file.json` or `PAGESNAP_VAR_PASSWORD`); a deliberately wrong one becomes
+    `{{wrong-secret}}` and replays as some other wrong value.
+  - Data that must be unique per run (sign-up username) is declared fresh: `snap.vars({ username: { value, fresh:
+    "ps{ts}" } })`, or edit `replay.json` after a manual capture.
+  - Selects fall back from the recorded value to the label, then the position (ids that differ per run).
+  - Replay types like a person: it leaves each field after typing (blur validation) and retypes when a late
+    prefill overwrote the value.
+  - `--by-url` opens each captured URL instead (also used when a session has no recording); steps in another state
+    are then reported as such, not as drift.
 - **Site chrome**: top-level blocks repeated on at least half the pages (nav, header, footer) are written once to
   `lean/CHROME.txt`, chunked separately and ranked lower, so per-step answers carry the page content, not the menu.
 - **Capture fidelity** (found on live apps): role locators are re-checked with Playwright's own `getByRole` right

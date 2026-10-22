@@ -10,7 +10,7 @@ This folder is the whole PageSnap loop run against it.
 | 3. Spec from PAGES.md + `pack query --diff` per step | written by the agent | `tests/parabank.e2e.spec.ts` |
 | 4. Static check | `npm run pack -- validate examples/parabank/session examples/parabank/tests/parabank.e2e.spec.ts` | 14 ok, 0 missing |
 | 5. Run | `cd examples/parabank && npx playwright test` | 6 tests |
-| 6. Drift check | `npx tsx examples/parabank/login.ts && npm run pack -- verify examples/parabank/session --storage=examples/parabank/.auth/state.json` | 337 ok, 1 gone (a search result) |
+| 6. Drift check by replay | `npm run pack -- verify examples/parabank/session --vars=examples/parabank/.auth/vars.json` | 13/13 steps (registers a fresh user each replay); 347 ok, 0 gone, 2 account-number links reported as data |
 
 ## The E2E spec
 
@@ -35,6 +35,13 @@ The spec uses only generated page-object members plus role/name lookups that `va
   `[id="customer.firstName"]`. `validate` flagged it before any test ran.
 - Site chrome (left menu, header, footer) was repeated in every step's answer; it is now stored once.
 - Account-number links were turned into page-object members; data-named controls are now skipped.
+
+## Replay notes
+
+- The capture records each action; `replay.json` declares the username fresh (`ps{ts}`) and the password secret.
+- Account ids differ for every new user, so recorded `<select>` values fall back to the option position.
+- Two capture fixes came from replaying here: a field with a per-render UUID id (`payee.phoneNumber`) is no longer
+  located by that id, and a link-text fallback for header/footer links that matched twice is now rejected.
 
 ## Notes
 

@@ -1,0 +1,45 @@
+{
+  "actions": [
+    {
+      "type": "select",
+      "target": {
+        "tag": "select",
+        "id": "accountId",
+        "role": "combobox",
+        "type": "select-one",
+        "css": "#accountId"
+      },
+      "value": [
+        "20115"
+      ],
+      "label": [
+        "20115"
+      ],
+      "index": [
+        1
+      ]
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "amount",
+        "role": "textbox",
+        "type": "text",
+        "css": "#amount"
+      },
+      "value": "12.34"
+    },
+    {
+      "type": "click",
+      "target": {
+        "tag": "button",
+        "id": "findByAmount",
+        "role": "button",
+        "accName": "FIND TRANSACTIONS",
+        "type": "submit",
+        "css": "#findByAmount"
+      }
+    }
+  ]
+}

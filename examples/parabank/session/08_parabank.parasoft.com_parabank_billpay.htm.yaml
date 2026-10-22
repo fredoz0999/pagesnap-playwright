@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/billpay.htm
 # Title: ParaBank | Bill Pay
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:06:49Z
+# Captured: 2026-10-22T02:28:04Z
 # Trigger: manual
 # Step: 8
 # Note: action: open Bill Pay | data: payee Electric Co, account 12345, amount 12.34
@@ -13,21 +13,15 @@
 - list
   - listitem
   - listitem
-    - link "About Us" [dup 1/2]:
+    - link "About Us":
       locators:
         - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
   - listitem
-    - link "Services" [dup 1/2]:
-      locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+    - link "Services":
   - listitem
-    - link "Products" [dup 1/2]:
-      locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+    - link "Products":
   - listitem
-    - link "Locations" [dup 1/2]:
-      locators:
-        - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+    - link "Locations":
   - listitem
     - link "Admin Page":
       locators:
@@ -167,14 +161,14 @@
       - cell
     - row
       - cell "From account #:"
-      - cell "18561 18672"
+      - cell "20115 20226"
         - combobox "fromAccountId":
-          value: "18561"
+          value: "20115"
           locators:
             - {by: name, value: "fromAccountId", stability: high, score: 88}
           options:  # native <select> - available without opening UI
-            - option "18561" [selected]
-            - option "18672"
+            - option "20115" [selected]
+            - option "20226"
     - row
       - cell
       - cell
@@ -182,47 +176,11 @@
           value: "Send Payment"
           locators:
             - {by: role, value: "button", name: "Send Payment", stability: medium, score: 95}
-- list
-  - listitem
-    - link "Home":
-      locators:
-        - {by: role, value: "link", name: "Home", stability: medium, score: 95}
-  - listitem
-    - link "About Us" [dup 2/2]:
-      locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
-  - listitem
-    - link "Services" [dup 2/2]:
-      locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
-  - listitem
-    - link "Products" [dup 2/2]:
-      locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
-  - listitem
-    - link "Locations" [dup 2/2]:
-      locators:
-        - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
-  - listitem
-    - link "Site Map":
-      locators:
-        - {by: role, value: "link", name: "Site Map", stability: medium, score: 95}
-  - listitem
-    - link "Contact Us":
-      locators:
-        - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
-- text "© Parasoft. All rights reserved."
-- list
-  - listitem
-  - listitem
-    - link "www.parasoft.com":
-      locators:
-        - {by: role, value: "link", name: "www.parasoft.com", stability: medium, score: 95}
 
 # --- All <select> options ---
 # <select> "fromAccountId":
-#   - 18561 (selected)
-#   - 18672
+#   - 20115 (selected)
+#   - 20226
 
 # --- Tables (headers + first rows) ---
 # table "table-0":

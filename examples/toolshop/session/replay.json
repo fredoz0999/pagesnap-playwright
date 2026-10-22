@@ -1,0 +1,10 @@
+{
+  "vars": {
+    "email": {
+      "value": "ps1792636130915@example.com"
+    },
+    "password": {
+      "secret": true
+    }
+  }
+}

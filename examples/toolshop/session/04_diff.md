@@ -54,28 +54,10 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - generic "mm":
 + - generic "unit-price":
 + - generic "years":
-+ - heading "Claw Hammer with Fiberglass Handle" [level=5]
-+ - heading "Claw Hammer with Shock Reduction Grip" [level=5]
 + - heading "Claw Hammer" [level=1]:
-+ - heading "Court Hammer" [level=5]
-+ - heading "Hammer" [level=5]
 + - heading "Related products" [level=2]
-+ - heading "Sledgehammer" [level=5]
 + - heading "Specifications" [level=3]:
-+ - heading "Thor Hammer" [level=5]
 + - link "Andrew George":
-+ - link "Claw Hammer with Fiberglass Handle More information":
-+ - link "Claw Hammer with Shock Reduction Grip More information":
-+ - link "Court Hammer More information":
-+ - link "Hammer More information":
-+ - link "More information" [dup 1/6]:
-+ - link "More information" [dup 2/6]:
-+ - link "More information" [dup 3/6]:
-+ - link "More information" [dup 4/6]:
-+ - link "More information" [dup 5/6]:
-+ - link "More information" [dup 6/6]:
-+ - link "Sledgehammer More information":
-+ - link "Thor Hammer More information":
 + - link "Unsplash" [dup 1/2]:
 + - link "Unsplash" [dup 2/2]:
 + - row:
@@ -101,6 +83,24 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > span:nth-child(2)", stability: low, score: 60}
 + - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > span:nth-child(1)", stability: low, score: 60}
 + - {by: css, value: "app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > span:nth-child(2)", stability: low, score: 60}
++ - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1)", stability: low, score: 60}
++ - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2)", stability: low, score: 60}
++ - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3)", stability: low, score: 60}
++ - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(4)", stability: low, score: 60}
++ - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5)", stability: low, score: 60}
++ - {by: css, value: "app-root:nth-child(1) > div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6)", stability: low, score: 60}
++ - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)", stability: low, score: 60}
++ - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2)", stability: low, score: 60}
++ - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1)", stability: low, score: 60}
++ - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)", stability: low, score: 60}
++ - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(1)", stability: low, score: 60}
++ - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2)", stability: low, score: 60}
++ - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(1)", stability: low, score: 60}
++ - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2)", stability: low, score: 60}
++ - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1)", stability: low, score: 60}
++ - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2)", stability: low, score: 60}
++ - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(1)", stability: low, score: 60}
++ - {by: css, value: "div:nth-child(3) > app-detail:nth-child(2) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2)", stability: low, score: 60}
 
 ## Removed
 
@@ -179,8 +179,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - heading "Sustainability:" [level=4]
 - - heading "Thor Hammer" [level=5]:
 - - img "Banner"
-- - link "Claw Hammer ABCDE$11.48":
-- - link "Claw Hammer with Fiberglass Handle ABCDE$20.14":
-- - link "Claw Hammer with Shock Reduction Grip ABCDE$13.41":
-- - link "Court Hammer ABCDE$18.63":
-- - link "Explore courses":
+- - img "Claw Hammer with Fiberglass Handle"
+- - img "Claw Hammer with Shock Reduction Grip"
+- - img "Court Hammer"
+- - img "Hammer"
+- - img "Sledgehammer"

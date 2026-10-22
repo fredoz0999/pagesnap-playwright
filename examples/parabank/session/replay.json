@@ -1,0 +1,10 @@
+{
+  "vars": {
+    "username": {
+      "fresh": "ps{ts}"
+    },
+    "password": {
+      "secret": true
+    }
+  }
+}

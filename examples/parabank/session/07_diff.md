@@ -8,25 +8,25 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 
 - - combobox "fromAccountId":
 - - combobox "toAccountId":
-- - option "18561" [selected]
-- - option "18561" [selected]
-- - option "18672"
-- - option "18672"
+- - option "20115" [selected]
+- - option "20115" [selected]
+- - option "20226"
+- - option "20226"
 - options:  # native <select> - available without opening UI
 - options:  # native <select> - available without opening UI
 
 ## Added
 
-+ #   - 18561
-+ #   - 18672 (selected)
++ #   - 20115
++ #   - 20226 (selected)
 + - heading "Transfer Complete!" [level=1]
 + - text "See Account Activity for more details."
 + - text "has been transferred from account # to account # ."
 
 ## Removed
 
-- #   - 18561 (selected)
-- #   - 18672
+- #   - 20115 (selected)
+- #   - 20226
 - - button "Transfer":
 - - form:
 - - heading "Transfer Funds" [level=1]
@@ -44,6 +44,6 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - locators:
 - locators:
 - value: ""
-- value: "18561"
-- value: "18561"
+- value: "20115"
+- value: "20115"
 - value: "Transfer"

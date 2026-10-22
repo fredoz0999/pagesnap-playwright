@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/billpay.htm
 # Title: ParaBank | Bill Payment Complete
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:06:50Z
+# Captured: 2026-10-22T02:28:04Z
 # Trigger: manual
 # Step: 9
 # Note: action: click Send Payment | assert: 'Bill Payment Complete' naming Electric Co and $12.34
@@ -124,5 +124,5 @@
 
 # --- All <select> options ---
 # <select> "fromAccountId":
-#   - 18561 (selected)
-#   - 18672
+#   - 20115 (selected)
+#   - 20226

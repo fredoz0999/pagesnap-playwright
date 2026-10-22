@@ -461,7 +461,11 @@ const buildLocators = (el, nodeRole, nodeName) => {
   }
 
   const id = el.getAttribute('id');
-  if (id && !/^[0-9]/.test(id) && id.length < 80) {
+  // Generated ids change on every render (UUIDs, React useId ":r1:", framework counters):
+  // a locator built on them is gone by the next page load.
+  const generatedId = (v) => /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}/i.test(v) || /^:r[0-9a-z]+:$/i.test(v)
+    || /^(ember|react-select|mui|radix|headlessui|mat-[a-z-]+|ng-[a-z-]+|cdk-[a-z-]+)[-_:]?\d+/i.test(v) || /[0-9a-f]{16,}/i.test(v);
+  if (id && !/^[0-9]/.test(id) && id.length < 80 && !generatedId(id)) {
     push('id', id, 'high');
     hasId = true;
   }

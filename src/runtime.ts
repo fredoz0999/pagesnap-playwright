@@ -19,6 +19,7 @@ import { refreshFlow, writePromptPack, type StepRecord } from "./session-pack.js
 import { persistSnapshot, type AltLocator } from "./snapshot-write.js";
 import { buildIndex } from "./pack/index.js";
 import { checkRoleLocators } from "./role-check.js";
+import { ActionRecorder } from "./recorder.js";
 import { isDuplicateCapture, normalizeNote } from "./util-parse.js";
 
 interface TabState {
@@ -68,6 +69,8 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
   let lastTreeBody = "";
   let lastCaptureUrl = "";
   let captureCount = 0;
+  // Actions between captures, so `pack verify` can replay into every captured state.
+  const recorder = new ActionRecorder();
 
   const installOnPage = async (page: Page) => {
     try {
@@ -185,6 +188,7 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
     });
     lastTreeBody = saved.lastTreeBody;
     lastCaptureUrl = saved.lastCaptureUrl;
+    if (cap.recordActions) recorder.writeStep(cap.sessionDir, saved.filename, recorder.take());
     lastCapture = { at: now, url, note };
     await toast(page, "Saved snapshot #" + step, true);
     return true;
@@ -215,6 +219,9 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
     }, cap.toolbarPosition);
     await context.addInitScript({ path: injectedPath("snapshot-chrome.js") });
     context.on("page", (page) => { void installOnPage(page); });
+    if (cap.recordActions) {
+      try { await recorder.attach(context); } catch (e) { console.error("Action recording off:", e instanceof Error ? e.message : e); }
+    }
 
     if (cap.loadStoragePath && cap.attached) {
       try {
@@ -361,6 +368,9 @@ export async function runCapture(cap: SnapshotCapture, args: string[]): Promise<
     }
   }
 
+  if (cap.recordActions && captureCount > 0) {
+    try { recorder.writeReplayRules(cap.sessionDir); } catch { /* best effort */ }
+  }
   refreshFlow(cap, steps, cap.writeDiff);
   console.log("\nDone! " + captureCount + " capture(s) in " + path.resolve(cap.sessionDir));
   if (cap.buildPack && captureCount > 0) {

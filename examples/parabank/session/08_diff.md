@@ -8,8 +8,8 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 ## Dropdown / options changes
 
 + - combobox "fromAccountId":
-+ - option "18561" [selected]
-+ - option "18672"
++ - option "20115" [selected]
++ - option "20226"
 + options:  # native <select> - available without opening UI
 - # <select> "toAccountId":
 
@@ -43,7 +43,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - cell
 + - cell
 + - cell
-+ - cell "18561 18672"
++ - cell "20115 20226"
 + - cell "Account #:"
 + - cell "Address:"
 + - cell "Amount: $"
@@ -56,6 +56,10 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - cell "Zip Code:"
 + - form:
 + - heading "Bill Payment Service" [level=1]
++ - link "About Us":
++ - link "Locations":
++ - link "Products":
++ - link "Services":
 + - row
 + - row
 + - row
@@ -91,15 +95,46 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + - {by: name, value: "payee.address.zipCode", stability: high, score: 88}
 + - {by: name, value: "payee.name", stability: high, score: 88}
 + - {by: name, value: "payee.phoneNumber", stability: high, score: 88}
-+ - {by: name, value: "verifyAccount", stability: high, score: 88}
-+ - {by: role, value: "button", name: "Send Payment", stability: medium, score: 95}
-+ locators:
-+ locators:
 
 ## Removed
 
-- #   - 18561
-- #   - 18672 (selected)
+- #   - 20115
+- #   - 20226 (selected)
 - - heading "Transfer Complete!" [level=1]
+- - link "About Us" [dup 1/2]:
+- - link "About Us" [dup 2/2]:
+- - link "Contact Us":
+- - link "Home":
+- - link "Locations" [dup 1/2]:
+- - link "Locations" [dup 2/2]:
+- - link "Products" [dup 1/2]:
+- - link "Products" [dup 2/2]:
+- - link "Services" [dup 1/2]:
+- - link "Services" [dup 2/2]:
+- - link "Site Map":
+- - link "www.parasoft.com":
+- - list
+- - list
+- - listitem
+- - listitem
+- - listitem
+- - listitem
+- - listitem
+- - listitem
+- - listitem
+- - listitem
+- - listitem
 - - text "See Account Activity for more details."
 - - text "has been transferred from account # to account # ."
+- - text "© Parasoft. All rights reserved."
+- - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(2) > a:nth-child(1)", stability: low, score: 60}
+- - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+- - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+- - {by: css, value: "#footerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+- - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(3) > a:nth-child(1)", stability: low, score: 60}
+- - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(4) > a:nth-child(1)", stability: low, score: 60}
+- - {by: css, value: "#headerPanel > ul:nth-child(1) > li:nth-child(5) > a:nth-child(1)", stability: low, score: 60}
+- - {by: role, value: "link", name: "Contact Us", stability: medium, score: 95}
+- - {by: role, value: "link", name: "Home", stability: medium, score: 95}
+- - {by: role, value: "link", name: "Site Map", stability: medium, score: 95}
+- - {by: role, value: "link", name: "www.parasoft.com", stability: medium, score: 95}

@@ -1,0 +1,38 @@
+{
+  "actions": [
+    {
+      "type": "select",
+      "target": {
+        "tag": "select",
+        "testid": "payment-method",
+        "testidAttr": "data-test",
+        "id": "payment-method",
+        "role": "combobox",
+        "accName": "Payment Method",
+        "type": "select-one",
+        "css": "#payment-method"
+      },
+      "value": [
+        "cash-on-delivery"
+      ],
+      "label": [
+        "Cash on Delivery"
+      ],
+      "index": [
+        2
+      ]
+    },
+    {
+      "type": "click",
+      "target": {
+        "tag": "button",
+        "testid": "finish",
+        "testidAttr": "data-test",
+        "role": "button",
+        "accName": "Check payment",
+        "type": "button",
+        "css": "app-payment:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(1)"
+      }
+    }
+  ]
+}

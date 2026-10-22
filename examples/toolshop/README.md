@@ -10,6 +10,7 @@ API at `api.practicesoftwaretesting.com`. This is the shopping flow end to end.
 | 3. Spec from PAGES.md + `pack query --diff` per step | written by the agent | `tests/toolshop.e2e.spec.ts` |
 | 4. Static check | `npm run pack -- validate examples/toolshop/session examples/toolshop/tests/toolshop.e2e.spec.ts` | 4 ok, 0 missing |
 | 5. Run | `cd examples/toolshop && npx playwright test` | 5 passed, 3 runs in a row |
+| 6. Drift check by replay | `npm run pack -- verify examples/toolshop/session --vars=examples/toolshop/.auth/vars.json` | 13/13 steps reached and checked; 530-532 locators ok, 0-2 gone (a promo banner the site shows at random) |
 
 ## The E2E spec
 
@@ -44,5 +45,7 @@ API at `api.practicesoftwaretesting.com`. This is the shopping flow end to end.
   lookup result. The spec waits for that response and then checks the invoice bills the looked-up address. An early
   version read the form before the lookup landed and looked like a billing bug; it was a race in the test.
 - Shared demo accounts get locked by other users, so every run registers a new customer through the API.
-- `verify` only re-checks routable pages (home, product) by URL: 5 of 13 steps. Search results and the checkout
-  wizard steps need app state (a cart, a search), so they are reported as "page state differs", not as drift.
+- Opening URLs (`verify --by-url`) only reaches 5 of 13 steps: search results and the checkout wizard need app
+  state. Replaying the recorded flow reaches all 13. Two things the replay had to learn on this app: the billing
+  form validates on blur (Proceed stays disabled until the field is left), and the address prefill can land after
+  the house number was typed and wipe it, so replay leaves each field and retypes a value that did not stick.

@@ -80,38 +80,38 @@ export class ProductPage extends BasePage {
     return this.page.getByTestId('product-specs');
   }
 
+  /** link "Unsplash" */
+  get unsplashLink3(): Locator {
+    return this.page.locator('a[href*="https://unsplash.com/photos/t5YUoHW6zRo"]');
+  }
+
   /** link "Claw Hammer with Shock Reduction Grip More information" */
   get link(): Locator {
-    return this.page.getByRole('link', { name: 'Claw Hammer with Shock Reduction Grip More information', exact: true });
+    return this.page.locator('a[href*="/product/01M5GND76DX63X0V1S632TWZFC"]');
   }
 
   /** link "Hammer More information" */
   get hammerMoreInformationLink(): Locator {
-    return this.page.getByRole('link', { name: 'Hammer More information', exact: true });
+    return this.page.locator('a[href*="/product/01M5GND76N9P1WQ5T8HJVJ5N3F"]');
   }
 
   /** link "Thor Hammer More information" */
   get thorHammerMoreInformationLink(): Locator {
-    return this.page.getByRole('link', { name: 'Thor Hammer More information', exact: true });
+    return this.page.locator('a[href*="/product/01M5GND773BS12QCXFZNCMJA07"]');
   }
 
   /** link "Sledgehammer More information" */
   get sledgehammerMoreInformationLink(): Locator {
-    return this.page.getByRole('link', { name: 'Sledgehammer More information', exact: true });
+    return this.page.locator('a[href*="/product/01M5GND77768V5FAP7XFFEBM79"]');
   }
 
   /** link "Claw Hammer with Fiberglass Handle More information" */
   get link2(): Locator {
-    return this.page.getByRole('link', { name: 'Claw Hammer with Fiberglass Handle More information', exact: true });
+    return this.page.locator('a[href*="/product/01M5GND77A1MZV5GJHM225X0Q5"]');
   }
 
   /** link "Court Hammer More information" */
   get courtHammerMoreInformationLink(): Locator {
-    return this.page.getByRole('link', { name: 'Court Hammer More information', exact: true });
-  }
-
-  /** link "Unsplash" */
-  get unsplashLink3(): Locator {
-    return this.page.locator('a[href*="https://unsplash.com/photos/t5YUoHW6zRo"]');
+    return this.page.locator('a[href*="/product/01M5GND77C8TVM5Q0SM5PNNXTM"]');
   }
 }

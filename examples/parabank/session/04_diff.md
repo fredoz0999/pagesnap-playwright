@@ -12,7 +12,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + # <select> "type":
 + - combobox "fromAccountId":
 + - combobox "type":
-+ - option "18561" [selected]
++ - option "20115" [selected]
 + - option "CHECKING" [selected]
 + - option "SAVINGS"
 + options:  # native <select> - available without opening UI
@@ -20,7 +20,7 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 
 ## Added
 
-+ #   - 18561 (selected)
++ #   - 20115 (selected)
 + #   - CHECKING (selected)
 + #   - SAVINGS
 + - button "Open New Account":
@@ -36,13 +36,13 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 + locators:
 + locators:
 + value: "0"
-+ value: "18561"
++ value: "20115"
 + value: "Open New Account"
 
 ## Removed
 
 - #   headers: Account | Balance* | Available Amount
-- #   row 1: 18561 | $515.50 | $515.50
+- #   row 1: 20115 | $515.50 | $515.50
 - #   row 2: Total | $515.50 |
 - # table "accountTable":
 - - cell
@@ -50,16 +50,16 @@ _Tip: For custom dropdowns, capture once closed and once open (Ctrl+Shift+M with
 - - cell "$515.50" [dup 2/3]
 - - cell "$515.50" [dup 3/3]
 - - cell "*Balance includes deposits that may be subject to holds"
-- - cell "18561"
+- - cell "20115"
 - - cell "Total"
 - - columnheader "Account"
 - - columnheader "Available Amount"
 - - columnheader "Balance*"
 - - heading "Accounts Overview" [level=1]
-- - link "18561":
+- - link "20115":
 - - row
 - - row
 - - row
 - - row
 - - table
-- - {by: role, value: "link", name: "18561", stability: medium, score: 95}
+- - {by: role, value: "link", name: "20115", stability: medium, score: 95}

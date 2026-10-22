@@ -1,0 +1,13 @@
+{
+  "actions": [
+    {
+      "type": "click",
+      "target": {
+        "tag": "a",
+        "role": "link",
+        "accName": "Accounts Overview",
+        "css": "#leftPanel > ul:nth-child(3) > li:nth-child(2) > a:nth-child(1)"
+      }
+    }
+  ]
+}

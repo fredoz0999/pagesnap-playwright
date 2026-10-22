@@ -1,0 +1,16 @@
+{
+  "actions": [
+    {
+      "type": "click",
+      "target": {
+        "tag": "button",
+        "testid": "proceed-1",
+        "testidAttr": "data-test",
+        "role": "button",
+        "accName": "Proceed to checkout",
+        "type": "button",
+        "css": "div:nth-child(2) > aw-wizard-step:nth-child(1) > app-cart:nth-child(1) > div:nth-child(1) > div:nth-child(2) > button:nth-child(2)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "actions": [
+    {
+      "type": "select",
+      "target": {
+        "tag": "select",
+        "id": "type",
+        "role": "combobox",
+        "type": "select-one",
+        "css": "#type"
+      },
+      "value": [
+        "1"
+      ],
+      "label": [
+        "SAVINGS"
+      ],
+      "index": [
+        1
+      ]
+    },
+    {
+      "type": "click",
+      "target": {
+        "tag": "input",
+        "role": "button",
+        "accName": "Open New Account",
+        "type": "button",
+        "css": "#openAccountForm > form:nth-child(2) > div:nth-child(9) > input:nth-child(1)"
+      }
+    }
+  ]
+}

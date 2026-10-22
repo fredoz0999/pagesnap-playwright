@@ -60,7 +60,7 @@
     - link "Log Out":
       - /url: logout.htm
 - heading "Bill Payment Complete" [level=1]
-- paragraph: Bill Payment to Electric Co in the amount of $12.34 from account 18561 was successful.
+- paragraph: Bill Payment to Electric Co in the amount of $12.34 from account 20115 was successful.
 - paragraph: See Account Activity for more details.
 - list:
   - listitem:

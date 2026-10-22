@@ -55,6 +55,7 @@ Use these members in specs instead of raw selectors. `import { LoginPage } from 
 - transferButton = button "Transfer"
 
 ## BillpayPage /parabank/billpay.htm (steps 8,9)
+- aboutUsLink = link "About Us" (fragile)
 - payeeNameInput = textbox "payee.name"
 - payeeAddressStreetInput = textbox "payee.address.street"
 - payeeAddressCityInput = textbox "payee.address.city"

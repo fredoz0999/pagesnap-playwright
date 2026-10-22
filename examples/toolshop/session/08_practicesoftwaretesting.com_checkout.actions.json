@@ -1,0 +1,44 @@
+{
+  "actions": [
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "testid": "email",
+        "testidAttr": "data-test",
+        "id": "email",
+        "role": "textbox",
+        "accName": "Email address *",
+        "type": "email",
+        "css": "#email"
+      },
+      "value": "{{email}}"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "testid": "password",
+        "testidAttr": "data-test",
+        "id": "password",
+        "role": "textbox",
+        "accName": "Password *",
+        "type": "password",
+        "css": "#password"
+      },
+      "value": "{{wrong-secret}}"
+    },
+    {
+      "type": "click",
+      "target": {
+        "tag": "input",
+        "testid": "login-submit",
+        "testidAttr": "data-test",
+        "role": "button",
+        "accName": "Login",
+        "type": "submit",
+        "css": "#signin-tab > form:nth-child(2) > div:nth-child(3) > input:nth-child(1)"
+      }
+    }
+  ]
+}

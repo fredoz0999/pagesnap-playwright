@@ -1,0 +1,30 @@
+{
+  "actions": [
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "testid": "search-query",
+        "testidAttr": "data-test",
+        "id": "search-query",
+        "role": "textbox",
+        "accName": "Search",
+        "type": "text",
+        "css": "#search-query"
+      },
+      "value": "hammer"
+    },
+    {
+      "type": "click",
+      "target": {
+        "tag": "button",
+        "testid": "search-submit",
+        "testidAttr": "data-test",
+        "role": "button",
+        "accName": "Search",
+        "type": "submit",
+        "css": "#filters > form:nth-child(9) > div:nth-child(1) > button:nth-child(4)"
+      }
+    }
+  ]
+}

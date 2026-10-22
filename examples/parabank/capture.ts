@@ -36,6 +36,10 @@ async function main() {
   const page = await context.newPage();
   page.setDefaultTimeout(20000);
   const snap = new ScriptedSession({ outputDir: out, goal: "Parabank: register, open savings account, transfer, pay bill, find transaction", saveAria: true });
+  // Record clicks/typing for replay verification. Each replay registers a new user
+  // (fresh username); the password is a secret supplied at verify time.
+  await snap.record(page);
+  snap.vars({ username: { value: user.username, fresh: "ps{ts}" }, password: { value: user.password, secret: true } });
   const cap = async (note: string) => console.log("  " + (await snap.capture(page, note)));
 
   // 1-2 register
@@ -104,6 +108,7 @@ async function main() {
   fs.mkdirSync(authDir, { recursive: true });
   await context.storageState({ path: path.join(authDir, "state.json") });
   fs.writeFileSync(path.join(authDir, "user.json"), JSON.stringify(user, null, 2));
+  fs.writeFileSync(path.join(authDir, "vars.json"), JSON.stringify({ password: user.password }, null, 2));
 
   // 12-13 log out, bad login
   await page.getByRole("link", { name: "Log Out" }).click();

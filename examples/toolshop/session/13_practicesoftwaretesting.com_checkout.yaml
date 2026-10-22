@@ -1,7 +1,7 @@
 # URL: https://practicesoftwaretesting.com/checkout
 # Title: Checkout - Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:02:04Z
+# Captured: 2026-10-22T02:29:10Z
 # Trigger: manual
 # Step: 13
 # Note: action: Confirm | assert: 'Thanks for your order! Your invoice number is INV-...'
@@ -31,7 +31,6 @@
       locators:
         - {by: testid, value: "nav-home", attr: data-test, stability: high, score: 98}
   - menuitem "Categories Hand ToolsPower ToolsOtherSpecial ToolsRentals":
-    locators:
     - button "Categories" [collapsed]:
       dropdown: closed
       locators:
@@ -50,7 +49,6 @@
       locators:
         - {by: testid, value: "nav-menu", attr: data-test, stability: high, score: 98}
   - menuitem "2":
-    locators:
     - link "cart":
       locators:
         - {by: testid, value: "nav-cart", attr: data-test, stability: high, score: 98}
@@ -71,7 +69,7 @@
   - listitem
     - text "Payment"
 - text "Thanks for your order! Your invoice number is ."
-- text "INV-2026000004"
+- text "INV-2026000012"
 - generic:
   locators:
     - {by: testid, value: "course-promo", attr: data-test, stability: high, score: 98}

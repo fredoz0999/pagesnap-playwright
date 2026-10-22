@@ -1,7 +1,7 @@
 # URL: https://parabank.parasoft.com/parabank/findtrans.htm
 # Title: ParaBank | Find Transactions
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:06:50Z
+# Captured: 2026-10-22T02:28:05Z
 # Trigger: manual
 # Step: 11
 # Note: action: click Find Transactions by amount | assert: results table lists the Bill Payment to Electric Co
@@ -135,8 +135,8 @@
 
 # --- All <select> options ---
 # <select> "accountId":
-#   - 18672
-#   - 18561 (selected)
+#   - 20226
+#   - 20115 (selected)
 
 # --- Tables (headers + first rows) ---
 # table "transactionTable":

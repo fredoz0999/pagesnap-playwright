@@ -1,0 +1,13 @@
+{
+  "actions": [
+    {
+      "type": "click",
+      "target": {
+        "tag": "a",
+        "role": "link",
+        "accName": "Log Out",
+        "css": "#leftPanel > ul:nth-child(3) > li:nth-child(8) > a:nth-child(1)"
+      }
+    }
+  ]
+}

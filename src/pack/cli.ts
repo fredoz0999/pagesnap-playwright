@@ -26,7 +26,7 @@ const USAGE = `pagesnap lean pack - token-lean snapshots for coding agents
   npm run pack -- stats    <session|latest>
   npm run pack -- bench    <session|latest> [--md]
   npm run pack -- pom      <session|latest> [--out=tests/pages]
-  npm run pack -- verify   <session|latest> [--storage=state.json] [--step=N]
+  npm run pack -- verify   <session|latest> [--vars=vars.json] [--by-url] [--storage=state.json] [--step=N]
   npm run pack -- heal     <session|latest> <spec.ts> [--log=playwright-output.txt] [--write]
   npm run pack -- prompt   <session|latest> [--cases] [--name=checkout-flow]
   npm run pack -- install-prompts <test-repo-dir>
@@ -36,7 +36,8 @@ query     hybrid search (keyword + vector + exact name) -> page outline + the fe
 validate  check every locator in a spec against the snapshots (no LLM tokens). Exit 1 if any is missing.
 stats     raw vs compact token estimate per page
 bench     tokens an agent reads for the whole flow: raw / compact / query / query+diff / PAGES.md / ariaSnapshot
-verify    reopen each captured page and count matches for every recorded locator (drift check)
+verify    drift check: replay the recorded flow and count matches for every locator at each step
+          (--by-url: open each captured URL instead; used automatically when nothing was recorded)
 heal      suggest replacements for missing / ambiguous / failing locators; --write applies clear winners
 pom       generate Playwright page objects from the verified locators (no LLM) + PAGES.md map
 prompt    print a ready-to-paste agent prompt for this session (--cases: manual test cases)
@@ -75,9 +76,15 @@ async function main(argv: string[]): Promise<number> {
     case "verify": {
       const st = flag(rest, "step");
       const storage = flag(rest, "storage");
-      const rep = await verifySession(dir, { storage: storage ? userPath(storage) : undefined, steps: st ? st.split(",").map(Number) : undefined });
+      const varsFile = flag(rest, "vars");
+      const rep = await verifySession(dir, {
+        storage: storage ? userPath(storage) : undefined,
+        steps: st ? st.split(",").map(Number) : undefined,
+        mode: rest.includes("--by-url") ? "url" : undefined,
+        vars: varsFile ? (JSON.parse(fs.readFileSync(userPath(varsFile), "utf8")) as Record<string, string>) : undefined,
+      });
       process.stdout.write(rep.text);
-      return rep.counts.gone > 0 ? 1 : 0;
+      return rep.counts.gone > 0 || rep.blocked ? 1 : 0;
     }
     case "heal": {
       const spec = pos[0];

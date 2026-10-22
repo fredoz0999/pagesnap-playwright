@@ -1,0 +1,146 @@
+{
+  "actions": [
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "customer.firstName",
+        "name": "customer.firstName",
+        "role": "textbox",
+        "type": "text",
+        "css": "#customerForm > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "Page"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "customer.lastName",
+        "name": "customer.lastName",
+        "role": "textbox",
+        "type": "text",
+        "css": "#customerForm > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "Snap"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "customer.address.street",
+        "name": "customer.address.street",
+        "role": "textbox",
+        "type": "text",
+        "css": "#customerForm > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "1 Test Way"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "customer.address.city",
+        "name": "customer.address.city",
+        "role": "textbox",
+        "type": "text",
+        "css": "#customerForm > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "Chantilly"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "customer.address.state",
+        "name": "customer.address.state",
+        "role": "textbox",
+        "type": "text",
+        "css": "#customerForm > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "VA"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "customer.address.zipCode",
+        "name": "customer.address.zipCode",
+        "role": "textbox",
+        "type": "text",
+        "css": "#customerForm > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "20151"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "customer.phoneNumber",
+        "name": "customer.phoneNumber",
+        "role": "textbox",
+        "type": "text",
+        "css": "#customerForm > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "5550100"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "customer.ssn",
+        "name": "customer.ssn",
+        "role": "textbox",
+        "type": "text",
+        "css": "#customerForm > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(8) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "123-45-6789"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "customer.username",
+        "name": "customer.username",
+        "role": "textbox",
+        "type": "text",
+        "css": "#customerForm > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(10) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "{{username}}"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "customer.password",
+        "name": "customer.password",
+        "role": "textbox",
+        "type": "password",
+        "css": "#customerForm > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(11) > td:nth-child(2) > input:nth-child(1)"
+      },
+      "value": "{{secret:password}}"
+    },
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "repeatedPassword",
+        "name": "repeatedPassword",
+        "role": "textbox",
+        "type": "password",
+        "css": "#repeatedPassword"
+      },
+      "value": "{{secret:password}}"
+    },
+    {
+      "type": "click",
+      "target": {
+        "tag": "input",
+        "role": "button",
+        "accName": "Register",
+        "type": "submit",
+        "css": "#customerForm > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(13) > td:nth-child(2) > input:nth-child(1)"
+      }
+    }
+  ]
+}

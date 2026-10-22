@@ -1,0 +1,45 @@
+{
+  "actions": [
+    {
+      "type": "fill",
+      "target": {
+        "tag": "input",
+        "id": "amount",
+        "name": "input",
+        "role": "textbox",
+        "type": "text",
+        "css": "#amount"
+      },
+      "value": "25"
+    },
+    {
+      "type": "select",
+      "target": {
+        "tag": "select",
+        "id": "toAccountId",
+        "role": "combobox",
+        "type": "select-one",
+        "css": "#toAccountId"
+      },
+      "value": [
+        "20226"
+      ],
+      "label": [
+        "20226"
+      ],
+      "index": [
+        1
+      ]
+    },
+    {
+      "type": "click",
+      "target": {
+        "tag": "input",
+        "role": "button",
+        "accName": "Transfer",
+        "type": "submit",
+        "css": "#transferForm > div:nth-child(4) > input:nth-child(1)"
+      }
+    }
+  ]
+}

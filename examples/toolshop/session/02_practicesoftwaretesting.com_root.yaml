@@ -1,7 +1,7 @@
 # URL: https://practicesoftwaretesting.com/
 # Title: Practice Software Testing - Toolshop - v5.0
 # Viewport: 1280x900
-# Captured: 2026-10-22T02:01:49Z
+# Captured: 2026-10-22T02:28:56Z
 # Trigger: manual
 # Step: 2
 # Note: action: search 'hammer' | assert: caption 'Searched for: hammer', only hammer products listed
@@ -31,7 +31,6 @@
       locators:
         - {by: testid, value: "nav-home", attr: data-test, stability: high, score: 98}
   - menuitem "Categories Hand ToolsPower ToolsOtherSpecial ToolsRentals":
-    locators:
     - button "Categories" [collapsed]:
       dropdown: closed
       locators:

@@ -1,0 +1,13 @@
+{
+  "actions": [
+    {
+      "type": "click",
+      "target": {
+        "tag": "a",
+        "role": "link",
+        "accName": "Find Transactions",
+        "css": "#leftPanel > ul:nth-child(3) > li:nth-child(5) > a:nth-child(1)"
+      }
+    }
+  ]
+}
